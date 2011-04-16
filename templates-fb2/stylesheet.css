@@ -1,0 +1,59 @@
+.sujet2 {
+	font-family: Georgia, serif;
+}
+.center {
+	text-align: center;
+}
+.center p {
+	text-indent: 0;
+}
+.right {
+	text-align: right;
+}
+.frame {
+	margin: 1em auto;
+	padding: .5em;
+	width: 50%;
+	min-width: 15em;
+	border: thin solid black;
+	font-weight: bold;
+	font-style: normal;
+	text-align: center;
+	text-indent: 0;
+}
+.smallcaps {
+	font-variant: small-caps;
+}
+.underline {
+	text-decoration: underline;
+}
+.overline {
+	text-decoration: overline;
+}
+.upper {
+	text-transform: uppercase;
+}
+.large {
+	font-size: 110%;
+}
+.x-large {
+	font-size: 120%;
+}
+.xx-large {
+	font-size: 130%;
+}
+.xxx-large {
+	font-size: 140%;
+}
+.small {
+	font-size: 90%;
+}
+.x-small {
+	font-size: 80%;
+}
+.xx-small {
+	font-size: 70%;
+}
+.xxx-small {
+	font-size: 60%;
+}
