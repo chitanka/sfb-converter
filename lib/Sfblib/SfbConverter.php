@@ -24,8 +24,6 @@ class Sfblib_SfbConverter
 		INFO_S         = 'I>',  INFO_E         = 'I$',
 		DEDICATION_S   = 'D>',  DEDICATION_E   = 'D$',
 		EPIGRAPH_S     = 'E>',  EPIGRAPH_E     = 'E$',
-		LETTER_S       = 'L>',  LETTER_E       = 'L$',
-		SIGN_S         = 'S>',  SIGN_E         = 'S$',
 		NOTICE_S       = 'N>',  NOTICE_E       = 'N$',
 		POEM_S         = 'P>',  POEM_E         = 'P$',
 		CITE_S         = 'C>',  CITE_E         = 'C$',
@@ -38,7 +36,6 @@ class Sfblib_SfbConverter
 
 		/* one-liners */
 		NOTICE_OL       = 'N',
-		SIGN_OL         = 'S',
 		PREFORMATTED_OL = 'F',
 		AUTHOR_OL       = '@',
 		DATE_OL         = '@@',
@@ -569,8 +566,6 @@ class Sfblib_SfbConverter
 			case self::TITLE_5:         $this->doTitle($this->lcmd); break;
 			case self::DEDICATION_S:    $this->doDedication();       break;
 			case self::EPIGRAPH_S:      $this->doEpigraph();         break;
-			case self::LETTER_S:        $this->doLetter();           break;
-			case self::SIGN_S:          $this->doSign();             break;
 			case self::NOTICE_S:        $this->doNotice();           break;
 			case self::ANNO_S:          $this->doAnnotation();       break;
 			case self::INFO_S:          $this->doInfoblock();        break;
@@ -578,7 +573,6 @@ class Sfblib_SfbConverter
 			case self::CITE_S:          $this->doCite();             break;
 			case self::PREFORMATTED_S:  $this->doPreformatted();     break;
 			case self::TABLE_S:         $this->doTable();            break;
-			case self::SIGN_OL:         $this->doSignOl();           break;
 			case self::NOTICE_OL:       $this->doNoticeOl();         break;
 			case self::PREFORMATTED_OL: $this->doPreformattedOl();   break;
 			case self::SUBHEADER:       $this->doSubheader();        break;
@@ -823,14 +817,11 @@ class Sfblib_SfbConverter
 			case self::CITE_S:          $this->doCite();                break;
 			case self::AUTHOR_OL:       $this->doAuthor();              break;
 			case self::SUBHEADER:       $this->doSubheader();           break;
-			case self::SIGN_S:          $this->doSign();                break;
-			case self::SIGN_OL:         $this->doSignOl();              break;
 			case self::NOTICE_S:        $this->doNotice();              break;
 			case self::NOTICE_OL:       $this->doNoticeOl();            break;
 			case self::PREFORMATTED_S:  $this->doPreformatted();        break;
 			case self::PREFORMATTED_OL: $this->doPreformattedOl();      break;
 			case self::DATE_OL:         $this->doDate();                break;
-			case self::LETTER_S:        $this->doLetter();              break;
 			case self::STYLE_S:         $this->doStyle();               break;
 			case self::EPIGRAPH_E:                                      break;
 			default:                    $this->doUnknownContent();
@@ -919,14 +910,11 @@ class Sfblib_SfbConverter
 			case self::CITE_S:          $this->doCite();                break;
 			case self::AUTHOR_OL:       $this->doAuthor();              break;
 			case self::SUBHEADER:       $this->doSubheader();           break;
-			case self::SIGN_S:          $this->doSign();                break;
-			case self::SIGN_OL:         $this->doSignOl();              break;
 			case self::NOTICE_S:        $this->doNotice();              break;
 			case self::NOTICE_OL:       $this->doNoticeOl();            break;
 			case self::PREFORMATTED_S:  $this->doPreformatted();        break;
 			case self::PREFORMATTED_OL: $this->doPreformattedOl();      break;
 			case self::DATE_OL:         $this->doDate();                break;
-			case self::LETTER_S:        $this->doLetter();              break;
 			case self::STYLE_S:         $this->doStyle();               break;
 			case self::DEDICATION_E:                                    break;
 			default:                    $this->doUnknownContent();
@@ -973,128 +961,6 @@ class Sfblib_SfbConverter
 		$d = $this->isInDedication();
 		$n = $this->isInNote();
 		return $d && $n && $d < $n;
-	}
-
-	/*************************************************************************/
-
-
-	/**
-	* Letter processing
-	*/
-	protected function doLetter()
-	{
-		$this->_inLetter = $this->linecnt;
-		$this->saveEmptyLineBuffer();
-		$this->doLetterStart();
-		$this->checkForParagraphOnBlockStart();
-
-		do {
-			$this->nextLine(false);
-			$this->inLetter();
-		} while ( $this->isInBlock(self::LETTER_E) );
-
-		$this->fixHasNextLine(self::LETTER_E);
-
-		$this->lcmd = '';
-		$this->enableEmptyLines();
-		$this->doLetterEnd();
-		$this->_inLetter = false;
-	}
-
-	protected function inLetter()
-	{
-		switch ($this->lcmd) {
-			case self::PARAGRAPH:       $this->doParagraph();           break;
-			case self::POEM_S:          $this->doPoem();                break;
-			case self::CITE_S:          $this->doCite();                break;
-			case self::AUTHOR_OL:       $this->doAuthor();              break;
-			case self::SUBHEADER:       $this->doSubheader();           break;
-			case self::SIGN_S:          $this->doSign();                break;
-			case self::SIGN_OL:         $this->doSignOl();              break;
-			case self::NOTICE_S:        $this->doNotice();              break;
-			case self::NOTICE_OL:       $this->doNoticeOl();            break;
-			case self::PREFORMATTED_S:  $this->doPreformatted();        break;
-			case self::PREFORMATTED_OL: $this->doPreformattedOl();      break;
-			case self::DATE_OL:         $this->doDate();                break;
-			case self::TABLE_S:         $this->doTable();               break;
-			case self::LETTER_S:        $this->doLetter();              break;
-			case self::STYLE_S:         $this->doStyle();               break;
-			case self::LETTER_E:                                        break;
-			default:                    $this->doUnknownContent();
-		}
-	}
-
-	protected function doLetterStart()
-	{
-		$this->saveStartTag($this->letterElement);
-	}
-
-	protected function doLetterEnd()
-	{
-		$this->saveEndTag($this->letterElement);
-	}
-
-	protected function isInLetter()
-	{
-		return $this->_inLetter;
-	}
-
-	protected function isAtLetterEnd()
-	{
-		return $this->lcmd == self::LETTER_E;
-	}
-
-
-	/*************************************************************************/
-
-
-	/**
-	* Sign processing
-	*/
-	protected function doSign()
-	{
-		$this->saveEmptyLineBuffer();
-		$this->doSignStart();
-		$this->checkForParagraphOnBlockStart();
-
-		do {
-			$this->nextLine(false);
-			$this->inSign();
-		} while ( $this->isInBlock(self::SIGN_E) );
-
-		$this->lcmd = '';
-		$this->enableEmptyLines();
-		$this->doSignEnd();
-	}
-
-	protected function inSign()
-	{
-		switch ($this->lcmd) {
-			case self::PARAGRAPH:       $this->doParagraph();           break;
-			case self::SUBHEADER:       $this->doSubheader();           break;
-			case self::PREFORMATTED_S:  $this->doPreformatted();        break;
-			case self::PREFORMATTED_OL: $this->doPreformattedOl();      break;
-			case self::STYLE_S:         $this->doStyle();               break;
-			case self::SIGN_E:                                          break;
-			default:                    $this->doUnknownContent();
-		}
-	}
-
-	protected function doSignStart()
-	{
-		$this->saveStartTag($this->signElement);
-	}
-
-	protected function doSignEnd()
-	{
-		$this->saveEndTag($this->signElement);
-	}
-
-	protected function doSignOl()
-	{
-		$this->doSignStart();
-		$this->doParagraph();
-		$this->doSignEnd();
 	}
 
 
@@ -1186,14 +1052,11 @@ class Sfblib_SfbConverter
 			case self::CITE_S:          $this->doCite();                break;
 			case self::AUTHOR_OL:       $this->doAuthor();              break;
 			case self::SUBHEADER:       $this->doSubheader();           break;
-			case self::SIGN_S:          $this->doSign();                break;
-			case self::SIGN_OL:         $this->doSignOl();              break;
 			case self::NOTICE_S:        $this->doNotice();              break;
 			case self::NOTICE_OL:       $this->doNoticeOl();            break;
 			case self::PREFORMATTED_S:  $this->doPreformatted();        break;
 			case self::PREFORMATTED_OL: $this->doPreformattedOl();      break;
 			case self::DATE_OL:         $this->doDate();                break;
-			case self::LETTER_S:        $this->doLetter();              break;
 			case self::STYLE_S:         $this->doStyle();               break;
 			case self::ANNO_E:                                          break;
 			default:                    $this->doUnknownContent();
@@ -1254,14 +1117,11 @@ class Sfblib_SfbConverter
 			case self::CITE_S:          $this->doCite();                break;
 			case self::AUTHOR_OL:       $this->doAuthor();              break;
 			case self::SUBHEADER:       $this->doSubheader();           break;
-			case self::SIGN_S:          $this->doSign();                break;
-			case self::SIGN_OL:         $this->doSignOl();              break;
 			case self::NOTICE_S:        $this->doNotice();              break;
 			case self::NOTICE_OL:       $this->doNoticeOl();            break;
 			case self::PREFORMATTED_S:  $this->doPreformatted();        break;
 			case self::PREFORMATTED_OL: $this->doPreformattedOl();      break;
 			case self::DATE_OL:         $this->doDate();                break;
-			case self::LETTER_S:        $this->doLetter();              break;
 			case self::STYLE_S:         $this->doStyle();               break;
 			case self::INFO_E:                                          break;
 			default:                    $this->doUnknownContent();
@@ -1488,14 +1348,11 @@ class Sfblib_SfbConverter
 			case self::TITLE_4:
 			case self::TITLE_5:         $this->doTitle($this->lcmd); break;
 			case self::EPIGRAPH_S:      $this->doEpigraph();         break;
-			case self::LETTER_S:        $this->doLetter();           break;
-			case self::SIGN_S:          $this->doSign();             break;
 			case self::NOTICE_S:        $this->doNotice();           break;
 			case self::POEM_S:          $this->doPoem();             break;
 			case self::CITE_S:          $this->doCite();             break;
 			case self::PREFORMATTED_S:  $this->doPreformatted();     break;
 			case self::TABLE_S:         $this->doTable();            break;
-			case self::SIGN_OL:         $this->doSignOl();           break;
 			case self::NOTICE_OL:       $this->doNoticeOl();         break;
 			case self::PREFORMATTED_OL: $this->doPreformattedOl();   break;
 			case self::SUBHEADER:       $this->doSubheader();        break;
@@ -1557,8 +1414,6 @@ class Sfblib_SfbConverter
 			case self::SUBHEADER:        $this->doSubheader();       break;
 			case self::PREFORMATTED_S:   $this->doPreformatted();    break;
 			case self::PREFORMATTED_OL:  $this->doPreformattedOl();  break;
-			case self::SIGN_S:           $this->doSign();            break;
-			case self::SIGN_OL:          $this->doSignOl();          break;
 			case self::NOTICE_S:         $this->doNotice();          break;
 			case self::NOTICE_OL:        $this->doNoticeOl();        break;
 			case self::DATE_OL:          $this->doDate();            break;
