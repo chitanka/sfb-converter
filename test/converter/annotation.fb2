@@ -7,28 +7,14 @@
 <p>Първи ред.</p>
 <p>Втори ред.</p>
 </annotation>
-
-
-
 <lang>bg</lang>
-
-
-
 </title-info>
-
 <document-info><author><nickname>(неизвестен автор)</nickname></author>
-
-
-
 <version>0.0</version>
-
 </document-info>
 </description>
 <body><section>
 <p>Текст.</p>
 </section>
 </body>
-
-
-
 </FictionBook>

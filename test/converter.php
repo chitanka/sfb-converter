@@ -32,9 +32,16 @@ function testConverter($converter, $inFile, $imgDir, $outFile, $callback = null)
 		if ( is_callable($callback) ) {
 			$testOutput = call_user_func($callback, $testOutput);
 		}
+		// remove double new lines
+		$testOutput = preg_replace('/\n\n+/', "\n", $testOutput);
 		$hasErrors = $testOutput != file_get_contents($outFile);
 		doLog("$converter: $inFile", $hasErrors ? ML_ERROR : ML_OK);
-		file_put_contents(sprintf('%s/current/%s', dirname($outFile), basename($outFile)), $testOutput);
+
+		// save output if wanted
+		$outDir = dirname($outFile) . '/output';
+		if (file_exists($outDir)) {
+			file_put_contents($outDir .'/'. basename($outFile), $testOutput);
+		}
 	}
 }
 
