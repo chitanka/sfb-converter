@@ -91,8 +91,6 @@ class Sfblib_SfbConverter
 		$epigraphElement       = 'epigraph',
 		$dedicationElement     = 'dedication',
 		$citeElement           = 'cite',
-		$letterElement         = 'letter',
-		$signElement           = 'sign',
 		$noticeElement         = 'notice',
 		$annotationElement     = 'annotation',
 		$infoblockElement      = 'information',
@@ -205,8 +203,6 @@ class Sfblib_SfbConverter
 		$_inPoem             = false,
 		/** how many poems do we have entered */
 		$_poemsEntered       = 0,
-		/** are we in a letter */
-		$_inLetter           = false,
 		/** are we in a cite */
 		$_inCite             = false,
 		/** are we in a foot note */

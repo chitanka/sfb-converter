@@ -19,8 +19,6 @@ class Sfblib_SfbToHtmlConverter extends Sfblib_SfbConverter
 		$epigraphElement       = 'blockquote',
 		$dedicationElement     = 'blockquote',
 		$citeElement           = 'blockquote',
-		$letterElement         = 'blockquote',
-		$signElement           = 'blockquote',
 		$noticeElement         = 'div',
 		$annotationElement     = 'fieldset',
 		$infoblockElement      = 'fieldset',
@@ -118,18 +116,6 @@ class Sfblib_SfbToHtmlConverter extends Sfblib_SfbConverter
 	protected function doDedicationStart()
 	{
 		$this->saveStartTag($this->dedicationElement, array('class' => 'dedication'));
-	}
-
-
-	protected function doLetterStart()
-	{
-		$this->saveStartTag($this->letterElement, array('class' => 'letter'));
-	}
-
-
-	protected function doSignStart()
-	{
-		$this->saveStartTag($this->signElement, array('class' => 'sign'));
 	}
 
 

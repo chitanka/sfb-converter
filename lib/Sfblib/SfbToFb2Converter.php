@@ -10,8 +10,6 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 		$epigraphElement       = 'epigraph',
 		$dedicationElement     = 'epigraph',
 		$citeElement           = 'cite',
-		$letterElement         = 'cite',
-		$signElement           = 'subtitle',
 		$noticeElement         = '',
 		$annotationElement     = 'annotation',
 		$infoblockElement      = 'body',
@@ -577,24 +575,6 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 	/*************************************************************************/
 
 
-	protected function doSignStart()
-	{
-		if ( ! $this->isInNote() ) {
-			$this->overwriteParagraphElement($this->signElement);
-		}
-	}
-
-	protected function doSignEnd()
-	{
-		if ( ! $this->isInNote() ) {
-			$this->revertParagraphElement();
-		}
-	}
-
-
-	/*************************************************************************/
-
-
 	protected function doNoticeStart()
 	{
 		$this->paragraphPrefix = $this->out->getStartTag($this->emphasisElement);
@@ -851,7 +831,6 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 	{
 		return $this->isAtEpigraphEnd()
 			|| $this->isAtDedicationEnd()
-			|| $this->isAtLetterEnd()
 			|| $this->isAtCiteEnd()
 			|| $this->isAtPoemEnd()
 			|| ($this->isInPoem() && $this->isAtDate())
@@ -1032,7 +1011,6 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 		return ! $this->isInCite()
 			&& ! $this->isInEpigraph()
 			&& ! $this->isInDedication()
-			&& ! $this->isInLetter()
 			&& ! $this->isInAnnotation();
 	}
 
