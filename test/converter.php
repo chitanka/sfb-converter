@@ -9,16 +9,14 @@ define('ML_ERROR', 3);
 
 function testFile($file)
 {
-	if (preg_match('/\.sfb$/', $file)) {
-		doLog("=> $file ...", ML_INFO);
+	doLog("=> $file ...", ML_INFO);
 
-		$fb2File = strtr($file, array('.sfb' => '.fb2'));
-		clearFb2File($fb2File);
-		testConverter('SfbToFb2Converter', $file, dirname($file), $fb2File, 'clearFb2String');
+	$fb2File = strtr($file, array('.sfb' => '.fb2'));
+	clearFb2File($fb2File);
+	testConverter('SfbToFb2Converter', $file, dirname($file), $fb2File, 'clearFb2String');
 
-		$htmlFile = strtr($file, array('.sfb' => '.html'));
-		testConverter('SfbToHtmlConverter', $file, 'img', $htmlFile);
-	}
+	$htmlFile = strtr($file, array('.sfb' => '.html'));
+	testConverter('SfbToHtmlConverter', $file, 'img', $htmlFile);
 }
 
 
@@ -135,9 +133,8 @@ else {
 	*/
 	$dir = dirname(__FILE__) . '/converter';
 	foreach ( scandir($dir) as $file ) {
-		if ($file[0] == '.') {
-			continue;
+		if (preg_match('/\.sfb$/', $file)) {
+			testFile("$dir/$file");
 		}
-		testFile("$dir/$file");
 	}
 }
