@@ -22,10 +22,10 @@ function testFile($file)
 }
 
 
-function testConverter($converterClass, $inFile, $imgDir, $outFile, $callback = null)
+function testConverter($converter, $inFile, $imgDir, $outFile, $callback = null)
 {
 	if ( file_exists($outFile) ) {
-		$converterClass = 'Sfblib_' . $converterClass;
+		$converterClass = 'Sfblib_' . $converter;
 		$conv = new $converterClass($inFile, $imgDir);
 		$conv->setObjectCount(1);
 		$conv->rmPattern(' —')->rmRegExpPattern('/^— /');
@@ -35,7 +35,7 @@ function testConverter($converterClass, $inFile, $imgDir, $outFile, $callback = 
 			$testOutput = call_user_func($callback, $testOutput);
 		}
 		$hasErrors = $testOutput != file_get_contents($outFile);
-		doLog("$converterClass: $inFile", $hasErrors ? ML_ERROR : ML_OK);
+		doLog("$converter: $inFile", $hasErrors ? ML_ERROR : ML_OK);
 		file_put_contents(sprintf('%s/current/%s', dirname($outFile), basename($outFile)), $testOutput);
 	}
 }
