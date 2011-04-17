@@ -29,7 +29,7 @@ class Sfblib_SfbConverter
 		CITE_S         = 'C>',  CITE_E         = 'C$',
 		PREFORMATTED_S = 'F>',  PREFORMATTED_E = 'F$',
 		TABLE_S        = 'T>',  TABLE_E        = 'T$',
-		STYLE_S        = 'M>',  STYLE_E        = 'M$',
+		STYLE_S        = 'S>',  STYLE_E        = 'S$',
 
 		/* raw input, save as is */
 		RAW_S          = 'R>',  RAW_E          = 'R$',
