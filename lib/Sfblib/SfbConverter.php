@@ -2175,7 +2175,7 @@ class Sfblib_SfbConverter
 						$row[$cc] = $row[$cc - 1];
 						// delete old cell
 						unset( $row[$cc - 1] );
-						init_or_inc_array_value( $row[$cc][0], 'colspan', 2 );
+						Sfblib_Util::initOrIncArrayValue( $row[$cc][0], 'colspan', 2 );
 						break;
 					// row span
 					case self::TABLE_CELL_ROWSPAN:
@@ -2187,7 +2187,7 @@ class Sfblib_SfbConverter
 						// will not be set if there is a previos row with column span
 						// in such a case we must skip this column
 						if ( isset( $this->tableData[$sr][$cc] ) ) {
-							init_or_inc_array_value(
+							Sfblib_Util::initOrIncArrayValue(
 								$this->tableData[$sr][$cc][0], 'rowspan', 2 );
 						}
 						// delete current cell

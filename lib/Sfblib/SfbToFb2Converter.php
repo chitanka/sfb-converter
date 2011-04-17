@@ -1048,7 +1048,7 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 		$this->binaryText .= $this->out->xmlElement($this->binaryElement,
 			$this->encodeImage($content),
 			array(
-				'content-type' => guessMimeType($src),
+				'content-type' => Sfblib_Util::guessMimeType($src),
 				'id'           => $id,
 			)
 		);
