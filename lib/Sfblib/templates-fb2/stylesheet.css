@@ -21,6 +21,12 @@
 	text-align: center;
 	text-indent: 0;
 }
+.bold {
+	font-weight: bold;
+}
+.italic {
+	font-style: italic;
+}
 .smallcaps {
 	font-variant: small-caps;
 }
