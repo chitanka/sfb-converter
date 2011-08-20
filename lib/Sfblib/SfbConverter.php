@@ -66,10 +66,7 @@ class Sfblib_SfbConverter
 		IMG_ID    = ':',
 		IMG_TITLE = '#',
 		IMG_ALIGN = '-',
-		IMG_SIZE  = '=',
-
-		/* verse numbering */
-		VERSE_NUM = '=';
+		IMG_SIZE  = '=';
 
 
 	protected static
@@ -1293,7 +1290,7 @@ class Sfblib_SfbConverter
 
 	protected function isAtVerseNumber()
 	{
-		return ! empty($this->lcmd) && is_numeric($this->lcmd);
+		return ! empty($this->lcmd) && preg_match('/^\d/', $this->lcmd);
 	}
 
 
