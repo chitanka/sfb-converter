@@ -9,24 +9,14 @@
 <version>0.0</version>
 </document-info>
 </description>
-<body><section>
-<p>Пред къщата имаше табелка:</p>
-<p><style name="frame">
-ЗА ПРОДАН
-</style></p>
-<empty-line/>
-<p>Пред къщата имаше табелка:</p>
-<p><style name="frame">
-ЗА ПРОДАН
-</style></p>
-<p><style name="frame">
-ГОЛЯМО НАМАЛЕНИЕ
-</style></p>
-<empty-line/>
-<p>Пред къщата имаше табелка:</p>
-<p><style name="frame">
-ЗА ПРОДАН
-</style></p>
+<body><section id="t-ananij">
+<title><p>Ананий</p></title>
+<p>Вие, Бенханан…</p>
+</section>
+</body>
+<body name="notes"><section id="note_1-0">
+<title><p>0</p></title>
+<p>БЕНХАНАН — малко известно…</p>
 </section>
 </body>
 </FictionBook>
