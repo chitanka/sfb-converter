@@ -948,6 +948,12 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 		if ( $this->isInPoem() ) {
 			$this->closeStanzaIfAny();
 			$this->openStanza();
+		} else if ( $this->isInEpigraph() || $this->isInDedication() ) {
+			// separators as formatted as subtitles, but FB2 does not allow
+			// a subtitle in an epigraph, so give it a plain paragraph instead
+			parent::doParagraphStart();
+			$this->inParagraph();
+			parent::doParagraphEnd();
 		} else {
 			parent::inSeparator();
 		}
@@ -992,7 +998,11 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 	{
 		if ( $this->acceptsBlockImage() ) {
 			$this->revertParagraphElement();
-			$this->appendParagraphIfImageTitle();
+			// this breaks FB2 if after the image follows a section, i.e.
+			// > TITLE
+			// {img:MY_IMAGE}
+			// >> SUBTITLE
+			//$this->appendParagraphIfImageTitle();
 		}
 	}
 
@@ -1011,7 +1021,8 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 		return ! $this->isInCite()
 			&& ! $this->isInEpigraph()
 			&& ! $this->isInDedication()
-			&& ! $this->isInAnnotation();
+			&& ! $this->isInAnnotation()
+			&& ! $this->isInPoem();
 	}
 
 

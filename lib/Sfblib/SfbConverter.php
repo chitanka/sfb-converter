@@ -528,7 +528,7 @@ class Sfblib_SfbConverter
 			$this->nextLine(false);
 		} while ( $this->lcmd == $marker );
 
-		// we have read the next non-header line, make sure this is known
+		// we have read the next non-marker line, make sure this is known
 		$this->hasNextLine = true;
 
 		return $lines;
@@ -1327,6 +1327,8 @@ class Sfblib_SfbConverter
 			$this->inStyle();
 		} while ( $this->isInBlock(self::STYLE_E) );
 
+		$this->fixHasNextLine(self::STYLE_E);
+
 		$this->doStyleEnd();
 	}
 
@@ -1353,6 +1355,7 @@ class Sfblib_SfbConverter
 			case self::DATE_OL:         $this->doDate();             break;
 			case self::HEADER:          $this->doHeader();           break;
 			case self::EMPTYLINE:       $this->doEmptyLine();        break;
+			case self::STYLE_S:         $this->doStyle();            break;
 			case self::STYLE_E:                                      break;
 			default:                    $this->doUnknownContent();
 		}

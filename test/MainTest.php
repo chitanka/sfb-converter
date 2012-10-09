@@ -3,7 +3,6 @@ class MainTest extends TestCase
 {
 	private $inputFiles = array(
 		'accent.sfb',
-		'all.sfb',
 		'ampersand.sfb',
 		'annotation-author-dedication.sfb',
 		'annotation.sfb',
@@ -13,6 +12,7 @@ class MainTest extends TestCase
 		'author.sfb',
 		'bug-body-section-swap.sfb',
 		'bug-redundant-stanza.sfb',
+		'bug-m-with-author.sfb',
 		'cite.sfb',
 		'date-alone.sfb',
 		'date-letter-begin.sfb',
@@ -22,8 +22,9 @@ class MainTest extends TestCase
 		'deleted.sfb',
 		'emphasis.sfb',
 		//'emphasis-strong-mishmash.sfb', // will probably never work
-		'epigraph-dedication.sfb',
 		'epigraph.sfb',
+		'epigraph-with-separator.sfb',
+		'epigraph-dedication.sfb',
 		'header.sfb',
 		'image-complex.sfb',
 		'image-in-blocks.sfb',
@@ -70,6 +71,7 @@ class MainTest extends TestCase
 		'title-note-notitle.sfb',
 		'titles.sfb',
 		'title-with-note.sfb',
+		'all.sfb',
 	);
 
 	public function testFb2Converter()

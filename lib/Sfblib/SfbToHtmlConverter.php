@@ -387,7 +387,7 @@ class Sfblib_SfbToHtmlConverter extends Sfblib_SfbConverter
 
 	protected function doUnknownContent()
 	{
-		$this->saveContent("<p>doUnknownContent(): $this->linecnt: $this->line</p>\n");
+		$this->saveContent("doUnknownContent(): $this->linecnt: $this->line\n");
 	}
 
 }
