@@ -66,7 +66,9 @@ class Sfblib_SfbConverter
 		IMG_ID    = ':',
 		IMG_TITLE = '#',
 		IMG_ALIGN = '-',
-		IMG_SIZE  = '=';
+		IMG_SIZE  = '=',
+
+		JUMP_ID    = ':';
 
 
 	protected static
@@ -173,8 +175,18 @@ class Sfblib_SfbConverter
 		$_refsWaiting          = array(
 			0 => null, // reserved for the eventual note concerning the text title
 		),
-		/** cuurently active note index (from the _notes array) */
-		$_curNoteIndex         = 0;
+		/** curently active note index (from the _notes array) */
+		$_curNoteIndex         = 0,
+
+		/** Prefix used for internal linking */
+		$internalLinkTarget = '',
+
+		/**
+		 * current block ID used for internal linking
+		 * input format:
+		 *   :glava_10
+		 */
+		$_curJumpId = null;
 
 
 	private
@@ -250,6 +262,10 @@ class Sfblib_SfbConverter
 		// foot notes
 		'/(?<=[^\s\\\\(])(\*+)(\d*)/e' => "\$this->getRef('$1', '$2')",
 		#'/&([^;]) /' => '&amp;$1 ',
+
+		// internal links
+		'%{#([^}]+)}([^{]+){/#}%e' => "\$this->doInternalLink('$1', '$2')",
+		'%{#([^}]+)}%e' => "\$this->doInternalLink('$1')",
 		);
 
 		$this->replPairs = array(
@@ -2335,15 +2351,26 @@ class Sfblib_SfbConverter
 	}
 
 
-	/*************************************************************************/
 
+	/*************************************************************************/
 
 	protected function doUnknownContent()
 	{
+		if ($this->hasJumpId()) {
+			return;
+		}
 		echo "doUnknownContent(): $this->linecnt: $this->line\n";
 		$this->saveContent($this->line);
 	}
 
+	protected function hasJumpId()
+	{
+		if ($this->lcmd[0] == self::JUMP_ID) {
+			$this->_curJumpId = substr($this->lcmd, 1);
+			return true;
+		}
+		return false;
+	}
 
 	/*************************************************************************/
 
@@ -2351,6 +2378,12 @@ class Sfblib_SfbConverter
 	protected function saveStartTag($elm, $attrs = array())
 	{
 		if ( ! empty($elm) ) {
+			if ($this->_curJumpId !== null) {
+				if ( !isset($attrs['id'])) {
+					$attrs['id'] = $this->_curJumpId;
+				}
+				$this->_curJumpId = null;
+			}
 			$this->save( $this->out->getStartTag($elm, $attrs) );
 		}
 	}
@@ -2428,6 +2461,28 @@ class Sfblib_SfbConverter
 		), false);
 	}
 
+
+	/**
+	 * Generate an internal link
+	 * 
+	 * @param string	$target	Link target
+	 * @param string	$text	Link text
+	 * @return string	An XML anchor element
+	 */
+	protected function doInternalLink($target, $text = null)
+	{
+		if ($text === null) {
+			$target = rtrim($target, '/');
+			if (strpos($target, '|') !== false) {
+				list($target, $text) = explode('|', $target);
+			} else {
+				$text = $target;
+			}
+		}
+		return $this->out->xmlElement('a', $text, array(
+			'href'  => $this->internalLinkTarget . "#$target",
+		), false);
+	}
 
 
 	/**
