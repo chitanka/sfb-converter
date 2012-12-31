@@ -12,7 +12,6 @@
 <body><section>
 <empty-line/>
 <image l:href="#img_1-1" alt="Картинка 1" title="Заглавие 1" id="limg_1-1"/>
-<p>Заглавие 1</p>
 <p><image l:href="#img_1-1"/> С текст.</p>
 <p><image l:href="#img_1-1"/> С текст.</p>
 </section>
