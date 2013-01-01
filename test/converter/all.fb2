@@ -21,7 +21,7 @@
 <epigraph>
 <p>Посвещава се на Великия Тестер</p>
 </epigraph>
-<section id="t-zaglavie_1">
+<section id="l-zaglavie_1">
 <title><p>Заглавие 1</p></title>
 <epigraph>
 <p>Епиграф 2</p>
@@ -30,7 +30,7 @@
 Епиграфов
 </text-author>
 </epigraph>
-<section id="t-zaglavie_11">
+<section id="l-zaglavie_11">
 <title><p>Заглавие 1.1</p></title>
 <p>Изречение след заглавието. Има и <emphasis>акцентиран</emphasis> текст. Има и <strikethrough>изтрит</strikethrough> текст. Има и <strong>мнооого акцентиран</strong> текст. Има и <emphasis>интересни, ама супер интересни</emphasis> акценти.</p>
 <cite>
@@ -40,7 +40,7 @@
 <p>Репортаж на Пурко Пуркович. Съдържанието друг път.</p>
 </cite>
 </section>
-<section id="t-zaglavie_12">
+<section id="l-zaglavie_12">
 <title><p>Заглавие 1.2</p></title>
 <p>Изречение след заглавието.</p>
 <cite>
@@ -51,7 +51,7 @@
 </cite>
 </section>
 </section>
-<section id="t-zaglavie_2">
+<section id="l-zaglavie_2">
 <title><p>Заглавие 2</p></title>
 <p>Свободен текст след заглавието. Още текст след заглавието. И още малко текст. Една интересна<a l:href="#note_1-1" type="note">1</a> бележка.</p>
 <empty-line/>
@@ -103,7 +103,7 @@
 Подзаглавието.
 </subtitle>
 </section>
-<section id="t-posledno_zaglavie">
+<section id="l-posledno_zaglavie">
 <title><p>Последно заглавие</p></title>
 <poem>
 <stanza>

@@ -34,6 +34,7 @@ class MainTest extends TestCase
 		'index.sfb',
 		'infoblock.sfb',
 		'letter.sfb',
+		'm-in-m.sfb',
 		'note-in-author.sfb',
 		'notes-high-numbers.sfb',
 		'notes-mixed.sfb',
@@ -57,7 +58,7 @@ class MainTest extends TestCase
 		'section-empty-with-note.sfb',
 		'separator.sfb',
 		'sign.sfb',
-		'sign-with-note.sfb',
+		'sign-with-note.sfb', // currently broken
 		'sign-with-subtitle.sfb',
 		'strong.sfb',
 		'subtitle.sfb',
@@ -71,7 +72,7 @@ class MainTest extends TestCase
 		'title-note-notitle.sfb',
 		'titles.sfb',
 		'title-with-note.sfb',
-		'all.sfb',
+		'all.sfb', // currently broken
 	);
 
 	public function testFb2Converter()

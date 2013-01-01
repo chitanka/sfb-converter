@@ -9,23 +9,23 @@
 <version>0.0</version>
 </document-info>
 </description>
-<body><section id="t-glava_chetvyrta">
+<body><section id="l-glava_chetvyrta">
 <title><p>Глава четвърта</p></title>
-<section id="t-i_ii_iii_iv_v_vi">
+<section id="l-i_ii_iii_iv_v_vi">
 <title><p>I, II, III, IV, V, VI</p></title>
 <empty-line/>
 </section>
-<section id="t-vii">
+<section id="l-vii">
 <title><p>VII</p></title>
 <p>По-малко ли жената любим —</p>
 <p>по-лесно можем я плени.</p>
 </section>
-<section id="t-viii">
+<section id="l-viii">
 <title><p>VIII</p></title>
 <image l:href="#img_1-1" alt="favicon.png" id="limg_1-1"/>
 <empty-line/>
 </section>
-<section id="t-x">
+<section id="l-x">
 <title><p>X</p></title>
 <p>Текст.</p>
 </section>
