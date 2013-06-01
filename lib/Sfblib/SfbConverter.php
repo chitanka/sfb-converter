@@ -1687,7 +1687,7 @@ class Sfblib_SfbConverter
 	protected function inSubheader($lines, $isMulti)
 	{
 		foreach ($lines as $line) {
-			$this->doSubheaderLineStart($isMulti);
+			$this->doSubheaderLineStart($isMulti, $line);
 			$this->saveContent($line);
 			$this->doSubheaderLineEnd($isMulti);
 		}
@@ -1701,7 +1701,7 @@ class Sfblib_SfbConverter
 	{
 	}
 
-	protected function doSubheaderLineStart($isMulti)
+	protected function doSubheaderLineStart($isMulti, $line)
 	{
 		$this->saveStartTag($this->subheaderElement);
 	}
@@ -2370,7 +2370,7 @@ class Sfblib_SfbConverter
 
 	protected function saveUnknownContent()
 	{
-		echo "doUnknownContent(): $this->linecnt: $this->line\n";
+		echo "Unknown content at line $this->linecnt: $this->line\n";
 		$this->saveContent($this->line);
 	}
 
