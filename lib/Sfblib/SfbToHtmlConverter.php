@@ -16,6 +16,7 @@ class Sfblib_SfbToHtmlConverter extends Sfblib_SfbConverter
 	protected
 		/* block elements */
 		$sectionElement        = 'div',
+		$sectionAttributes     = array('class' => 'section'),
 		$epigraphElement       = 'blockquote',
 		$dedicationElement     = 'blockquote',
 		$citeElement           = 'blockquote',

@@ -640,10 +640,11 @@ class Sfblib_SfbConverter
 	}
 
 
+	protected $sectionAttributes = array();
 	protected function openSection($id = null)
 	{
 		$attrs = $id ? array('id' => $id) : array();
-		$this->saveStartTag($this->sectionElement, $attrs);
+		$this->saveStartTag($this->sectionElement, $attrs + $this->sectionAttributes);
 		$this->sectionsEntered++;
 	}
 
