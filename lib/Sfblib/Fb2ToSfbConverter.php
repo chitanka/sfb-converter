@@ -1,25 +1,41 @@
 <?php
 
-class Fb2ToSfbConverter
+class Sfblib_Fb2ToSfbConverter
 {
 	const EOL = "\n";
 
-	private $file;
+	private $data;
 
-	public function __construct($file)
+	public function __construct($data = null)
 	{
-		$this->file = $file;
+		$this->data = $data;
 	}
 
-	public function convert()
+	public function convert($data = null)
 	{
-		$fb2 = new SimpleXMLElement($this->file, null, true);
+		if ($data === null) {
+			$data = $this->data;
+		}
+		if ($data === null) {
+			throw new Exception('No data given to FB2 to SFB converter');
+		}
+		$dataIsFile = strpos($data, '<') === false;
+		$fb2 = new SimpleXMLElement($data, null, $dataIsFile);
 		$sfb = '';
-		$sfb .= $this->convertMainTitle($fb2->description);
-		$sfb .= $this->line();
-		$sfb .= $this->convertImage($fb2->body->image);
-		$sfb .= $this->convertEpigraphs($fb2->body->epigraph);
-		$sfb .= $this->convertSections($fb2->body->section);
+		if ($fb2->description) {
+			$sfb .= $this->convertMainTitle($fb2->description);
+			$sfb .= $this->line();
+		}
+		if ($fb2->body->image) {
+			$sfb .= $this->convertImage($fb2->body->image);
+		}
+		if ($fb2->body->epigraph) {
+			$sfb .= $this->convertEpigraphs($fb2->body->epigraph);
+		}
+		if ($fb2->body->section) {
+			$sfb .= $this->convertSections($fb2->body->section);
+		}
+		$sfb = trim($sfb, "\n") . "\n";
 
 		return $sfb;
 	}
