@@ -1,6 +1,19 @@
-<FictionBook><body>
-<section>
-<title><p>Title</p></title>
-<p>A paragraph</p>
-</section>
-</body></FictionBook>
+<FictionBook>
+<body>
+	<epigraph>
+		<p>Epigraph</p>
+		<p>second line of the epigraph</p>
+	</epigraph>
+
+	<section>
+		<title><p>Title</p></title>
+		<section>
+			<title>
+				<p>Subtitle 1</p>
+				<p>Subtitle 2</p>
+			</title>
+			<p>A paragraph</p>
+		</section>
+	</section>
+</body>
+</FictionBook>

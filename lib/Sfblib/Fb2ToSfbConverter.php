@@ -21,6 +21,7 @@ class Sfblib_Fb2ToSfbConverter
 		}
 		$dataIsFile = strpos($data, '<') === false;
 		$fb2 = new SimpleXMLElement($data, null, $dataIsFile);
+
 		$sfb = '';
 		if ($fb2->description) {
 			$sfb .= $this->convertMainTitle($fb2->description);
@@ -35,7 +36,7 @@ class Sfblib_Fb2ToSfbConverter
 		if ($fb2->body->section) {
 			$sfb .= $this->convertSections($fb2->body->section);
 		}
-		$sfb = trim($sfb, "\n") . "\n";
+		$sfb = $this->clearSfb($sfb);
 
 		return $sfb;
 	}
@@ -81,30 +82,43 @@ class Sfblib_Fb2ToSfbConverter
 	private function convertEpigraph(SimpleXMLElement $epigraph)
 	{
 		$sfb = '';
-		$sfb .= $epigraph->asXML();
+		$sfb .= $this->command('E>');
+		foreach ($epigraph->children() as $elm) {
+			switch ($elm->getName()) {
+				case 'p':
+					$sfb .= $this->convertParagraph($elm); break;
+				case 'poem':
+					$sfb .= $this->convertPoem($elm); break;
+				case 'subtitle':
+					$sfb .= $this->convertSubtitle($elm); break;
+				case 'empty-line':
+					$sfb .= $this->line(); break;
+			}
+		}
+		$sfb .= $this->command('E$');
 		return $sfb;
 	}
 
-	private function convertSections(SimpleXMLElement $sections)
+	private function convertSections(SimpleXMLElement $sections, $level = 1)
 	{
 		$sfb = '';
 		if ($sections) {
 			$sfb .= $this->line();
 			foreach ($sections as $section) {
-				$sfb .= $this->convertSection($section);
+				$sfb .= $this->convertSection($section, $level);
 			}
 		}
 		return $sfb;
 	}
 
-	private function convertSection(SimpleXMLElement $section, $level = 1)
+	private function convertSection(SimpleXMLElement $section, $level)
 	{
 		$sfb = '';
 		$sfb .= $this->convertTitle($section->title, $level);
 		$sfb .= $this->convertEpigraphs($section->epigraph);
 		$sfb .= $this->convertImage($section->image);
 		if ($section->section) {
-			$sfb .= $this->convertSections($section->section);
+			$sfb .= $this->convertSections($section->section, $level + 1);
 		} else {
 			foreach ($section->children() as $elm) {
 				switch ($elm->getName()) {
@@ -250,8 +264,8 @@ class Sfblib_Fb2ToSfbConverter
 
 	private function line($content = '', $command = '')
 	{
-		if (empty($content) && empty($command)) {
-			return self::EOL;
+		if (empty($content)) {
+			return $command . self::EOL;
 		}
 		return $command . "\t" . $content . self::EOL;
 	}
@@ -264,5 +278,12 @@ class Sfblib_Fb2ToSfbConverter
 	private function removeElement($xml, $tag)
 	{
 		return strtr($xml, array("<$tag>" => '', "</$tag>" => ''));
+	}
+
+	private function clearSfb($sfb)
+	{
+		$sfb = preg_replace('/\n\n\n+>/', "\n\n>", $sfb);
+		$sfb = trim($sfb, "\n") . "\n";
+		return $sfb;
 	}
 }
