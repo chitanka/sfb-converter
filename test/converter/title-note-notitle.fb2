@@ -9,20 +9,14 @@
 <version>0.0</version>
 </document-info>
 </description>
-<body><section id="l-predgovor_ot_prevodacha">
-<title><p>Предговор от преводача</p></title>
-<p>Той не принадлежи само на Франция…</p>
+<body><section id="l-ananij">
+<title><p>Ананий</p></title>
+<p>Вие, Бенханан…</p>
 </section>
-<section id="l-_">
-<epigraph>
-<p>На Леон Верт,</p>
-<p>когато е бил малко момче</p>
-</epigraph>
-<empty-line/>
-</section>
-<section id="l-i">
-<title><p>I</p></title>
-<p>Когато бях на шест години…</p>
+</body>
+<body name="notes"><section id="note_1-0">
+<title><p>0</p></title>
+<p>БЕНХАНАН — малко известно…</p>
 </section>
 </body>
 </FictionBook>

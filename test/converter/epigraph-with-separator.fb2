@@ -9,20 +9,15 @@
 <version>0.0</version>
 </document-info>
 </description>
-<body><section id="l-predgovor_ot_prevodacha">
-<title><p>Предговор от преводача</p></title>
-<p>Той не принадлежи само на Франция…</p>
-</section>
-<section id="l-_">
-<epigraph>
-<p>На Леон Верт,</p>
-<p>когато е бил малко момче</p>
+<body><epigraph>
+<p>Посвещение</p>
+<p>* * *</p>
+<p>Допълнение</p>
 </epigraph>
-<empty-line/>
-</section>
-<section id="l-i">
-<title><p>I</p></title>
-<p>Когато бях на шест години…</p>
-</section>
+<epigraph>
+<p>Homo homini lupus est.</p>
+<p>* * *</p>
+<p>Homo homini lupus est.</p>
+</epigraph>
 </body>
 </FictionBook>

@@ -9,13 +9,11 @@
 <version>0.0</version>
 </document-info>
 </description>
-<body><section id="l-chast_1">
-<title><p>Част 1</p></title>
-<image l:href="#img_1-1" alt="favicon.png" id="limg_1-1"/>
-<section id="l-glava_1">
-<title><p>Глава 1</p></title>
-<p>След като…</p>
-</section>
+<body><section>
+<empty-line/>
+<image l:href="#img_1-1" alt="Картинка 1" title="Заглавие 1" id="limg_1-1"/>
+<p><image l:href="#img_1-1"/> С текст.</p>
+<p><image l:href="#img_1-1"/> С текст.</p>
 </section>
 </body>
 <binary content-type="image/png" id="img_1-1">iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9YLDwwZMJPDFAUAAAEnSURBVDjLpZK/S8NAGIafXAJWTHFxq1PABOqSPRTMeouQ4hrQQMHVUaGTdHQSnNQ/QHq4tOu5nKuLm3+HGRuH9KetpaYvHBzH9z733nefJaUs2EIOwDC5rWS+eL8vAezsriw4ebwE4C17WJ+A/YNF490ZAEmSEIYh3e4YdPWyGtCoCQCOeu0FI0Cr1UJrDUAcxwB83fShmAMErsPo+nTJ+FvzINF7nQGadcEnoJRCKbVRA4/rNt8TgL9nEzwP6Z9LoihaazTG0H4aggUfgChpDk3XBiBNU4wx0/1kGWNI05QysUPTdWZP8F2B9ceNvu8vnQWuoCisGeCwZv9rgBpz9YItZUkpi8FgMP3jTaW1Jsuy8SQCnU6neoI8zyuZPc8rE3ieV7kHP9sOTDDaNhF/AAAAAElFTkSuQmCC</binary>

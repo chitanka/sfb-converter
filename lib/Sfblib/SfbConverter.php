@@ -66,7 +66,9 @@ class Sfblib_SfbConverter
 		IMG_ID    = ':',
 		IMG_TITLE = '#',
 		IMG_ALIGN = '-',
-		IMG_SIZE  = '=';
+		IMG_SIZE  = '=',
+
+		JUMP_ID    = ':';
 
 
 	protected static
@@ -173,8 +175,18 @@ class Sfblib_SfbConverter
 		$_refsWaiting          = array(
 			0 => null, // reserved for the eventual note concerning the text title
 		),
-		/** cuurently active note index (from the _notes array) */
-		$_curNoteIndex         = 0;
+		/** curently active note index (from the _notes array) */
+		$_curNoteIndex         = 0,
+
+		/** Prefix used for internal linking */
+		$internalLinkTarget = '',
+
+		/**
+		 * current block ID used for internal linking
+		 * input format:
+		 *   :glava_10
+		 */
+		$_curJumpId = null;
 
 
 	private
@@ -250,11 +262,16 @@ class Sfblib_SfbConverter
 		// foot notes
 		'/(?<=[^\s\\\\(])(\*+)(\d*)/e' => "\$this->getRef('$1', '$2')",
 		#'/&([^;]) /' => '&amp;$1 ',
+
+		// internal links
+		'%{#([^}]+)}([^{]+){/#}%e' => "\$this->doInternalLink('$1', '$2')",
+		'%{#([^}]+)}%e' => "\$this->doInternalLink('$1')",
 		);
 
 		$this->replPairs = array(
 			"\t"     => '        ', // eight nbspaces
-			'`'      => '&#768;', // ударение
+			'`'      => '&#768;', // ударение, гравис (тежко, твърдо)
+			'´'      => '&#769;', // ударение, акут (остро, меко)
 
 			'{sup}'  => "<$this->superscriptElement>",
 			'{/sup}' => "</$this->superscriptElement>",
@@ -479,12 +496,6 @@ class Sfblib_SfbConverter
 	*/
 	protected function nextLine($canMarkEnd = true)
 	{
-// 		if ($this->i++ > $this->maxlinecnt) {
-// 			echo "Грешка при $this->file\n";
-// 			dprbt();
-// 			exit(-1);
-// 		}
-
 		if ($this->hasNextLine) {
 			$this->hasNextLine = false;
 			return $this->line;
@@ -515,7 +526,7 @@ class Sfblib_SfbConverter
 		if ($this->debug) {
 			echo sprintf("\033[44;1m%6d: %s\033[0m\n", $this->linecnt, $this->line);
 		}
-		#echo "$this->lcmd:$this->ltext\n";
+
 		return $this->line;
 	}
 
@@ -528,7 +539,7 @@ class Sfblib_SfbConverter
 			$this->nextLine(false);
 		} while ( $this->lcmd == $marker );
 
-		// we have read the next non-header line, make sure this is known
+		// we have read the next non-marker line, make sure this is known
 		$this->hasNextLine = true;
 
 		return $lines;
@@ -629,10 +640,11 @@ class Sfblib_SfbConverter
 	}
 
 
+	protected $sectionAttributes = array();
 	protected function openSection($id = null)
 	{
 		$attrs = $id ? array('id' => $id) : array();
-		$this->saveStartTag($this->sectionElement, $attrs);
+		$this->saveStartTag($this->sectionElement, $attrs + $this->sectionAttributes);
 		$this->sectionsEntered++;
 	}
 
@@ -738,7 +750,7 @@ class Sfblib_SfbConverter
 		// we have read the next non-title line, make sure this is known
 		$this->hasNextLine = true;
 
-		$this->doTitleStart($marker, $this->generateSectionId($title));
+		$this->doTitleStart($marker, $this->generateInternalId($title));
 
 		$this->inTitle($title, $marker);
 
@@ -748,9 +760,12 @@ class Sfblib_SfbConverter
 	}
 
 
-	protected function generateSectionId($titles)
+	protected function generateInternalId($name, $unique = true)
 	{
-		return 't-' . $this->out->getAnchorName(implode('-', $titles));
+		if (is_array($name)) {
+			$name = implode('-', $name);
+		}
+		return 'l-' . $this->out->getAnchorName($name, $unique);
 	}
 
 
@@ -1106,6 +1121,11 @@ class Sfblib_SfbConverter
 	{
 		switch ($this->lcmd) {
 			case self::PARAGRAPH:       $this->doParagraph();           break;
+			case self::TITLE_1:
+			case self::TITLE_2:
+			case self::TITLE_3:
+			case self::TITLE_4:
+			case self::TITLE_5:         $this->doTitle($this->lcmd); break;
 			case self::POEM_S:          $this->doPoem();                break;
 			case self::CITE_S:          $this->doCite();                break;
 			case self::AUTHOR_OL:       $this->doAuthor();              break;
@@ -1167,11 +1187,9 @@ class Sfblib_SfbConverter
 		$this->lcmd = '';
 		$this->doPoemEnd();
 		$this->enableEmptyLines();
-		#echo "LEAVING POEM _poemsEntered=$this->_poemsEntered\n";
 		if ( ! --$this->_poemsEntered ) {
 			$this->_inPoem = false;
 		}
-		#echo "_inPoem=$this->_inPoem\n";
 	}
 
 	/**
@@ -1327,7 +1345,11 @@ class Sfblib_SfbConverter
 			$this->inStyle();
 		} while ( $this->isInBlock(self::STYLE_E) );
 
+		$this->fixHasNextLine(self::STYLE_E);
+
 		$this->doStyleEnd();
+		// a HACK to allow nested styles
+		$this->lcmd = '';
 	}
 
 
@@ -1353,6 +1375,7 @@ class Sfblib_SfbConverter
 			case self::DATE_OL:         $this->doDate();             break;
 			case self::HEADER:          $this->doHeader();           break;
 			case self::EMPTYLINE:       $this->doEmptyLine();        break;
+			case self::STYLE_S:         $this->doStyle();            break;
 			case self::STYLE_E:                                      break;
 			default:                    $this->doUnknownContent();
 		}
@@ -1665,7 +1688,7 @@ class Sfblib_SfbConverter
 	protected function inSubheader($lines, $isMulti)
 	{
 		foreach ($lines as $line) {
-			$this->doSubheaderLineStart($isMulti);
+			$this->doSubheaderLineStart($isMulti, $line);
 			$this->saveContent($line);
 			$this->doSubheaderLineEnd($isMulti);
 		}
@@ -1679,7 +1702,7 @@ class Sfblib_SfbConverter
 	{
 	}
 
-	protected function doSubheaderLineStart($isMulti)
+	protected function doSubheaderLineStart($isMulti, $line)
 	{
 		$this->saveStartTag($this->subheaderElement);
 	}
@@ -1753,7 +1776,6 @@ class Sfblib_SfbConverter
 	{
 		$buffer = $this->flushEmptyLineBuffer();
 		if ( ! empty($buffer) ) {
-			#echo "saveEmptyLineBuffer - $buffer\n";
 			$this->save($buffer);
 		}
 	}
@@ -2137,15 +2159,14 @@ class Sfblib_SfbConverter
 		$cc = -1; // curent column index
 		$row = array(); // contents of the cells
 
-		$re = '!{img:[^}|]+\|[^}]+}!';
-		$placeholder = 'IMG_PLACEHOLDER';
-		if ( preg_match_all($re, $this->ltext, $imgs) ) {
-			$imgs = $imgs[0];
+		$re = '!({img:[^}|]+\|[^}]+}|\[\[[^]|]+\|[^]|]+\]\])!';
+		$placeholder = 'IN_TABLE_PLACEHOLDER';
+		if (preg_match_all($re, $this->ltext, $savedContent)) {
+			$savedContent = $savedContent[0];
 			$this->ltext = preg_replace($re, $placeholder, $this->ltext);
 		}
 
-		$len = strlen($this->ltext);
-		for ($i = 0; $i < $len; $i++) {
+		for ($i = 0, $len = strlen($this->ltext); $i < $len; $i++) {
 			$ch = $this->ltext[$i];
 			if ( $expectModif ) {
 				switch ( $ch ) {
@@ -2215,7 +2236,7 @@ class Sfblib_SfbConverter
 		foreach ($row as $i => $cdata) {
 			$cell = trim($cdata[1], ' ');
 			while ( strpos($cell, $placeholder) !== false ) {
-				$cell = preg_replace("!$placeholder!", array_shift($imgs), $cell, 1);
+				$cell = preg_replace("!$placeholder!", array_shift($savedContent), $cell, 1);
 			}
 			$row[$i][1] = $this->doInlineElements($cell);
 		}
@@ -2251,8 +2272,6 @@ class Sfblib_SfbConverter
 	* binary (#PCDATA)
 	* 	content-type CDATA #REQUIRED
 	* 	id           ID    #REQUIRED
-	*
-	* Called as a callback of a preg_replace.
 	*/
 	protected function doBlockImage()
 	{
@@ -2276,6 +2295,10 @@ class Sfblib_SfbConverter
 		return $this->_inBlockImage;
 	}
 
+	/**
+	 *
+	 * Called as a callback of a preg_replace.
+	 */
 	protected function doImage($name, $modifs)
 	{
 		$alt = $name;
@@ -2332,15 +2355,34 @@ class Sfblib_SfbConverter
 	}
 
 
-	/*************************************************************************/
 
+	/*************************************************************************/
 
 	protected function doUnknownContent()
 	{
-		echo "doUnknownContent(): $this->linecnt: $this->line\n";
+		if ($this->hasJumpId()) {
+			if ($this->ltext != '') {
+				$this->doParagraph();
+			}
+			return;
+		}
+		$this->saveUnknownContent();
+	}
+
+	protected function saveUnknownContent()
+	{
+		echo "Unknown content at line $this->linecnt: $this->line\n";
 		$this->saveContent($this->line);
 	}
 
+	protected function hasJumpId()
+	{
+		if ($this->lcmd[0] == self::JUMP_ID) {
+			$this->_curJumpId = substr($this->lcmd, 1);
+			return true;
+		}
+		return false;
+	}
 
 	/*************************************************************************/
 
@@ -2348,6 +2390,12 @@ class Sfblib_SfbConverter
 	protected function saveStartTag($elm, $attrs = array())
 	{
 		if ( ! empty($elm) ) {
+			if ($this->_curJumpId !== null) {
+				if ( !isset($attrs['id'])) {
+					$attrs['id'] = $this->generateInternalId($this->_curJumpId);
+				}
+				$this->_curJumpId = null;
+			}
 			$this->save( $this->out->getStartTag($elm, $attrs) );
 		}
 	}
@@ -2383,10 +2431,6 @@ class Sfblib_SfbConverter
 	protected function save($text, $forceEmpty = false)
 	{
 		if ( ! empty($text) || $forceEmpty ) {
-			#echo "$this->_curBlock += |$text|\n";#dprbt();
-/*			if ( !isset($this->_text[$this->_curBlock][$this->_curSubBlock]) ) {
-				var_dump($this->_curBlock, $this->_curSubBlock);
-			}*/
 			$this->_text[$this->_curBlock][$this->_curSubBlock] .= $text . $this->_newLineOutput;
 		}
 	}
@@ -2426,6 +2470,39 @@ class Sfblib_SfbConverter
 	}
 
 
+	/**
+	 * Generate an internal link
+	 *
+	 * @param string	$target	Link target
+	 * @param string	$text	Link text
+	 * @return string	An XML anchor element
+	 */
+	protected function doInternalLink($target, $text = null)
+	{
+		if ($text === null) {
+			$target = rtrim($target, '/');
+			if (strpos($target, '|') !== false) {
+				list($target, $text) = explode('|', $target);
+			} else {
+				$text = $target;
+			}
+		}
+		$target = $this->generateInternalId($target, false);
+		return $this->doInternalLinkElement($target, $text);
+	}
+
+	protected function doInternalLinkElement($target, $text)
+	{
+		return $this->out->xmlElement('a', $text, array(
+			'href'  => $this->internalLinkTarget . "#$target",
+		), false);
+	}
+
+
+	public function setInternalLinkTarget($target)
+	{
+		$this->internalLinkTarget = $target;
+	}
 
 	/**
 	* Sometimes a paragraph can be on the same line as the starting block marker.

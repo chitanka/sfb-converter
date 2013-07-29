@@ -52,10 +52,7 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 			self::TABLE_CELL_BOTTOM => array('valign' => 'bottom'),
 		),
 
-		/** save all binary data here */
-		$binaryText            = '',
-
-		$genre                 = 'prose_classic',
+		$genre                 = array('prose_classic'),
 		$authors               = array(),
 		$title                 = '(няма заглавие)',
 		$subtitle              = '',
@@ -65,7 +62,6 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 		$translators           = array(),
 		$sequences             = array(),
 
-		$srcGenre              = 'prose_classic',
 		$srcAuthors            = array(),
 		$srcTitle              = '',
 		$srcSubtitle           = '',
@@ -81,6 +77,9 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 		$history               = array();
 
 	private
+		/** save all binary data here */
+		$binaryTextFileName,
+
 		$_inStanza             = false,
 
 		// process subheaders as they were titles
@@ -131,29 +130,30 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 
 	public function getContent()
 	{
-		$eol = $this->getEol();
 		$trepl = array(
 			'<v>' . self::EOL  => '<v>',
 			self::EOL . '</v>' => '</v>',
 			'<p>' . self::EOL  => '<p>',
 			self::EOL . '</p>' => '</p>',
 		);
+		$clearNewLines = function($str) use ($trepl) {
+			return strtr($str, $trepl);
+		};
 
-		return strtr('<?xml version="1.0" encoding="UTF-8"?>'
-			. self::EOL
-			. $this->out->getStartTag($this->rootElement, array(
+		return implode($this->getEol(), array(
+			'<?xml version="1.0" encoding="UTF-8"?>',
+			$this->out->getStartTag($this->rootElement, array(
 				'xmlns'   => 'http://www.gribuser.ru/xml/fictionbook/2.0',
 				'xmlns:l' => 'http://www.w3.org/1999/xlink',
-			))                                . $eol
-			. $this->getStylesheet()          . $eol
-			. $this->getDescription()         . $eol
-			. $this->getText()                . $eol
-			. $this->getInfoblock()           . $eol
-			. $this->getNotes(1)              . $eol
-			. $this->getBinary()              . $eol
-			. $this->out->getEndTag($this->rootElement)
-			. self::EOL
-			, $trepl);
+			)),
+			$this->getStylesheet(),
+			$this->getDescription(),
+			$clearNewLines($this->getText()),
+			$clearNewLines($this->getInfoblock()),
+			$clearNewLines($this->getNotes(1)),
+			$this->getBinary(),
+			$this->out->getEndTag($this->rootElement)
+		)) . self::EOL;
 	}
 
 
@@ -209,7 +209,7 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 
 	public function getBinary()
 	{
-		return $this->binaryText;
+		return $this->binaryTextFileName ? file_get_contents($this->binaryTextFileName) : null;
 	}
 
 
@@ -228,7 +228,7 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 	{
 		$eol = $this->getEol();
 		return $this->out->xmlElement('title-info',
-			$this->out->xmlElement('genre', $this->genre)               . $eol
+			$this->getGenre()                                           . $eol
 			.$this->getAuthors()                                        . $eol
 			.$this->out->xmlElement('book-title', $this->getTitle())    . $eol
 			.$this->getAnnotation()                                     . $eol
@@ -250,7 +250,7 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 		}
 		$eol = $this->getEol();
 		return $this->out->xmlElement('src-title-info',
-			$this->out->xmlElement('genre', $this->genre)               . $eol
+			$this->getGenre()                                           . $eol
 			.$this->getSrcAuthors()                                     . $eol
 			.$this->out->xmlElement('book-title', $this->srcTitle)      . $eol
 			.$this->out->xmlElementOrNone('date', $this->textDate)      . $eol
@@ -301,6 +301,21 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 		return $this->out->xmlElement('coverpage', $this->out->getEmptyTag(
 			'image', array('l:href' => '#'.$this->coverpage)
 		));
+	}
+
+
+	public function getGenre()
+	{
+		$elements = array();
+		foreach ($this->genre as $key => $genre) {
+			$attrs = array();
+			if (is_string($key)) {
+				$attrs['match'] = $genre;
+				$genre = $key;
+			}
+			$elements[] = $this->out->xmlElement('genre', $genre, $attrs);
+		}
+		return implode($this->getEol(), $elements);
 	}
 
 
@@ -358,9 +373,18 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 	/*************************************************************************/
 
 
+	/**
+	 * @param mixed $genre  Allowed values:
+	 *     - string
+	 *     - array, e.g.
+	 *         array(
+	 *           "nonfiction",
+	 *           "sci_history" => 50 // used for the match attribute
+	 *         )
+	 */
 	public function setGenre($genre)
 	{
-		$this->genre = $genre;
+		$this->genre = (array) $genre;
 	}
 	public function addAuthor($name, $raw = true)
 	{
@@ -424,6 +448,10 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 	}
 
 
+	public function setDocAuthor($name)
+	{
+		$this->docAuthors = (array) $name;
+	}
 	public function addDocAuthor($name, $raw = true)
 	{
 		$this->docAuthors[] = $raw ? $this->preparePersonName($name) : $name;
@@ -544,7 +572,7 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 
 	/**
 	*/
-	protected function canImageStartSection()
+	protected function imageIsOnSectionStart()
 	{
 		return $this->_lastSaved[$this->_curBlock] == '</epigraph>'
 			|| strpos($this->_lastSaved[$this->_curBlock], '<title>') === 0;
@@ -593,14 +621,18 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 
 	protected function doAnnotationStart()
 	{
-		$this->enterContentBlock('annotation');
+		if ( ! $this->isSectionOpened()) {
+			$this->enterContentBlock('annotation');
+		}
 		parent::doAnnotationStart();
 	}
 
 	protected function doAnnotationEnd()
 	{
 		parent::doAnnotationEnd();
-		$this->leaveContentBlock('annotation');
+		if ( ! $this->isSectionOpened()) {
+			$this->leaveContentBlock('annotation');
+		}
 	}
 
 
@@ -651,13 +683,13 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 		}*/
 	}
 
-	protected function doSubheaderLineStart($isMulti)
+	protected function doSubheaderLineStart($isMulti, $line)
 	{
 		if ( $this->acceptsSubheader() ) {
 /*			if ( $this->_subheaderAsTitle ) {
 				$this->saveStartTag($this->paragraphElement);
 			} else {*/
-				parent::doSubheaderLineStart($isMulti);
+				parent::doSubheaderLineStart($isMulti, $line);
 // 			}
 		} else {
 			$this->saveStartTag($this->paragraphElement);
@@ -747,7 +779,9 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 
 	protected function addTableCaption($text)
 	{
-		$this->saveStartTag($this->subheaderElement);
+		$this->saveStartTag($this->subheaderElement, array(
+			'id' => $this->generateInternalId($text)
+		));
 		$this->saveContent($text);
 		$this->saveEndTag($this->subheaderElement);
 	}
@@ -948,6 +982,12 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 		if ( $this->isInPoem() ) {
 			$this->closeStanzaIfAny();
 			$this->openStanza();
+		} else if ( $this->isInEpigraph() || $this->isInDedication() ) {
+			// separators as formatted as subtitles, but FB2 does not allow
+			// a subtitle in an epigraph, so give it a plain paragraph instead
+			parent::doParagraphStart();
+			$this->inParagraph();
+			parent::doParagraphEnd();
 		} else {
 			parent::inSeparator();
 		}
@@ -978,11 +1018,20 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 	/*************************************************************************/
 
 
+	private $_hasExtraSectionForImage = false;
 	protected function doBlockImageStart()
 	{
 		if ( $this->acceptsBlockImage() ) {
 			$this->overwriteParagraphElement();
-			if ( ! $this->canImageStartSection() ) {
+
+			if ($this->imageHasNoteInTitle() && $this->imageIsOnSectionStart()) {
+				// we'll add a paragraph for the image title,
+				// so wrap them in a section
+				$this->openSection();
+				$this->_hasExtraSectionForImage = true;
+			}
+
+			if ( ! $this->imageIsOnSectionStart() ) {
 				$this->doEmptyLine();
 			}
 		}
@@ -992,7 +1041,16 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 	{
 		if ( $this->acceptsBlockImage() ) {
 			$this->revertParagraphElement();
-			$this->appendParagraphIfImageTitle();
+
+			if ($this->imageHasNoteInTitle()) {
+				// we cannot have a link to a footnote in the title attribute,
+				// so let the link live in a paragraph
+				$this->appendParagraphIfImageTitle();
+				if ($this->_hasExtraSectionForImage) {
+					$this->closeSection();
+					$this->_hasExtraSectionForImage = false;
+				}
+			}
 		}
 	}
 
@@ -1011,9 +1069,14 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 		return ! $this->isInCite()
 			&& ! $this->isInEpigraph()
 			&& ! $this->isInDedication()
-			&& ! $this->isInAnnotation();
+			&& ! $this->isInAnnotation()
+			&& ! $this->isInPoem();
 	}
 
+	protected function imageHasNoteInTitle()
+	{
+		return preg_match('/\*/', $this->ltext);
+	}
 
 	protected function getImage($src, $id, $alt, $title, $url, $size, $align)
 	{
@@ -1045,17 +1108,19 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 			return $this->_binaryIds[$hash];
 		}
 
-		$this->binaryText .= $this->out->xmlElement($this->binaryElement,
+		if ($this->binaryTextFileName === null) {
+			$this->binaryTextFileName = sys_get_temp_dir() .'/fb2bin-'.md5(time().uniqid());
+		}
+		file_put_contents($this->binaryTextFileName, $this->out->xmlElement($this->binaryElement,
 			$this->encodeImage($content),
 			array(
 				'content-type' => Sfblib_Util::guessMimeType($src),
 				'id'           => $id,
 			)
-		);
+		), FILE_APPEND);
 
 		return $this->_binaryIds[$hash] = $id;
 	}
-
 
 	protected function encodeImage($data)
 	{
@@ -1099,6 +1164,13 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 	protected function doExternLink($href)
 	{
 		return $href;
+	}
+
+	protected function doInternalLinkElement($target, $text)
+	{
+		return $this->out->xmlElement('a', $text, array(
+			'l:href'  => $this->internalLinkTarget . "#$target",
+		), false);
 	}
 
 }

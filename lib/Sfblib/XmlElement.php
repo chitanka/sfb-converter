@@ -125,15 +125,17 @@ class Sfblib_XmlElement
 		$text = strip_tags($text);
 		$text = preg_replace('/[^\w_-]/', '', $text);
 		$text = urlencode( iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $text) );
-		if ( $text === '' || is_numeric($text[0]) ) {
+		if ($text === '') {
 			$text = '_' . $text;
 		}
 
-		if ( isset($this->_anchorNames[$text]) ) {
-			$this->_anchorNames[$text]++;
-			$text .= '.' . $this->_anchorNames[$text];
-		} else {
-			$this->_anchorNames[$text] = 1;
+		if ($unique) {
+			if (isset($this->_anchorNames[$text])) {
+				$this->_anchorNames[$text]++;
+				$text .= '.' . $this->_anchorNames[$text];
+			} else {
+				$this->_anchorNames[$text] = 1;
+			}
 		}
 
 		return $text;
