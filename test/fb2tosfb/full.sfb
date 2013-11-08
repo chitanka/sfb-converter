@@ -3,9 +3,15 @@ E>
 	second line of the epigraph
 E$
 
->	Title
+>	Title 1
 
->>	Subtitle 1
->>	Subtitle 2
+>>	Subtitle 1.1
+>>	Subtitle 1.1.sec
+
+	A paragraph
+
+>	Title 2
+
+>>	Subtitle 2.1
 
 	A paragraph

@@ -13,8 +13,14 @@
 				<p>Subtitle 1.1.sec</p>
 			</title>
 			<p>A paragraph</p>
+			<empty-line/>
+			<p>Second paragraph</p>
+			<p>Third one</p>
 		</section>
 	</section>
+	<epigraph>
+		<p>Epig</p>
+	</epigraph>
 	<section>
 		<title><p>Title 2</p></title>
 		<section>
