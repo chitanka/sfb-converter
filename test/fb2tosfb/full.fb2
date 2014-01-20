@@ -1,0 +1,28 @@
+<FictionBook>
+<body>
+	<epigraph>
+		<p>Epigraph</p>
+		<p>second line of the epigraph</p>
+	</epigraph>
+
+	<section>
+		<title><p>Title 1</p></title>
+		<section>
+			<title>
+				<p>Subtitle 1.1</p>
+				<p>Subtitle 1.1.sec</p>
+			</title>
+			<p>A paragraph</p>
+		</section>
+	</section>
+	<section>
+		<title><p>Title 2</p></title>
+		<section>
+			<title>
+				<p>Subtitle 2.1</p>
+			</title>
+			<p>A paragraph</p>
+		</section>
+	</section>
+</body>
+</FictionBook>

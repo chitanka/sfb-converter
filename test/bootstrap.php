@@ -2,8 +2,10 @@
 error_reporting(E_ALL | E_STRICT);
 
 spl_autoload_register(function($class){
-	$class = str_replace('_', '/', $class);
-	require_once $class .'.php';
+	if (strpos($class, 'Sfblib') === 0) {
+		$class = str_replace('_', '/', $class);
+		require_once $class .'.php';
+	}
 });
 
 function addIncludePath($path)
