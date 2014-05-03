@@ -11,7 +11,7 @@ class Sfblib_Util
 		}
 
 		$finfo = new finfo(FILEINFO_MIME_TYPE);
-		return $finfo->file($href);
+		return $finfo->file($file);
 	}
 
 

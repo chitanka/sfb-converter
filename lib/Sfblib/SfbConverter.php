@@ -188,6 +188,24 @@ class Sfblib_SfbConverter
 		 */
 		$_curJumpId = null;
 
+	protected $out;
+	protected $imgDir;
+
+	/**
+	 * Current line in the reading buffer
+	 * @var string
+	 */
+	protected $line;
+	/**
+	 * Current command in the line reading buffer, e.g. C>
+	 * @var string
+	 */
+	protected $lcmd;
+	/**
+	 * Current text in the line reading buffer
+	 * @var string
+	 */
+	protected $ltext;
 
 	private
 		/** save here the empty lines */
@@ -231,6 +249,82 @@ class Sfblib_SfbConverter
 		/** Sfblib_LineReader */
 		$_reader             = null;
 
+	private $curImgNr;
+	/**
+	 * Regular expression patterns for replacements
+	 * @var array
+	 */
+	private $patterns;
+	/**
+	 * The keys of self::$patterns
+	 * @var array
+	 */
+	private $kpatterns;
+	/**
+	 * The values of self::$patterns
+	 * @var array
+	 */
+	private $vpatterns;
+
+	/**
+	 * String patterns for replacements
+	 * @var array
+	 */
+	private $replPairs;
+
+	/**
+	 * Starting position for reading in input file or string
+	 * @var int
+	 */
+	private $startpos;
+
+	/**
+	 * Current line number in the reading buffer
+	 * @var int
+	 */
+	protected $linecnt;
+
+	/**
+	 * Maximal number of lines to read
+	 * @var int
+	 */
+	private $maxlinecnt;
+
+	/**
+	 *
+	 * @var bool
+	 */
+	private $hasNextLine;
+
+	/**
+	 *
+	 * @var bool
+	 */
+	private $inHeaderRow;
+
+	/**
+	 *
+	 * @var string
+	 */
+	private $curTableRow;
+
+	/**
+	 * Current table buffer if we are in a table-reading mode
+	 * @var array
+	 */
+	protected $tableData;
+
+	/**
+	 *
+	 * @var string
+	 */
+	protected $tableCaption;
+
+	/**
+	 *
+	 * @var array
+	 */
+	protected $spanRows;
 
 	public function __construct($file, $imgDir = 'img')
 	{
@@ -240,7 +334,6 @@ class Sfblib_SfbConverter
 
 		$this->imgDir = rtrim($imgDir, '/');
 		$this->curImgNr = 0;
-		$this->putLineId = false; // not used currently
 
 		$reStart = '(?<=[\s([„«>])';
 		$reEnd = '(?![\w\d])';

@@ -55,6 +55,11 @@ class Sfblib_SfbToHtmlConverter extends Sfblib_SfbConverter
 		$breakLineElement      = 'br',
 		$legendElement         = 'legend';
 
+	/**
+	 *
+	 * @var array
+	 */
+	private $verseCnts;
 
 	public function __construct($file, $imgDir = 'img')
 	{
@@ -171,10 +176,10 @@ class Sfblib_SfbToHtmlConverter extends Sfblib_SfbConverter
 	protected function getVerseAnchorId($num)
 	{
 		$id = "verse_$num";
-		if ( isset( $this->_verseCnts[$num] ) ) {
-			$id .= '.' . ( ++$this->_verseCnts[$num] );
+		if ( isset( $this->verseCnts[$num] ) ) {
+			$id .= '.' . ( ++$this->verseCnts[$num] );
 		} else {
-			$this->_verseCnts[$num] = 1;
+			$this->verseCnts[$num] = 1;
 		}
 		return $id;
 	}

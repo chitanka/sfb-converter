@@ -91,6 +91,19 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 		*/
 		$_lastSaved            = array();
 
+	/**
+	 * Path to stylesheet file
+	 * @var string
+	 */
+	private $stylesheetFile;
+
+	private $coverpage;
+
+	/**
+	 *
+	 * @var array
+	 */
+	private $binaryIds;
 
 	public function __construct($file, $imgDir = 'img')
 	{
@@ -1104,8 +1117,8 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 		$content = file_get_contents($src);
 		$hash = md5($content);
 
-		if ( isset($this->_binaryIds[$hash]) ) {
-			return $this->_binaryIds[$hash];
+		if ( isset($this->binaryIds[$hash]) ) {
+			return $this->binaryIds[$hash];
 		}
 
 		if ($this->binaryTextFileName === null) {
@@ -1119,7 +1132,7 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 			)
 		), FILE_APPEND);
 
-		return $this->_binaryIds[$hash] = $id;
+		return $this->binaryIds[$hash] = $id;
 	}
 
 	protected function encodeImage($data)
