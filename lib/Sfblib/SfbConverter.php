@@ -498,6 +498,19 @@ class Sfblib_SfbConverter
 		$this->curRef = $nr;
 	}
 
+	/**
+	 * @param int $startpos
+	 */
+	public function setStartPosition($startpos) {
+		$this->startpos = $startpos;
+	}
+
+	/**
+	 * @param int $maxLineCount
+	 */
+	public function setMaxLineCount($maxLineCount) {
+		$this->maxlinecnt = $maxLineCount;
+	}
 
 	public function convert()
 	{
@@ -2270,15 +2283,14 @@ class Sfblib_SfbConverter
 			case self::TABLE_HEADER:
 				$this->addTableCaption($this->ltext);
 				break;
-
+			case self::TABLE_E:
+				break;
 			case self::TABLE_HCELL:
 				$this->inHeaderRow = true;
 				// go to default
 			default:
 				$this->curTableRow++;
 				$this->inTableRow();
-
-			case self::TABLE_E: break;
 		}
 	}
 

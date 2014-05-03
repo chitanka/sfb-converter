@@ -200,10 +200,13 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 		}
 
 		switch ($type) {
+			case 1:
+				return $this->out->xmlElement($this->footnotesElement,
+					$footnotes, array('name' => 'notes')
+				);
 			case 0:
-			default: return $footnotes;
-			case 1:  return $this->out->xmlElement($this->footnotesElement,
-				$footnotes, array('name' => 'notes'));
+			default:
+				return $footnotes;
 		}
 	}
 

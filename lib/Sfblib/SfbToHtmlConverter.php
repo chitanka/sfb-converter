@@ -76,13 +76,16 @@ class Sfblib_SfbToHtmlConverter extends Sfblib_SfbConverter
 		}
 
 		switch ($type) {
+			case 1:
+				return $this->out->xmlElement($this->footnotesElement,
+					$this->out->xmlElement($this->legendElement, 'Бележки') . $footnotes,
+					array('class' => 'footnotes')
+				);
+			case 2:
+				return '<hr />' . $footnotes;
 			case 0:
-			default: return $footnotes;
-			case 1:  return $this->out->xmlElement($this->footnotesElement,
-				$this->out->xmlElement($this->legendElement, 'Бележки') . $footnotes,
-				array('class' => 'footnotes')
-			);
-			case 2:  return '<hr />' . $footnotes;
+			default:
+				return $footnotes;
 		}
 	}
 
