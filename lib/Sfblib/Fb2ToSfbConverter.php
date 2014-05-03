@@ -286,9 +286,7 @@ class Sfblib_Fb2ToSfbConverter
 					}
 					$sfb .= $this->convertStanza($elm); break;
 				case 'text-author':
-					$sfb .= $this->convertAuthor($elm); break;
-				case 'date':
-					$sfb .= $this->convertDate($elm); break;
+					$sfb .= $this->convertTextAuthor($elm); break;
 			}
 		}
 		$sfb .= $this->command('P$');
@@ -338,6 +336,13 @@ class Sfblib_Fb2ToSfbConverter
 	{
 		$sfb = '';
 		$sfb .= $table->asXML();
+		return $sfb;
+	}
+
+	private function convertPoemTitle(SimpleXMLElement $title)
+	{
+		$sfb = '';
+		$sfb .= $this->line($this->convertInlineElements($title->asXML()), '|');
 		return $sfb;
 	}
 
