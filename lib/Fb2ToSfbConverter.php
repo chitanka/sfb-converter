@@ -1,7 +1,9 @@
-<?php
+<?php namespace Sfblib;
 
-class Sfblib_Fb2ToSfbConverter
-{
+use SimpleXMLElement;
+
+class Fb2ToSfbConverter {
+
 	const EOL = "\n";
 
 	private $data;
@@ -17,7 +19,7 @@ class Sfblib_Fb2ToSfbConverter
 			$data = $this->data;
 		}
 		if ($data === null) {
-			throw new Exception('No data given to FB2 to SFB converter');
+			throw new \InvalidArgumentException('No data given to FB2 to SFB converter');
 		}
 		$dataIsFile = strpos($data, '<') === false;
 		$fb2 = new SimpleXMLElement($data, null, $dataIsFile);

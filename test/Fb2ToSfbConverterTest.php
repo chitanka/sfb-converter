@@ -1,6 +1,8 @@
 <?php
-class Fb2ToSfbConverterTest extends TestCase
-{
+
+use Sfblib\Fb2ToSfbConverter;
+
+class Fb2ToSfbConverterTest extends TestCase {
 	private $inputDir = 'fb2tosfb';
 
 	public function testSectionWithParagraph()
@@ -15,7 +17,7 @@ class Fb2ToSfbConverterTest extends TestCase
 
 	private function converter($data)
 	{
-		return new Sfblib_Fb2ToSfbConverter($data);
+		return new Fb2ToSfbConverter($data);
 	}
 
 }

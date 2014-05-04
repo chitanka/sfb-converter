@@ -1,6 +1,10 @@
 <?php
-class MainTest extends TestCase
-{
+
+use Sfblib\SfbToFb2Converter;
+use Sfblib\SfbToHtmlConverter;
+
+class MainTest extends TestCase {
+
 	private $inputFiles = array(
 		'accent',
 		'ampersand',
@@ -79,14 +83,14 @@ class MainTest extends TestCase
 	public function testFb2Converter()
 	{
 		foreach ($this->getInputFiles() as $file) {
-			$this->doTestConverter('SfbToFb2Converter', "$file.sfb", dirname($file), "$file.fb2", array($this, 'clearFb2String'));
+			$this->doTestConverter(new SfbToFb2Converter("$file.sfb", dirname($file)), "$file.sfb", "$file.fb2", array($this, 'clearFb2String'));
 		}
 	}
 
 	public function testHtmlConverter()
 	{
 		foreach ($this->getInputFiles() as $file) {
-			$this->doTestConverter('SfbToHtmlConverter', "$file.sfb", 'img', "$file.html");
+			$this->doTestConverter(new SfbToHtmlConverter("$file.sfb", 'img'), "$file.sfb", "$file.html");
 		}
 	}
 
@@ -97,10 +101,8 @@ class MainTest extends TestCase
 		}, $this->inputFiles);
 	}
 
-	private function doTestConverter($converter, $inFile, $imgDir, $outFile, $callback = null)
+	private function doTestConverter($conv, $inFile, $outFile, $callback = null)
 	{
-		$converterClass = 'Sfblib_' . $converter;
-		$conv = new $converterClass($inFile, $imgDir);
 		$conv->setObjectCount(1);
 		$conv->rmPattern(' —')->rmRegExpPattern('/^— /');
 		$conv->convert();
@@ -117,7 +119,7 @@ class MainTest extends TestCase
 			file_put_contents($outDir .'/'. basename($outFile), $testOutput);
 		}
 
-		$this->assertEquals(file_get_contents($outFile), $testOutput, "$converter: $inFile");
+		$this->assertEquals(file_get_contents($outFile), $testOutput, get_class($conv).": $inFile");
 	}
 
 

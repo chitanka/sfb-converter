@@ -1,9 +1,10 @@
-<?php
+<?php namespace Sfblib;
+
 /**
 * SFB to XHTML 1.0 converter
 */
-class Sfblib_SfbToHtmlConverter extends Sfblib_SfbConverter
-{
+class SfbToHtmlConverter extends SfbConverter {
+
 	protected static
 		$titleElements = array(
 			self::TITLE_1 => 'h2',

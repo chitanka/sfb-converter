@@ -1,9 +1,10 @@
-<?php
+<?php namespace Sfblib;
+
 /**
 * SFB to Fiction Book 2.1 converter
 */
-class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
-{
+class SfbToFb2Converter extends SfbConverter {
+
 	protected
 		/* block elements */
 		$sectionElement        = 'section',
@@ -1130,7 +1131,7 @@ class Sfblib_SfbToFb2Converter extends Sfblib_SfbConverter
 		file_put_contents($this->binaryTextFileName, $this->out->xmlElement($this->binaryElement,
 			$this->encodeImage($content),
 			array(
-				'content-type' => Sfblib_Util::guessMimeType($src),
+				'content-type' => Util::guessMimeType($src),
 				'id'           => $id,
 			)
 		), FILE_APPEND);

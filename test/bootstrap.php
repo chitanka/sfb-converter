@@ -1,20 +1,16 @@
 <?php
 error_reporting(E_ALL | E_STRICT);
 
-spl_autoload_register(function($class){
+spl_autoload_register(function($class) {
 	if (strpos($class, 'Sfblib') === 0) {
-		$class = str_replace('_', '/', $class);
-		require_once $class .'.php';
+		$class = strtr($class, array(
+			'Sfblib\\' => '',
+			'\\' => '/',
+		));
+		require_once "$class.php";
 	}
 });
 
-function addIncludePath($path)
-{
-	if ( is_array($path) ) {
-		$path = implode(PATH_SEPARATOR, $path);
-	}
-	set_include_path(get_include_path() . PATH_SEPARATOR . $path);
-}
-addIncludePath(dirname(__FILE__) . '/../lib');
+set_include_path(get_include_path() . PATH_SEPARATOR . realpath(__DIR__ . '/../lib'));
 
-require 'TestCase.php';
+require __DIR__ . '/TestCase.php';

@@ -1,6 +1,7 @@
-<?php
-class Sfblib_Util
-{
+<?php namespace Sfblib;
+
+class Util {
+
 	static public function guessMimeType($file)
 	{
 		switch ( strtolower(self::getFileExtension($file)) ) {
@@ -10,16 +11,14 @@ class Sfblib_Util
 			case 'jpeg': return 'image/jpeg';
 		}
 
-		$finfo = new finfo(FILEINFO_MIME_TYPE);
+		$finfo = new \finfo(FILEINFO_MIME_TYPE);
 		return $finfo->file($file);
 	}
-
 
 	static public function getFileExtension($filename)
 	{
 		return ltrim(strrchr($filename, '.'), '.');
 	}
-
 
 	static public function initOrIncArrayValue(&$arr, $key, $init_value = 0)
 	{

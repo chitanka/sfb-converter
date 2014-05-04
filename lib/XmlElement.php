@@ -1,10 +1,12 @@
-<?php
-class Sfblib_XmlElement
-{
+<?php namespace Sfblib;
 
-	/** Here we keep track of all generated anchor names */
+class XmlElement {
+
+	/**
+	 * Here we keep track of all generated anchor names
+	 * @var array
+	 */
 	private $_anchorNames = array();
-
 
 	public function xmlElement($name, $content = '', $attrs = array(), $doEscape = true)
 	{
@@ -43,8 +45,8 @@ class Sfblib_XmlElement
 	/**
 		Creates an HTML table.
 
-		@param $caption Table caption
-		@param $data Array of arrays, i.e.
+		@param string $caption Table caption
+		@param array $data Array of arrays, i.e.
 			array(
 				array(CELL, CELL, ...),
 				array(CELL, CELL, ...),
@@ -57,7 +59,7 @@ class Sfblib_XmlElement
 					if this array contains a key 'type' with the value 'header',
 					then the cell is rendered as a header cell
 				— second element must be a string representing the cell content
-		@param attrs Optional associative array for table attributes
+		@param array $attrs Optional associative array for table attributes
 	*/
 	public function simpleTable($caption, $data, $attrs = array()) {
 		$ext = $this->makeAttribs($attrs);
@@ -110,12 +112,12 @@ class Sfblib_XmlElement
 	* Generate an anchor name for a given string.
 	*
 	* @param string  $text    A string
-	* @param boolean $unique  Always generate a unique name
+	* @param bool    $unique  Always generate a unique name
 	*                         (consider all previously generated names)
 	*/
 	public function getAnchorName($text, $unique = true)
 	{
-		$text = Sfblib_Char::cyr2lat($text);
+		$text = Char::cyr2lat($text);
 		$text = strtolower($text);
 		$text = strtr($text, array(
 			' ' => '_',
@@ -140,7 +142,6 @@ class Sfblib_XmlElement
 
 		return $text;
 	}
-
 
 	public function link($url, $text, $title = '', $attrs = array()) {
 		$attrs = array( 'href' => $url ) + $attrs;

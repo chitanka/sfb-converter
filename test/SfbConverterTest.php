@@ -1,5 +1,7 @@
 <?php
 
+use Sfblib\SfbConverter;
+
 class SfbConverterTest extends TestCase {
 
 	/**
@@ -7,7 +9,7 @@ class SfbConverterTest extends TestCase {
 	 */
 	public function testAddMissingCommandDelimiters($input, $expected)
 	{
-		$this->assertEquals($expected, rtrim(Sfblib_SfbConverter::addMissingCommandDelimiters($input)));
+		$this->assertEquals($expected, rtrim(SfbConverter::addMissingCommandDelimiters($input)));
 	}
 
 	public function providerForTestAddMissingCommandDelimiters()

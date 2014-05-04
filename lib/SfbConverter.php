@@ -1,9 +1,9 @@
-<?php
+<?php namespace Sfblib;
+
 /**
 * Generic SFB to XML-ish language converter
 */
-class Sfblib_SfbConverter
-{
+class SfbConverter {
 
 	const
 		EOL          = "\n",
@@ -246,7 +246,7 @@ class Sfblib_SfbConverter
 		/** have we processed the end of the text */
 		$_textHasEnded       = false,
 
-		/** Sfblib_LineReader */
+		/** @var LineReader */
 		$_reader             = null;
 
 	private $curImgNr;
@@ -330,7 +330,7 @@ class Sfblib_SfbConverter
 	{
 		self::$objCount++;
 
-		$this->out = new Sfblib_XmlElement;
+		$this->out = new XmlElement;
 
 		$this->imgDir = rtrim($imgDir, '/');
 		$this->curImgNr = 0;
@@ -389,9 +389,9 @@ class Sfblib_SfbConverter
 		);
 
 		if ( is_readable($file) ) {
-			$this->_reader = new Sfblib_FileLineReader($file);
+			$this->_reader = new FileLineReader($file);
 		} else {
-			$this->_reader = new Sfblib_StringLineReader($file);
+			$this->_reader = new StringLineReader($file);
 		}
 
 		$this->lcmd = $this->ltext = '';
@@ -2365,7 +2365,7 @@ class Sfblib_SfbConverter
 						$row[$cc] = $row[$cc - 1];
 						// delete old cell
 						unset( $row[$cc - 1] );
-						Sfblib_Util::initOrIncArrayValue( $row[$cc][0], 'colspan', 2 );
+						Util::initOrIncArrayValue( $row[$cc][0], 'colspan', 2 );
 						break;
 					// row span
 					case self::TABLE_CELL_ROWSPAN:
@@ -2377,7 +2377,7 @@ class Sfblib_SfbConverter
 						// will not be set if there is a previos row with column span
 						// in such a case we must skip this column
 						if ( isset( $this->tableData[$sr][$cc] ) ) {
-							Sfblib_Util::initOrIncArrayValue(
+							Util::initOrIncArrayValue(
 								$this->tableData[$sr][$cc][0], 'rowspan', 2 );
 						}
 						// delete current cell
@@ -2797,16 +2797,14 @@ class Sfblib_SfbConverter
 }
 
 
-interface Sfblib_LineReader
-{
+interface LineReader {
 	public function getNextLine();
 	public function setStartPosition($pos);
 	public function getFirstLine();
 }
 
 
-class Sfblib_FileLineReader implements Sfblib_LineReader
-{
+class FileLineReader implements LineReader {
 
 	protected $_handle = null;
 
@@ -2815,7 +2813,7 @@ class Sfblib_FileLineReader implements Sfblib_LineReader
 		if ( is_readable($file) ) {
 			$this->_handle = fopen($file, 'r');
 		} else {
-			throw new Exception("$file is not readable");
+			throw new \InvalidArgumentException("$file is not readable");
 		}
 	}
 
@@ -2851,8 +2849,7 @@ class Sfblib_FileLineReader implements Sfblib_LineReader
 }
 
 
-class Sfblib_StringLineReader implements Sfblib_LineReader
-{
+class StringLineReader implements LineReader {
 	protected
 		$_delim = "\n",
 		$_lines;

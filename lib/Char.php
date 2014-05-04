@@ -1,6 +1,7 @@
-<?php
-class Sfblib_Char
-{
+<?php namespace Sfblib;
+
+class Char {
+
 	private static
 		$cyrlats = array(
 			'щ' => 'sht', 'ш' => 'sh', 'ю' => 'ju', 'я' => 'ja', 'ч' => 'ch',
