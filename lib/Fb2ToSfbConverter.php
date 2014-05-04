@@ -8,13 +8,11 @@ class Fb2ToSfbConverter {
 
 	private $data;
 
-	public function __construct($data = null)
-	{
+	public function __construct($data = null) {
 		$this->data = $data;
 	}
 
-	public function convert($data = null)
-	{
+	public function convert($data = null) {
 		if ($data === null) {
 			$data = $this->data;
 		}
@@ -55,16 +53,14 @@ class Fb2ToSfbConverter {
 		return $sfb;
 	}
 
-	private function convertMainTitle(SimpleXMLElement $titleInfo)
-	{
+	private function convertMainTitle(SimpleXMLElement $titleInfo) {
 		$sfb = '';
 		$sfb .= $this->line($this->convertMainAuthor($titleInfo->author), '|');
 		$sfb .= $this->line($titleInfo->{'book-title'}, '|');
 		return $sfb;
 	}
 
-	private function convertMainAuthor(SimpleXMLElement $author)
-	{
+	private function convertMainAuthor(SimpleXMLElement $author) {
 		return implode(' ', array(
 			$author->{'first-name'},
 			//$author->{'middle-name'},
@@ -74,8 +70,7 @@ class Fb2ToSfbConverter {
 	}
 
 	// TODO
-	private function convertDescription()
-	{
+	private function convertDescription() {
 //<src-title-info> - 0..1 (один, опционально) с версии 2.1;
 //<document-info> - 1 (один, обязателен);
 //<publish-info> - 0..1 (один, опционально);
@@ -84,8 +79,7 @@ class Fb2ToSfbConverter {
 	}
 
 	// TODO
-	private function convertTitleInfo()
-	{
+	private function convertTitleInfo() {
 //<genre> - 1..n (любое число, один обязaтелен);
 //<author> - 1..n (любое число, один обязaтелен);
 //<book-title> - 1 (один, обязателен);
@@ -100,8 +94,7 @@ class Fb2ToSfbConverter {
 	}
 
 	// TODO
-	private function convertSrcTitleInfo()
-	{
+	private function convertSrcTitleInfo() {
 //<genre> - 1..n (любое число, один обязaтелен);
 //<author> - 1..n (любое число, один обязaтелен);
 //<book-title> - 1 (один, обязателен);
@@ -116,8 +109,7 @@ class Fb2ToSfbConverter {
 	}
 
 	// TODO
-	private function convertDocumentInfo()
-	{
+	private function convertDocumentInfo() {
 //<author> - 1..n (любое число, один обязaтелен);
 //<program-used> - 0..1 (один, опционально);
 //<date> - 1 (один, обязателен);
@@ -130,8 +122,7 @@ class Fb2ToSfbConverter {
 	}
 
 	// TODO
-	private function convertPublishInfo()
-	{
+	private function convertPublishInfo() {
 //<book-name> - 0..1 (один, опционально) - название;
 //<publisher> - 0..1 (один, опционально) - издательство;
 //<city> - 0..1 (один, опционально)- место издания;
@@ -141,8 +132,7 @@ class Fb2ToSfbConverter {
 	}
 
 	// TODO
-	private function convertAnnotation()
-	{
+	private function convertAnnotation() {
 //<p>;
 //<poem>;
 //<cite>;
@@ -152,13 +142,11 @@ class Fb2ToSfbConverter {
 	}
 
 	// TODO
-	private function convertCoverpage()
-	{
+	private function convertCoverpage() {
 		// <coverpage><image l:href="#cover.jpg"/></coverpage>
 	}
 
-	private function convertImage(SimpleXMLElement $image)
-	{
+	private function convertImage(SimpleXMLElement $image) {
 		$sfb = '';
 		if ($image) {
 			$sfb = $this->line(sprintf('{img:%s}', ltrim($image->attributes('l', true)->href, '#')));
@@ -166,8 +154,7 @@ class Fb2ToSfbConverter {
 		return $sfb;
 	}
 
-	private function convertEpigraphs(SimpleXMLElement $epigraphs)
-	{
+	private function convertEpigraphs(SimpleXMLElement $epigraphs) {
 		$sfb = '';
 		if ($epigraphs) {
 			foreach ($epigraphs as $epigraph) {
@@ -177,8 +164,7 @@ class Fb2ToSfbConverter {
 		return $sfb;
 	}
 
-	private function convertEpigraph(SimpleXMLElement $epigraph)
-	{
+	private function convertEpigraph(SimpleXMLElement $epigraph) {
 		$sfb = '';
 		$sfb .= $this->command('E>');
 		foreach ($epigraph->children() as $elm) {
@@ -199,8 +185,7 @@ class Fb2ToSfbConverter {
 		return $sfb;
 	}
 
-	private function convertSections(SimpleXMLElement $sections, $level = 1)
-	{
+	private function convertSections(SimpleXMLElement $sections, $level = 1) {
 		$sfb = '';
 		if ($sections) {
 			$sfb .= $this->line();
@@ -211,8 +196,7 @@ class Fb2ToSfbConverter {
 		return $sfb;
 	}
 
-	private function convertSection(SimpleXMLElement $section, $level)
-	{
+	private function convertSection(SimpleXMLElement $section, $level) {
 		$sfb = '';
 		$sfb .= $this->convertTitle($section->title, $level);
 		$sfb .= $this->convertEpigraphs($section->epigraph);
@@ -250,8 +234,7 @@ class Fb2ToSfbConverter {
 		4 => '>>>>',
 		5 => '>>>>>',
 	);
-	private function convertTitle(SimpleXMLElement $title, $level = 1)
-	{
+	private function convertTitle(SimpleXMLElement $title, $level = 1) {
 		$sfb = '';
 		if (!$title) {
 			return $sfb;
@@ -264,15 +247,13 @@ class Fb2ToSfbConverter {
 		return $sfb;
 	}
 
-	private function convertParagraph(SimpleXMLElement $paragraph, $command = '')
-	{
+	private function convertParagraph(SimpleXMLElement $paragraph, $command = '') {
 		$content = $this->removeElement($paragraph->asXML(), 'p');
 		$content = $this->convertInlineElements($content);
 		return $this->line($content, $command);
 	}
 
-	private function convertPoem(SimpleXMLElement $poem)
-	{
+	private function convertPoem(SimpleXMLElement $poem) {
 		$sfb = '';
 		$sfb .= $this->command('P>');
 		$currentStanzaCount = 0;
@@ -295,15 +276,13 @@ class Fb2ToSfbConverter {
 		return $sfb;
 	}
 
-	private function convertSubtitle(SimpleXMLElement $subtitle)
-	{
+	private function convertSubtitle(SimpleXMLElement $subtitle) {
 		$sfb = '';
 		$sfb .= $this->line($this->convertInlineElements($subtitle->asXML()), '#');
 		return $sfb;
 	}
 
-	private function convertCite(SimpleXMLElement $cite)
-	{
+	private function convertCite(SimpleXMLElement $cite) {
 		$sfb = '';
 		$sfb .= $this->command('C>');
 		foreach ($cite->children() as $elm) {
@@ -326,30 +305,26 @@ class Fb2ToSfbConverter {
 		return $sfb;
 	}
 
-	private function convertTextAuthor(SimpleXMLElement $textAuthor)
-	{
+	private function convertTextAuthor(SimpleXMLElement $textAuthor) {
 		$sfb = '';
 		$sfb .= $this->line($this->convertInlineElements($textAuthor->asXML()), '@');
 		return $sfb;
 	}
 
 	// TODO td, th, tr
-	private function convertTable(SimpleXMLElement $table)
-	{
+	private function convertTable(SimpleXMLElement $table) {
 		$sfb = '';
 		$sfb .= $table->asXML();
 		return $sfb;
 	}
 
-	private function convertPoemTitle(SimpleXMLElement $title)
-	{
+	private function convertPoemTitle(SimpleXMLElement $title) {
 		$sfb = '';
 		$sfb .= $this->line($this->convertInlineElements($title->asXML()), '|');
 		return $sfb;
 	}
 
-	private function convertStanza(SimpleXMLElement $stanza)
-	{
+	private function convertStanza(SimpleXMLElement $stanza) {
 		$sfb = '';
 		foreach ($stanza->children() as $elm) {
 			switch ($elm->getName()) {
@@ -364,16 +339,14 @@ class Fb2ToSfbConverter {
 		return $sfb;
 	}
 
-	private function convertVerse(SimpleXMLElement $verse)
-	{
+	private function convertVerse(SimpleXMLElement $verse) {
 		$content = $this->removeElement($verse->asXML(), 'v');
 		$content = $this->convertInlineElements($content);
 		return $this->line($content);
 	}
 
 	// TODO - a, style, image
-	private function convertInlineElements($xml)
-	{
+	private function convertInlineElements($xml) {
 		$sfb = strtr($xml, array(
 			'<emphasis>' => '{e}', '</emphasis>' => '{/e}',
 			'<strong>' => '{s}', '</strong>' => '{/s}',
@@ -392,31 +365,26 @@ class Fb2ToSfbConverter {
 	}
 
 	// TODO
-	private function convertBinaries(SimpleXMLElement $binaries)
-	{
+	private function convertBinaries(SimpleXMLElement $binaries) {
 
 	}
 
-	private function line($content = '', $command = '')
-	{
+	private function line($content = '', $command = '') {
 		if (empty($content)) {
 			return $command . self::EOL;
 		}
 		return $command . "\t" . $content . self::EOL;
 	}
 
-	private function command($command)
-	{
+	private function command($command) {
 		return $this->line('', $command);
 	}
 
-	private function removeElement($xml, $tag)
-	{
+	private function removeElement($xml, $tag) {
 		return strtr($xml, array("<$tag>" => '', "</$tag>" => ''));
 	}
 
-	private function clearSfb($sfb)
-	{
+	private function clearSfb($sfb) {
 		$sfb = preg_replace('/\n\n\n+>/', "\n\n>", $sfb);
 		$sfb = trim($sfb, "\n") . "\n";
 		return $sfb;

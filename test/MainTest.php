@@ -80,29 +80,25 @@ class MainTest extends TestCase {
 		'all', // currently broken
 	);
 
-	public function testFb2Converter()
-	{
+	public function testFb2Converter() {
 		foreach ($this->getInputFiles() as $file) {
 			$this->doTestConverter(new SfbToFb2Converter("$file.sfb", dirname($file)), "$file.sfb", "$file.fb2", array($this, 'clearFb2String'));
 		}
 	}
 
-	public function testHtmlConverter()
-	{
+	public function testHtmlConverter() {
 		foreach ($this->getInputFiles() as $file) {
 			$this->doTestConverter(new SfbToHtmlConverter("$file.sfb", 'img'), "$file.sfb", "$file.html");
 		}
 	}
 
-	private function getInputFiles()
-	{
+	private function getInputFiles() {
 		return array_map(function($file){
 			return dirname(__FILE__).'/converter/'.$file;
 		}, $this->inputFiles);
 	}
 
-	private function doTestConverter($conv, $inFile, $outFile, $callback = null)
-	{
+	private function doTestConverter($conv, $inFile, $outFile, $callback = null) {
 		$conv->setObjectCount(1);
 		$conv->rmPattern(' —')->rmRegExpPattern('/^— /');
 		$conv->convert();
@@ -123,8 +119,7 @@ class MainTest extends TestCase {
 	}
 
 
-	private function clearFb2File($file)
-	{
+	private function clearFb2File($file) {
 		if ( ! file_exists($file) ) {
 			return;
 		}
@@ -143,8 +138,7 @@ class MainTest extends TestCase {
 	}
 
 
-	private function clearFb2String($string)
-	{
+	private function clearFb2String($string) {
 		if ( $this->shouldClearFb2String($string) ) {
 			$string = $this->removeElementFromString($string, 'id');
 			$string = $this->removeElementFromString($string, 'program-used');
@@ -155,14 +149,12 @@ class MainTest extends TestCase {
 	}
 
 
-	private function shouldClearFb2String($string)
-	{
+	private function shouldClearFb2String($string) {
 		return strpos($string, '<id>') !== false;
 	}
 
 
-	private function removeElementFromFile($file, $elm)
-	{
+	private function removeElementFromFile($file, $elm) {
 		$contents = file_get_contents($file);
 		if ( strpos($contents, "<$elm>") !== false ) {
 			file_put_contents($file, $this->removeElementFromString($contents, $elm));
@@ -170,8 +162,7 @@ class MainTest extends TestCase {
 	}
 
 
-	private function removeElementFromString($string, $elm)
-	{
+	private function removeElementFromString($string, $elm) {
 		$start = strpos ( $string, "<$elm" );
 		if ( $start === false ) {
 			return $string;

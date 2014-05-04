@@ -2,8 +2,7 @@
 
 class Util {
 
-	static public function guessMimeType($file)
-	{
+	static public function guessMimeType($file) {
 		switch ( strtolower(self::getFileExtension($file)) ) {
 			case 'png' : return 'image/png';
 			case 'gif' : return 'image/gif';
@@ -15,13 +14,11 @@ class Util {
 		return $finfo->file($file);
 	}
 
-	static public function getFileExtension($filename)
-	{
+	static public function getFileExtension($filename) {
 		return ltrim(strrchr($filename, '.'), '.');
 	}
 
-	static public function initOrIncArrayValue(&$arr, $key, $init_value = 0)
-	{
+	static public function initOrIncArrayValue(&$arr, $key, $init_value = 0) {
 		if ( isset( $arr[$key] ) ) {
 			$arr[$key]++;
 		} else {

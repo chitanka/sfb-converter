@@ -106,8 +106,7 @@ class SfbToFb2Converter extends SfbConverter {
 	 */
 	private $binaryIds;
 
-	public function __construct($file, $imgDir = 'img')
-	{
+	public function __construct($file, $imgDir = 'img') {
 		parent::__construct($file, $imgDir);
 		#$this->imgDir = dirname(__FILE__) . '/../' . $this->imgDir;
 		$this->date = date('Y-m-d H:i:s');
@@ -142,8 +141,7 @@ class SfbToFb2Converter extends SfbConverter {
 	}
 
 
-	public function getContent()
-	{
+	public function getContent() {
 		$trepl = array(
 			'<v>' . self::EOL  => '<v>',
 			self::EOL . '</v>' => '</v>',
@@ -171,8 +169,7 @@ class SfbToFb2Converter extends SfbConverter {
 	}
 
 
-	public function getStylesheet()
-	{
+	public function getStylesheet() {
 		if ($this->hasCustomStyles()) {
 			return $this->out->xmlElement($this->stylesheetElement, $this->getStylesheetContent(), $this->stylesheetAttributes);
 		}
@@ -181,19 +178,16 @@ class SfbToFb2Converter extends SfbConverter {
 	}
 
 
-	public function getStylesheetContent()
-	{
+	public function getStylesheetContent() {
 		return file_get_contents($this->stylesheetFile);
 	}
 
 
-	public function getText()
-	{
+	public function getText() {
 		return $this->out->xmlElement($this->bodyElement, $this->getContentBlock('main'));
 	}
 
-	public function getNotes($type = 0)
-	{
+	public function getNotes($type = 0) {
 		$footnotes = $this->getNotesBlock();
 
 		if ( empty($footnotes) ) {
@@ -212,26 +206,22 @@ class SfbToFb2Converter extends SfbConverter {
 	}
 
 
-	public function getAnnotation()
-	{
+	public function getAnnotation() {
 		return $this->getContentBlock('annotation');
 	}
 
 
-	public function getInfoblock()
-	{
+	public function getInfoblock() {
 		return $this->getContentBlock('infoblock');
 	}
 
 
-	public function getBinary()
-	{
+	public function getBinary() {
 		return $this->binaryTextFileName ? file_get_contents($this->binaryTextFileName) : null;
 	}
 
 
-	public function getDescription()
-	{
+	public function getDescription() {
 		$eol = $this->getEol();
 		return $this->out->xmlElement('description',
 			$this->getTitleInfo()      . $eol
@@ -241,8 +231,7 @@ class SfbToFb2Converter extends SfbConverter {
 	}
 
 
-	public function getTitleInfo()
-	{
+	public function getTitleInfo() {
 		$eol = $this->getEol();
 		return $this->out->xmlElement('title-info',
 			$this->getGenre()                                           . $eol
@@ -260,8 +249,7 @@ class SfbToFb2Converter extends SfbConverter {
 	}
 
 
-	public function getSrcTitleInfo()
-	{
+	public function getSrcTitleInfo() {
 		if ( empty($this->srcAuthors) && empty($this->srcTitle) ) {
 			return '';
 		}
@@ -277,8 +265,7 @@ class SfbToFb2Converter extends SfbConverter {
 	}
 
 
-	public function getDocumentInfo()
-	{
+	public function getDocumentInfo() {
 		$eol = $this->getEol();
 		return $this->out->xmlElement('document-info',
 			$this->getPersonsFor($this->docAuthors)                     . $eol
@@ -291,8 +278,7 @@ class SfbToFb2Converter extends SfbConverter {
 	}
 
 
-	public function getAuthors()
-	{
+	public function getAuthors() {
 		if ( empty($this->authors) ) {
 			$this->addAuthor('(неизвестен автор)', false);
 		}
@@ -300,8 +286,7 @@ class SfbToFb2Converter extends SfbConverter {
 	}
 
 
-	public function getTitle()
-	{
+	public function getTitle() {
 		$title = $this->title;
 		if ( ! empty($this->subtitle) ) {
 			$title .= " ($this->subtitle)";
@@ -310,8 +295,7 @@ class SfbToFb2Converter extends SfbConverter {
 	}
 
 
-	public function getCoverpage()
-	{
+	public function getCoverpage() {
 		if ( empty($this->coverpage) ) {
 			return '';
 		}
@@ -321,8 +305,7 @@ class SfbToFb2Converter extends SfbConverter {
 	}
 
 
-	public function getGenre()
-	{
+	public function getGenre() {
 		$elements = array();
 		foreach ($this->genre as $key => $genre) {
 			$attrs = array();
@@ -336,8 +319,7 @@ class SfbToFb2Converter extends SfbConverter {
 	}
 
 
-	public function getSrcAuthors()
-	{
+	public function getSrcAuthors() {
 		if ( empty($this->srcAuthors) ) {
 			$this->addSrcAuthor('(unknown author)', false);
 		}
@@ -345,8 +327,7 @@ class SfbToFb2Converter extends SfbConverter {
 	}
 
 
-	public function getPersonsFor($data, $elm = 'author')
-	{
+	public function getPersonsFor($data, $elm = 'author') {
 		$persons = '';
 		foreach ( (array) $data as $pdata ) {
 			if ( is_array($pdata) ) {
@@ -364,8 +345,7 @@ class SfbToFb2Converter extends SfbConverter {
 	}
 
 
-	public function getSequencesFor($data)
-	{
+	public function getSequencesFor($data) {
 		$sequences = '';
 		foreach ( (array) $data as $name => $nr ) {
 			$sequences .= $this->out->getEmptyTag('sequence', array(
@@ -377,8 +357,7 @@ class SfbToFb2Converter extends SfbConverter {
 	}
 
 
-	public function getHistory()
-	{
+	public function getHistory() {
 		$text = '';
 		foreach ( (array) $this->history as $line ) {
 			$text .= $this->out->xmlElement($this->paragraphElement, htmlspecialchars($line));
@@ -399,96 +378,75 @@ class SfbToFb2Converter extends SfbConverter {
 	 *           "sci_history" => 50 // used for the match attribute
 	 *         )
 	 */
-	public function setGenre($genre)
-	{
+	public function setGenre($genre) {
 		$this->genre = (array) $genre;
 	}
-	public function addAuthor($name, $raw = true)
-	{
+	public function addAuthor($name, $raw = true) {
 		$this->authors[] = $raw && $name[0] != '(' ? $this->preparePersonName($name) : $name;
 	}
-	public function setTitle($title)
-	{
+	public function setTitle($title) {
 		$this->title = strip_tags($title);
 	}
-	public function setSubtitle($subtitle)
-	{
+	public function setSubtitle($subtitle) {
 		$this->subtitle = strip_tags($subtitle);
 	}
-	public function setKeywords($keywords)
-	{
+	public function setKeywords($keywords) {
 		$this->keywords = $keywords;
 	}
-	public function setTextDate($date)
-	{
+	public function setTextDate($date) {
 		$this->textDate = $date;
 	}
-	public function addCoverpage($src)
-	{
+	public function addCoverpage($src) {
 		$this->coverpage = $this->saveBinaryText($this->getCurrentImageId(), $src);
 	}
 	/** Only two-letter codes */
-	public function setLang($lang)
-	{
+	public function setLang($lang) {
 		$this->lang = $lang;
 	}
 	/** Only two-letter codes */
-	public function setSrcLang($lang)
-	{
+	public function setSrcLang($lang) {
 		$this->srcLang = $lang;
 	}
-	public function addTranslator($name, $raw = true)
-	{
+	public function addTranslator($name, $raw = true) {
 		$this->translators[] = $raw ? $this->preparePersonName($name) : $name;
 	}
-	public function addSequence($name, $nr = null)
-	{
+	public function addSequence($name, $nr = null) {
 		$this->sequences[$name] = $nr;
 	}
 
 
-	public function addSrcAuthor($name, $raw = true)
-	{
+	public function addSrcAuthor($name, $raw = true) {
 		$this->srcAuthors[] = $raw ? $this->preparePersonName($name) : $name;
 	}
-	public function setSrcTitle($srcTitle)
-	{
+	public function setSrcTitle($srcTitle) {
 		$this->srcTitle = strip_tags($srcTitle);
 	}
-	public function setSrcSubtitle($srcSubtitle)
-	{
+	public function setSrcSubtitle($srcSubtitle) {
 		$this->srcSubtitle = strip_tags($srcSubtitle);
 	}
-	public function addSrcSequence($name, $nr = null)
-	{
+	public function addSrcSequence($name, $nr = null) {
 		$this->srcSequences[$name] = $nr;
 	}
 
 
-	public function setDocAuthor($name)
-	{
+	public function setDocAuthor($name) {
 		$this->docAuthors = (array) $name;
 	}
-	public function addDocAuthor($name, $raw = true)
-	{
+	public function addDocAuthor($name, $raw = true) {
 		$this->docAuthors[] = $raw ? $this->preparePersonName($name) : $name;
 	}
-	public function setDocId($docId)
-	{
+	public function setDocId($docId) {
 		$this->docId = $docId;
 	}
-	public function setDocVersion($docVersion)
-	{
+	public function setDocVersion($docVersion) {
 		$this->docVersion = $docVersion;
 	}
-	public function setHistory($history)
-	{
+	public function setHistory($history) {
 		$this->history = $history;
 	}
 
 
-	protected function preparePersonName($fullname)
-	{
+	protected function preparePersonName($fullname) {
 		return explode(' ', $fullname);
 	}
 
@@ -496,8 +454,7 @@ class SfbToFb2Converter extends SfbConverter {
 	/*************************************************************************/
 
 
-	protected function preDoText()
-	{
+	protected function preDoText() {
 		switch ($this->lcmd) {
 			case self::HEADER:
 			case self::TITLE_1:
@@ -531,8 +488,7 @@ class SfbToFb2Converter extends SfbConverter {
 	*
 	* @param $text  The text to save
 	*/
-	protected function save($text, $forceEmpty = false)
-	{
+	protected function save($text, $forceEmpty = false) {
 		$this->_lastSaved[$this->_curBlock] = $text;
 		parent::save($text, $forceEmpty);
 	}
@@ -544,8 +500,7 @@ class SfbToFb2Converter extends SfbConverter {
 	/**
 	* @param $lnes  Header lines
 	*/
-	protected function inHeader($lines)
-	{
+	protected function inHeader($lines) {
 		$_lines = $lines;
 
 		if ( count($_lines) >= 2 ) {
@@ -564,8 +519,7 @@ class SfbToFb2Converter extends SfbConverter {
 	/*************************************************************************/
 
 
-	protected function closeSection()
-	{
+	protected function closeSection() {
 		if ( $this->isEmptySection() ) {
 			$this->saveEmptyTag($this->emptyLineElement);
 		}
@@ -576,8 +530,7 @@ class SfbToFb2Converter extends SfbConverter {
 
 	/**
 	*/
-	protected function isEmptySection()
-	{
+	protected function isEmptySection() {
 		return $this->_lastSaved[$this->_curBlock] == '<section>'
 			|| $this->_lastSaved[$this->_curBlock] == '</epigraph>'
 			|| strpos($this->_lastSaved[$this->_curBlock], '<title>') === 0
@@ -589,8 +542,7 @@ class SfbToFb2Converter extends SfbConverter {
 
 	/**
 	*/
-	protected function imageIsOnSectionStart()
-	{
+	protected function imageIsOnSectionStart() {
 		return $this->_lastSaved[$this->_curBlock] == '</epigraph>'
 			|| strpos($this->_lastSaved[$this->_curBlock], '<title>') === 0;
 
@@ -603,8 +555,7 @@ class SfbToFb2Converter extends SfbConverter {
 	* @param $titleLines  Title lines
 	* @param $marker      A title marker (self::TITLE_X)
 	*/
-	protected function inTitle($titleLines, $marker)
-	{
+	protected function inTitle($titleLines, $marker) {
 		$text = '';
 		foreach ($titleLines as $titleLine) {
 			if ( ! empty($titleLine) ) {
@@ -620,14 +571,12 @@ class SfbToFb2Converter extends SfbConverter {
 	/*************************************************************************/
 
 
-	protected function doNoticeStart()
-	{
+	protected function doNoticeStart() {
 		$this->paragraphPrefix = $this->out->getStartTag($this->emphasisElement);
 		$this->paragraphSuffix = $this->out->getEndTag($this->emphasisElement);
 	}
 
-	protected function doNoticeEnd()
-	{
+	protected function doNoticeEnd() {
 		$this->paragraphPrefix =
 		$this->paragraphSuffix = '';
 	}
@@ -636,16 +585,14 @@ class SfbToFb2Converter extends SfbConverter {
 	/*************************************************************************/
 
 
-	protected function doAnnotationStart()
-	{
+	protected function doAnnotationStart() {
 		if ( ! $this->isSectionOpened()) {
 			$this->enterContentBlock('annotation');
 		}
 		parent::doAnnotationStart();
 	}
 
-	protected function doAnnotationEnd()
-	{
+	protected function doAnnotationEnd() {
 		parent::doAnnotationEnd();
 		if ( ! $this->isSectionOpened()) {
 			$this->leaveContentBlock('annotation');
@@ -656,8 +603,7 @@ class SfbToFb2Converter extends SfbConverter {
 	/*************************************************************************/
 
 
-	protected function doInfoblockStart()
-	{
+	protected function doInfoblockStart() {
 		$this->enterContentBlock('infoblock');
 
 		$this->saveStartTag($this->infoblockElement, array(
@@ -669,8 +615,7 @@ class SfbToFb2Converter extends SfbConverter {
 		$this->saveStartTag($this->sectionElement);
 	}
 
-	protected function doInfoblockEnd()
-	{
+	protected function doInfoblockEnd() {
 		$this->saveEndTag($this->sectionElement);
 		parent::doInfoblockEnd();
 		$this->leaveContentBlock('infoblock');
@@ -680,8 +625,7 @@ class SfbToFb2Converter extends SfbConverter {
 	/*************************************************************************/
 
 
-	protected function doSubheaderStart($isMulti)
-	{
+	protected function doSubheaderStart($isMulti) {
 /*		if ( $this->isInPoem() && ! $this->isInStanza() ) {
 			if ($isMulti) {
 				$this->_subheaderAsTitle = true;
@@ -692,16 +636,14 @@ class SfbToFb2Converter extends SfbConverter {
 		}*/
 	}
 
-	protected function doSubheaderEnd($isMulti)
-	{
+	protected function doSubheaderEnd($isMulti) {
 /*		if ( $this->_subheaderAsTitle ) {
 			$this->saveEndTag($this->titleElement);
 			$this->_subheaderAsTitle = false;
 		}*/
 	}
 
-	protected function doSubheaderLineStart($isMulti, $line)
-	{
+	protected function doSubheaderLineStart($isMulti, $line) {
 		if ( $this->acceptsSubheader() ) {
 /*			if ( $this->_subheaderAsTitle ) {
 				$this->saveStartTag($this->paragraphElement);
@@ -714,8 +656,7 @@ class SfbToFb2Converter extends SfbConverter {
 		}
 	}
 
-	protected function doSubheaderLineEnd($isMulti)
-	{
+	protected function doSubheaderLineEnd($isMulti) {
 		if ( $this->acceptsSubheader() ) {
 /*			if ( $this->_subheaderAsTitle ) {
 				$this->saveEndTag($this->paragraphElement);
@@ -729,8 +670,7 @@ class SfbToFb2Converter extends SfbConverter {
 	}
 
 
-	protected function acceptsSubheader()
-	{
+	protected function acceptsSubheader() {
 		return ! $this->isInMainEpigraphBody()
 			&& ! $this->isInMainDedicationBody();
 	}
@@ -739,36 +679,30 @@ class SfbToFb2Converter extends SfbConverter {
 	/*************************************************************************/
 
 
-	protected function doPoemEnd()
-	{
+	protected function doPoemEnd() {
 		$this->closeStanzaIfAny();
 		parent::doPoemEnd();
 	}
 
 
-	protected function doPoemHeaderStart()
-	{
+	protected function doPoemHeaderStart() {
 		$this->saveStartTag($this->poemHeaderElement);
 	}
 
-	protected function doPoemHeaderEnd()
-	{
+	protected function doPoemHeaderEnd() {
 		$this->saveEndTag($this->poemHeaderElement);
 	}
 
-	protected function doPoemHeaderLineStart()
-	{
+	protected function doPoemHeaderLineStart() {
 		$this->saveStartTag($this->paragraphElement);
 	}
 
-	protected function doPoemHeaderLineEnd()
-	{
+	protected function doPoemHeaderLineEnd() {
 		$this->saveEndTag($this->paragraphElement);
 	}
 
 
-	protected function doStyleStart()
-	{
+	protected function doStyleStart() {
 		if ( $this->isInPoem() ) {
 			$this->openStanza();
 		}
@@ -780,8 +714,7 @@ class SfbToFb2Converter extends SfbConverter {
 		$this->paragraphSuffix .= $this->out->getEndTag($this->blockStyleElement);
 	}
 
-	protected function doStyleEnd()
-	{
+	protected function doStyleEnd() {
 		if ( $this->isInPoem() ) {
 			$this->closeStanzaIfAny();
 		}
@@ -794,8 +727,7 @@ class SfbToFb2Converter extends SfbConverter {
 	/*************************************************************************/
 
 
-	protected function addTableCaption($text)
-	{
+	protected function addTableCaption($text) {
 		$this->saveStartTag($this->subheaderElement, array(
 			'id' => $this->generateInternalId($text)
 		));
@@ -803,8 +735,7 @@ class SfbToFb2Converter extends SfbConverter {
 		$this->saveEndTag($this->subheaderElement);
 	}
 
-	protected function doTableEnd()
-	{
+	protected function doTableEnd() {
 		$this->save( $this->simpleTable($this->tableData) );
 	}
 
@@ -812,15 +743,13 @@ class SfbToFb2Converter extends SfbConverter {
 	/*************************************************************************/
 
 
-	protected function doAuthorStart()
-	{
+	protected function doAuthorStart() {
 		if ( $this->isInPoem() ) {
 			$this->closeStanzaIfAny();
 		}
 	}
 
-	protected function doAuthorLineStart()
-	{
+	protected function doAuthorLineStart() {
 		if ( $this->acceptsAuthor() ) {
 			parent::doAuthorLineStart();
 		} else {
@@ -829,8 +758,7 @@ class SfbToFb2Converter extends SfbConverter {
 		}
 	}
 
-	protected function doAuthorLineEnd()
-	{
+	protected function doAuthorLineEnd() {
 		if ( $this->acceptsAuthor() ) {
 			parent::doAuthorLineEnd();
 			#$this->revertParagraphElement();
@@ -844,13 +772,11 @@ class SfbToFb2Converter extends SfbConverter {
 	/*************************************************************************/
 
 
-	protected function doDate()
-	{
+	protected function doDate() {
 		$this->doAuthor();
 	}
 
-	protected function doDateStart()
-	{
+	protected function doDateStart() {
 		$this->doAuthorStart();
 // 		if ( $this->acceptsDate() ) {
 // 			$this->closeStanzaIfAny();
@@ -864,8 +790,7 @@ class SfbToFb2Converter extends SfbConverter {
 	}
 
 
-	protected function doDateEnd()
-	{
+	protected function doDateEnd() {
 		$this->doAuthorEnd();
 // 		if ( $this->acceptsDate() ) {
 // 			parent::doDateEnd();
@@ -878,8 +803,7 @@ class SfbToFb2Converter extends SfbConverter {
 	}
 
 
-	protected function acceptsAuthor()
-	{
+	protected function acceptsAuthor() {
 		return $this->isAtEpigraphEnd()
 			|| $this->isAtDedicationEnd()
 			|| $this->isAtCiteEnd()
@@ -892,8 +816,7 @@ class SfbToFb2Converter extends SfbConverter {
 	}
 
 
-	protected function acceptsDate()
-	{
+	protected function acceptsDate() {
 		return $this->isInPoem();
 	}
 
@@ -901,8 +824,7 @@ class SfbToFb2Converter extends SfbConverter {
 	/*************************************************************************/
 
 
-	protected function doEmptyLine()
-	{
+	protected function doEmptyLine() {
 		if ( $this->isInPoem() ) {
 			$this->closeStanzaIfAny();
 		} else {
@@ -915,8 +837,7 @@ class SfbToFb2Converter extends SfbConverter {
 
 
 	/** TODO refactor */
-	protected function savePreformatted($content)
-	{
+	protected function savePreformatted($content) {
 		if ( $this->isInPoem() ) {
 			$this->openStanzaIfNone();
 			$this->saveStartTag($this->verseElement);
@@ -937,8 +858,7 @@ class SfbToFb2Converter extends SfbConverter {
 	/*************************************************************************/
 
 
-	protected function doParagraphStart()
-	{
+	protected function doParagraphStart() {
 		if ( $this->isInMainPoemBody() ) {
 			$this->openStanzaIfNone();
 			$this->overwriteParagraphElement($this->verseElement);
@@ -946,8 +866,7 @@ class SfbToFb2Converter extends SfbConverter {
 		parent::doParagraphStart();
 	}
 
-	protected function doParagraphEnd()
-	{
+	protected function doParagraphEnd() {
 		parent::doParagraphEnd();
 		if ( $this->isInMainPoemBody() ) {
 			$this->revertParagraphElement();
@@ -958,35 +877,30 @@ class SfbToFb2Converter extends SfbConverter {
 	/*************************************************************************/
 
 
-	protected function openStanzaIfNone()
-	{
+	protected function openStanzaIfNone() {
 		if ( ! $this->_inStanza ) {
 			$this->openStanza();
 		}
 	}
 
-	protected function closeStanzaIfAny()
-	{
+	protected function closeStanzaIfAny() {
 		if ( $this->_inStanza ) {
 			$this->closeStanza();
 		}
 	}
 
-	protected function openStanza()
-	{
+	protected function openStanza() {
 		$this->closeStanzaIfAny();
 		$this->_inStanza = true;
 		$this->saveStartTag($this->stanzaElement);
 	}
 
-	protected function closeStanza()
-	{
+	protected function closeStanza() {
 		$this->_inStanza = false;
 		$this->saveEndTag($this->stanzaElement);
 	}
 
-	protected function isInStanza()
-	{
+	protected function isInStanza() {
 		return $this->_inStanza;
 	}
 
@@ -994,8 +908,7 @@ class SfbToFb2Converter extends SfbConverter {
 	/*************************************************************************/
 
 
-	protected function inSeparator()
-	{
+	protected function inSeparator() {
 		if ( $this->isInPoem() ) {
 			$this->closeStanzaIfAny();
 			$this->openStanza();
@@ -1014,8 +927,7 @@ class SfbToFb2Converter extends SfbConverter {
 	/*************************************************************************/
 
 
-	protected function doNoteStart()
-	{
+	protected function doNoteStart() {
 		parent::doNoteStart();
 		$this->saveElement($this->titleElement,
 			$this->out->xmlElement($this->paragraphElement, $this->_curNoteIndex/*$this->curFn*/)
@@ -1023,8 +935,7 @@ class SfbToFb2Converter extends SfbConverter {
 	}
 
 
-	public function getNoteLink($curReference)
-	{
+	public function getNoteLink($curReference) {
 		return $this->out->xmlElement('a', $curReference, array(
 			'l:href' => '#' . self::getNoteId($curReference),
 			'type'   => 'note',
@@ -1036,8 +947,7 @@ class SfbToFb2Converter extends SfbConverter {
 
 
 	private $_hasExtraSectionForImage = false;
-	protected function doBlockImageStart()
-	{
+	protected function doBlockImageStart() {
 		if ( $this->acceptsBlockImage() ) {
 			$this->overwriteParagraphElement();
 
@@ -1054,8 +964,7 @@ class SfbToFb2Converter extends SfbConverter {
 		}
 	}
 
-	protected function doBlockImageEnd()
-	{
+	protected function doBlockImageEnd() {
 		if ( $this->acceptsBlockImage() ) {
 			$this->revertParagraphElement();
 
@@ -1072,8 +981,7 @@ class SfbToFb2Converter extends SfbConverter {
 	}
 
 
-	protected function appendParagraphIfImageTitle()
-	{
+	protected function appendParagraphIfImageTitle() {
 		if ( preg_match('/\|#(.+)[|}]/U', $this->ltext, $m) ) {
 			$this->saveStartTag($this->paragraphElement);
 			$this->saveContent($m[1]);
@@ -1081,8 +989,7 @@ class SfbToFb2Converter extends SfbConverter {
 		}
 	}
 
-	protected function acceptsBlockImage()
-	{
+	protected function acceptsBlockImage() {
 		return ! $this->isInCite()
 			&& ! $this->isInEpigraph()
 			&& ! $this->isInDedication()
@@ -1090,13 +997,11 @@ class SfbToFb2Converter extends SfbConverter {
 			&& ! $this->isInPoem();
 	}
 
-	protected function imageHasNoteInTitle()
-	{
+	protected function imageHasNoteInTitle() {
 		return preg_match('/\*/', $this->ltext);
 	}
 
-	protected function getImage($src, $id, $alt, $title, $url, $size, $align)
-	{
+	protected function getImage($src, $id, $alt, $title, $url, $size, $align) {
 		$attrs = array('l:href' => '#' . $this->saveBinaryText($id, $src));
 		if ( $this->isInBlockImage() && $this->acceptsBlockImage() ) {
 			$attrs += array(
@@ -1115,8 +1020,7 @@ class SfbToFb2Converter extends SfbConverter {
 	* Save an image data in the binary box.
 	* If the same image was already saved, only return the corresponding ID.
 	*/
-	protected function saveBinaryText($id, $src)
-	{
+	protected function saveBinaryText($id, $src) {
 		$src = str_replace('thumb/', '', $src); // no thumbs for now
 		$content = file_get_contents($src);
 		$hash = md5($content);
@@ -1139,8 +1043,7 @@ class SfbToFb2Converter extends SfbConverter {
 		return $this->binaryIds[$hash] = $id;
 	}
 
-	protected function encodeImage($data)
-	{
+	protected function encodeImage($data) {
 		return base64_encode($data);
 	}
 
@@ -1149,8 +1052,7 @@ class SfbToFb2Converter extends SfbConverter {
 	/*************************************************************************/
 
 
-	public function simpleTable($data)
-	{
+	public function simpleTable($data) {
 		$t = '<table>';
 		foreach ($data as $row) {
 			$t .= '<tr>';
@@ -1178,13 +1080,11 @@ class SfbToFb2Converter extends SfbConverter {
 	/*************************************************************************/
 
 
-	protected function doExternLink($href)
-	{
+	protected function doExternLink($href) {
 		return $href;
 	}
 
-	protected function doInternalLinkElement($target, $text)
-	{
+	protected function doInternalLinkElement($target, $text) {
 		return $this->out->xmlElement('a', $text, array(
 			'l:href'  => $this->internalLinkTarget . "#$target",
 		), false);

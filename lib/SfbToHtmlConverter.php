@@ -62,14 +62,12 @@ class SfbToHtmlConverter extends SfbConverter {
 	 */
 	private $verseCnts;
 
-	public function __construct($file, $imgDir = 'img')
-	{
+	public function __construct($file, $imgDir = 'img') {
 		parent::__construct($file, $imgDir);
 	}
 
 
-	public function getNotes($type = 0)
-	{
+	public function getNotes($type = 0) {
 		$footnotes = $this->getNotesBlock();
 
 		if ( empty($footnotes) ) {
@@ -97,8 +95,7 @@ class SfbToHtmlConverter extends SfbConverter {
 	/**
 	* @param $lnes  Header lines
 	*/
-	protected function getHeaderText($lines)
-	{
+	protected function getHeaderText($lines) {
 		return implode('<br />', $lines);
 	}
 
@@ -106,8 +103,7 @@ class SfbToHtmlConverter extends SfbConverter {
 	/*************************************************************************/
 
 
-	protected function inTitle($titleParts, $marker)
-	{
+	protected function inTitle($titleParts, $marker) {
 		$elm = self::$titleElements[$marker];
 		$text = implode("<$this->breakLineElement />", $titleParts);
 		if ( ! empty($text) ) {
@@ -117,58 +113,49 @@ class SfbToHtmlConverter extends SfbConverter {
 	}
 
 
-	protected function doEpigraphStart()
-	{
+	protected function doEpigraphStart() {
 		$this->saveStartTag($this->epigraphElement, array('class' => 'epigraph'));
 	}
 
 
-	protected function doDedicationStart()
-	{
+	protected function doDedicationStart() {
 		$this->saveStartTag($this->dedicationElement, array('class' => 'dedication'));
 	}
 
 
-	protected function doNoticeStart()
-	{
+	protected function doNoticeStart() {
 		$this->saveStartTag($this->noticeElement, array('class' => 'notice'));
 	}
 
 
-	protected function doAnnotationStart()
-	{
+	protected function doAnnotationStart() {
 		$this->saveStartTag($this->annotationElement, array('class' => 'annotation'));
 		$this->saveElement($this->legendElement, 'Анотация');
 	}
 
 
-	protected function doInfoblockStart()
-	{
+	protected function doInfoblockStart() {
 		$this->saveStartTag($this->annotationElement, array('class' => 'infobox'));
 		$this->saveElement($this->legendElement, 'Допълнителна информация');
 	}
 
 
-	protected function doPoemStart()
-	{
+	protected function doPoemStart() {
 		$this->saveStartTag($this->poemElement, array('class' => 'poem'));
 	}
 
 
 
-	protected function prepareVerseNumber()
-	{
+	protected function prepareVerseNumber() {
 		$this->paragraphPrefix = $this->getVerseAnchor() . ' ';
 	}
 
-	protected function clearVerseNumber()
-	{
+	protected function clearVerseNumber() {
 		$this->paragraphPrefix = '';
 	}
 
 
-	protected function getVerseAnchor()
-	{
+	protected function getVerseAnchor() {
 		$id = $this->getVerseAnchorId($this->lcmd);
 		return $this->out->xmlElement('a', $this->lcmd, array(
 			'href'  => '#' . $id,
@@ -177,8 +164,7 @@ class SfbToHtmlConverter extends SfbConverter {
 		));
 	}
 
-	protected function getVerseAnchorId($num)
-	{
+	protected function getVerseAnchorId($num) {
 		$id = "verse_$num";
 		if ( isset( $this->verseCnts[$num] ) ) {
 			$id .= '.' . ( ++$this->verseCnts[$num] );
@@ -189,20 +175,17 @@ class SfbToHtmlConverter extends SfbConverter {
 	}
 
 
-	protected function doPoemCenterStart()
-	{
+	protected function doPoemCenterStart() {
 		$this->saveStartTag($this->poemCenterElement, array('class' => 'poem-middle'));
 	}
 
 
-	protected function doCiteStart()
-	{
+	protected function doCiteStart() {
 		$this->saveStartTag($this->citeElement, array('class' => 'cite'));
 	}
 
 
-	protected function addTableCaption($text)
-	{
+	protected function addTableCaption($text) {
 		if ( ! empty($this->tableCaption) ) {
 			$this->tableCaption .= $this->out->getEmptyTag($this->breakLineElement);
 		}
@@ -213,8 +196,7 @@ class SfbToHtmlConverter extends SfbConverter {
 
 
 
-	protected function getImage($src, $id, $alt, $title, $url, $size, $align)
-	{
+	protected function getImage($src, $id, $alt, $title, $url, $size, $align) {
 		$ititle = empty($title) ? $alt : $title;
 		$img = $this->out->xmlElement('img', null, array(
 			'id' => $id,
@@ -252,28 +234,24 @@ class SfbToHtmlConverter extends SfbConverter {
 	}
 
 
-	protected function getImageTitleElm($title)
-	{
+	protected function getImageTitleElm($title) {
 		return $this->out->xmlElement('span', $title, array('class' => 'image-title') );
 	}
 
 
-	protected function doEmptyLine()
-	{
+	protected function doEmptyLine() {
 		$this->saveEmptyLine($this->out->xmlElement($this->paragraphElement, '&#160;'));
 	}
 
 
-	protected function inSeparator()
-	{
+	protected function inSeparator() {
 		$this->saveElement($this->separatorElement, $this->ltext, array(
 			'class' => 'separator'
 		));
 	}
 
 
-	protected function doParagraphReally()
-	{
+	protected function doParagraphReally() {
 		if ( $this->paragraphContainsBlockImage() ) {
 			$this->saveStartTag($this->blockImageElement, array('class' => 'image'));
 			$this->inParagraph();
@@ -284,80 +262,66 @@ class SfbToHtmlConverter extends SfbConverter {
 	}
 
 
-	protected function doAuthorStart()
-	{
+	protected function doAuthorStart() {
 		$this->saveStartTag($this->authorElement, array('class' => 'author'));
 	}
 
-	protected function doAuthorEnd()
-	{
+	protected function doAuthorEnd() {
 		$this->saveEndTag($this->authorElement);
 	}
 
-	protected function doAuthorLineStart()
-	{
+	protected function doAuthorLineStart() {
 		$this->saveStartTag($this->paragraphElement);
 	}
 
-	protected function doAuthorLineEnd()
-	{
+	protected function doAuthorLineEnd() {
 		$this->saveEndTag($this->paragraphElement);
 	}
 
 
-	protected function doDateStart()
-	{
+	protected function doDateStart() {
 		$this->saveStartTag($this->dateElement, array('class' => 'placeyear'));
 	}
 
-	protected function doDateEnd()
-	{
+	protected function doDateEnd() {
 		$this->saveEndTag($this->dateElement);
 	}
 
-	protected function doDateLineStart()
-	{
+	protected function doDateLineStart() {
 		$this->saveStartTag($this->paragraphElement);
 	}
 
-	protected function doDateLineEnd()
-	{
+	protected function doDateLineEnd() {
 		$this->saveEndTag($this->paragraphElement);
 	}
 
 
-	protected function doSubheaderLineStart($isMulti, $line)
-	{
+	protected function doSubheaderLineStart($isMulti, $line) {
 		$this->saveStartTag(self::$titleElements[self::TITLE_5], array(
 			'id' => $this->generateInternalId($line),
 			'class' => 'subheader',
 		));
 	}
 
-	protected function doSubheaderLineEnd($isMulti)
-	{
+	protected function doSubheaderLineEnd($isMulti) {
 		$this->saveEndTag(self::$titleElements[self::TITLE_5]);
 	}
 
 
-	protected function doNoteStart()
-	{
+	protected function doNoteStart() {
 		parent::doNoteStart();
 		$this->paragraphPrefix = $this->getRefLink($this->_curNoteIndex/*$this->curFn*/);
 	}
 
-	protected function postNoteStart()
-	{
+	protected function postNoteStart() {
 		$this->paragraphPrefix = '';
 	}
 
-	protected function preNoteEnd()
-	{
+	protected function preNoteEnd() {
 		$this->paragraphSuffix = $this->getRefLink($this->_curNoteIndex/*$this->curFn*/, '↑');
 	}
 
-	protected function postNoteEnd()
-	{
+	protected function postNoteEnd() {
 		$this->paragraphPrefix =
 		$this->paragraphSuffix = '';
 		parent::postNoteEnd();
@@ -365,8 +329,7 @@ class SfbToHtmlConverter extends SfbConverter {
 
 
 	/**  */
-	public function getNoteLink($curReference)
-	{
+	public function getNoteLink($curReference) {
 		$anchor = $this->out->xmlElement('a', "[$curReference]", array(
 			'href'  => '#' . self::getNoteId($curReference),
 			'title' => 'Към бележката',
@@ -379,8 +342,7 @@ class SfbToHtmlConverter extends SfbConverter {
 	}
 
 
-	protected function getRefLink($curReference, $text = '')
-	{
+	protected function getRefLink($curReference, $text = '') {
 		if (empty($text)) $text = "[$curReference]";
 
 		return $this->out->xmlElement('a', $text, array(
@@ -394,14 +356,12 @@ class SfbToHtmlConverter extends SfbConverter {
 	/**
 	* Return an element ID for a reference to a note
 	*/
-	protected function getRefId($nr)
-	{
+	protected function getRefId($nr) {
 		return 'ref_' . self::getNoteNr($nr);
 	}
 
 
-	protected function saveUnknownContent()
-	{
+	protected function saveUnknownContent() {
 		$this->saveContent("SFB Error: Unknown content at line $this->linecnt: $this->line\n");
 	}
 

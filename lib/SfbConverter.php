@@ -326,8 +326,7 @@ class SfbConverter {
 	 */
 	protected $spanRows;
 
-	public function __construct($file, $imgDir = 'img')
-	{
+	public function __construct($file, $imgDir = 'img') {
 		self::$objCount++;
 
 		$this->out = new XmlElement;
@@ -402,32 +401,27 @@ class SfbConverter {
 	}
 
 
-	public static function setObjectCount($cnt)
-	{
+	public static function setObjectCount($cnt) {
 		self::$objCount = $cnt;
 	}
 
-	public static function getObjectCount()
-	{
+	public static function getObjectCount() {
 		return self::$objCount;
 	}
 
 	/**
 	* Return a unique number across all converter objects
 	*/
-	public static function getUniqueObjectNr($nr)
-	{
+	public static function getUniqueObjectNr($nr) {
 		return self::createNoteIdSuffix(self::$objCount, $nr);
 	}
 
 
-	public static function createNoteIdSuffix($objCount, $noteNr)
-	{
+	public static function createNoteIdSuffix($objCount, $noteNr) {
 		return $objCount . '-' . $noteNr;
 	}
 
-	public static function addMissingCommandDelimiters($content)
-	{
+	public static function addMissingCommandDelimiters($content) {
 		$fixedContent = '';
 		$commands = array(
 			self::HEADER,
@@ -493,8 +487,7 @@ class SfbConverter {
 	}
 
 	/** TODO remove */
-	public function setCurRef($nr)
-	{
+	public function setCurRef($nr) {
 		$this->curRef = $nr;
 	}
 
@@ -512,8 +505,7 @@ class SfbConverter {
 		$this->maxlinecnt = $maxLineCount;
 	}
 
-	public function convert()
-	{
+	public function convert() {
 		if ( ! $this->_reader ) {
 			return $this;
 		}
@@ -528,14 +520,12 @@ class SfbConverter {
 	}
 
 
-	public function output()
-	{
+	public function output() {
 		print $this->getContent();
 	}
 
 
-	public function saveFile($filename)
-	{
+	public function saveFile($filename) {
 		myfile_put_contents($filename, $this->getContent());
 	}
 
@@ -543,26 +533,22 @@ class SfbConverter {
 	/**
 	* TODO remove
 	*/
-	public function content($withNotes = true, $plainNotes = true)
-	{
+	public function content($withNotes = true, $plainNotes = true) {
 		return $this->getText() . ($withNotes ? $this->getNotes($plainNotes ? 0 : 1) : '');
 	}
 
 
-	public function getContent()
-	{
+	public function getContent() {
 		return $this->getText() . $this->getNotes(1);
 	}
 
 
-	public function getText()
-	{
+	public function getText() {
 		return $this->getContentBlock('main');
 	}
 
 
-	public function getNotes($type = 0)
-	{
+	public function getNotes($type = 0) {
 		$footnotes = $this->getNotesBlock();
 
 		if ( empty($footnotes) ) {
@@ -573,36 +559,30 @@ class SfbConverter {
 	}
 
 
-	protected function getNotesBlock()
-	{
+	protected function getNotesBlock() {
 		$footnotes = $this->getContentBlock('footnotes', -1);
 		ksort($footnotes);
 
 		return implode('', $footnotes);
 	}
 
-	public function setSaveSuffix($suffix)
-	{
+	public function setSaveSuffix($suffix) {
 		$this->saveSuffix = $suffix;
 	}
 
 
-	public function enablePrettyOutput()
-	{
+	public function enablePrettyOutput() {
 		$this->_newLineOutput = self::EOL;
 	}
-	public function disablePrettyOutput()
-	{
+	public function disablePrettyOutput() {
 		$this->_newLineOutput = '';
 	}
 
-	public function hasPrettyOutput()
-	{
+	public function hasPrettyOutput() {
 		return $this->_newLineOutput != '';
 	}
 
-	public function getEol()
-	{
+	public function getEol() {
 		return $this->_newLineOutput;
 	}
 
@@ -611,8 +591,7 @@ class SfbConverter {
 	* Tells whether there is a foot note without corresponding reference.
 	* Such a foot note should refer to the text title.
 	*/
-	public function hasTitleNote()
-	{
+	public function hasTitleNote() {
 		if ( ! $this->_reader ) {
 			return null;
 		}
@@ -621,33 +600,28 @@ class SfbConverter {
 	}
 
 
-	public function addPattern($pattern, $repl)
-	{
+	public function addPattern($pattern, $repl) {
 		$this->replPairs[$pattern] = $repl;
 		return $this;
 	}
 
-	public function addRegExpPattern($pattern, $repl)
-	{
+	public function addRegExpPattern($pattern, $repl) {
 		$this->patterns[$pattern] = $repl;
 		return $this;
 	}
 
-	public function rmPattern($pattern)
-	{
+	public function rmPattern($pattern) {
 		unset($this->replPairs[$pattern]);
 		return $this;
 	}
 
-	public function rmRegExpPattern($pattern)
-	{
+	public function rmRegExpPattern($pattern) {
 		unset($this->patterns[$pattern]);
 		return $this;
 	}
 
 
-	public function hasCustomStyles()
-	{
+	public function hasCustomStyles() {
 		$content = $this->getContentBlock('main') . $this->getNotesBlock();
 
 		$has = strpos($content, "<$this->blockStyleElement") !== false;
@@ -665,8 +639,7 @@ class SfbConverter {
 	*                      If false, we may be at the end, but our buffer
 	*                      still holds lines to be processed.
 	*/
-	protected function nextLine($canMarkEnd = true)
-	{
+	protected function nextLine($canMarkEnd = true) {
 		if ($this->hasNextLine) {
 			$this->hasNextLine = false;
 			return $this->line;
@@ -702,8 +675,7 @@ class SfbConverter {
 	}
 
 
-	protected function getLinesForMultiLineMarker($marker)
-	{
+	protected function getLinesForMultiLineMarker($marker) {
 		$lines = array();
 		do {
 			$lines[] = $this->ltext;
@@ -729,8 +701,7 @@ class SfbConverter {
 	*			(p | image | poem | subtitle | cite | empty-line | table)*)))
 	*		id ID #IMPLIED
 	*/
-	protected function doText()
-	{
+	protected function doText() {
 		$this->preDoText();
 		switch ($this->lcmd) {
 			case self::PARAGRAPH:       $this->doParagraph();        break;
@@ -763,16 +734,13 @@ class SfbConverter {
 	}
 
 
-	protected function preDoText()
-	{
+	protected function preDoText() {
 	}
 
-	protected function postDoText()
-	{
+	protected function postDoText() {
 	}
 
-	protected function doTextEnd()
-	{
+	protected function doTextEnd() {
 		$this->closeSections();
 	}
 
@@ -780,16 +748,14 @@ class SfbConverter {
 	/*************************************************************************/
 
 
-	protected function openSectionIfNone()
-	{
+	protected function openSectionIfNone() {
 		if ( ! $this->isSectionOpened() ) {
 			$this->openSection();
 		}
 	}
 
 
-	protected function closeSections()
-	{
+	protected function closeSections() {
 		while ( $this->isSectionOpened() ) {
 			$this->closeSection();
 		}
@@ -803,8 +769,7 @@ class SfbConverter {
 	*
 	* @param $marker  A title marker (self::TITLE_X)
 	*/
-	protected function closeSectionsForTitle($marker)
-	{
+	protected function closeSectionsForTitle($marker) {
 		while ( $this->areSectionsToCloseForTitle($marker) ) {
 			$this->closeSection();
 		}
@@ -812,22 +777,19 @@ class SfbConverter {
 
 
 	protected $sectionAttributes = array();
-	protected function openSection($id = null)
-	{
+	protected function openSection($id = null) {
 		$attrs = $id ? array('id' => $id) : array();
 		$this->saveStartTag($this->sectionElement, $attrs + $this->sectionAttributes);
 		$this->sectionsEntered++;
 	}
 
-	protected function closeSection()
-	{
+	protected function closeSection() {
 		$this->saveEndTag($this->sectionElement);
 		$this->sectionsEntered--;
 	}
 
 
-	protected function isSectionOpened()
-	{
+	protected function isSectionOpened() {
 		return $this->sectionsEntered > 0;
 	}
 
@@ -837,8 +799,7 @@ class SfbConverter {
 	*
 	* @param $marker  A title marker (self::TITLE_X)
 	*/
-	protected function areSectionsToCloseForTitle($marker)
-	{
+	protected function areSectionsToCloseForTitle($marker) {
 		return self::$remainingSectionsByTitle[$marker] < $this->sectionsEntered;
 	}
 
@@ -846,8 +807,7 @@ class SfbConverter {
 	/*************************************************************************/
 
 
-	protected function doHeader()
-	{
+	protected function doHeader() {
 		$this->flushEmptyLineBuffer();
 		$this->doHeaderStart();
 
@@ -870,24 +830,20 @@ class SfbConverter {
 	/**
 	* @param $headerLines  Header lines
 	*/
-	protected function inHeader($headerLines)
-	{
+	protected function inHeader($headerLines) {
 		$text = $this->getHeaderText($headerLines);
 		if ( ! empty($text) ) {
 			$this->save( $this->out->xmlElement($this->titleElement, $text) );
 		}
 	}
 
-	protected function doHeaderStart()
-	{
+	protected function doHeaderStart() {
 	}
 
-	protected function doHeaderEnd()
-	{
+	protected function doHeaderEnd() {
 	}
 
-	protected function getHeaderText($lines)
-	{
+	protected function getHeaderText($lines) {
 		$text = '';
 		foreach ($lines as $line) {
 			if ( ! empty($line) ) {
@@ -907,8 +863,7 @@ class SfbConverter {
 	* title (p | empty-line)*
 	*
 	*/
-	protected function doTitle($marker)
-	{
+	protected function doTitle($marker) {
 		$this->flushEmptyLineBuffer();
 
 		$title = array( $this->doInlineElements($this->ltext) );
@@ -931,8 +886,7 @@ class SfbConverter {
 	}
 
 
-	protected function generateInternalId($name, $unique = true)
-	{
+	protected function generateInternalId($name, $unique = true) {
 		if (is_array($name)) {
 			$name = implode('-', $name);
 		}
@@ -940,21 +894,18 @@ class SfbConverter {
 	}
 
 
-	protected function inTitle($titleLines, $marker)
-	{
+	protected function inTitle($titleLines, $marker) {
 		$elm = $this->titleElement . strlen($marker);
 		$this->save( $this->out->xmlElement($elm, implode('. ', $titleLines)) );
 	}
 
 
-	protected function doTitleStart($marker, $id = null)
-	{
+	protected function doTitleStart($marker, $id = null) {
 		$this->closeSectionsForTitle($marker);
 		$this->openSection($id);
 	}
 
-	protected function doTitleEnd($marker)
-	{
+	protected function doTitleEnd($marker) {
 	}
 
 
@@ -964,8 +915,7 @@ class SfbConverter {
 	/**
 	* Epigraph processing
 	*/
-	protected function doEpigraph()
-	{
+	protected function doEpigraph() {
 		$this->_inEpigraph = $this->linecnt;
 		$this->flushEmptyLineBuffer();
 
@@ -988,8 +938,7 @@ class SfbConverter {
 	/**
 	* epigraph ((p | poem | cite | empty-line)*, text-author*)
 	*/
-	protected function inEpigraph()
-	{
+	protected function inEpigraph() {
 		switch ($this->lcmd) {
 			case self::PARAGRAPH:       $this->doParagraph();           break;
 			case self::POEM_S:          $this->doPoem();                break;
@@ -1007,44 +956,37 @@ class SfbConverter {
 		}
 	}
 
-	protected function doEpigraphStart()
-	{
+	protected function doEpigraphStart() {
 		$this->saveStartTag($this->epigraphElement);
 	}
 
-	protected function doEpigraphEnd()
-	{
+	protected function doEpigraphEnd() {
 		$this->saveEndTag($this->epigraphElement);
 	}
 
-	protected function isInEpigraph()
-	{
+	protected function isInEpigraph() {
 		return $this->_inEpigraph;
 	}
 
-	protected function isAtEpigraphEnd()
-	{
+	protected function isAtEpigraphEnd() {
 		return $this->lcmd == self::EPIGRAPH_E;
 	}
 
 
-	protected function isInMainEpigraphBody()
-	{
+	protected function isInMainEpigraphBody() {
 		return $this->isInEpigraph()
 			&& ! $this->isInEpigraphPoem()
 			&& ! $this->isInEpigraphCite()
 			&& ! $this->isInEpigraphNote();
 	}
 
-	protected function isInEpigraphCite()
-	{
+	protected function isInEpigraphCite() {
 		$e = $this->isInEpigraph();
 		$c = $this->isInCite();
 		return $e && $c && $e < $c;
 	}
 
-	protected function isInEpigraphNote()
-	{
+	protected function isInEpigraphNote() {
 		$e = $this->isInEpigraph();
 		$n = $this->isInNote();
 		return $e && $n && $e < $n;
@@ -1057,8 +999,7 @@ class SfbConverter {
 	/**
 	* Dedication processing
 	*/
-	protected function doDedication()
-	{
+	protected function doDedication() {
 		$this->_inDedication = $this->linecnt;
 		$this->flushEmptyLineBuffer();
 
@@ -1081,8 +1022,7 @@ class SfbConverter {
 	/**
 	* As epigraph
 	*/
-	protected function inDedication()
-	{
+	protected function inDedication() {
 		switch ($this->lcmd) {
 			case self::PARAGRAPH:       $this->doParagraph();           break;
 			case self::POEM_S:          $this->doPoem();                break;
@@ -1100,43 +1040,36 @@ class SfbConverter {
 		}
 	}
 
-	protected function doDedicationStart()
-	{
+	protected function doDedicationStart() {
 		$this->saveStartTag($this->dedicationElement);
 	}
 
-	protected function doDedicationEnd()
-	{
+	protected function doDedicationEnd() {
 		$this->saveEndTag($this->dedicationElement);
 	}
 
-	protected function isInDedication()
-	{
+	protected function isInDedication() {
 		return $this->_inDedication;
 	}
 
-	protected function isAtDedicationEnd()
-	{
+	protected function isAtDedicationEnd() {
 		return $this->lcmd == self::DEDICATION_E;
 	}
 
-	protected function isInMainDedicationBody()
-	{
+	protected function isInMainDedicationBody() {
 		return $this->isInDedication()
 			&& ! $this->isInDedicationPoem()
 			&& ! $this->isInDedicationCite()
 			&& ! $this->isInDedicationNote();
 	}
 
-	protected function isInDedicationCite()
-	{
+	protected function isInDedicationCite() {
 		$d = $this->isInDedication();
 		$c = $this->isInCite();
 		return $d && $c && $d < $c;
 	}
 
-	protected function isInDedicationNote()
-	{
+	protected function isInDedicationNote() {
 		$d = $this->isInDedication();
 		$n = $this->isInNote();
 		return $d && $n && $d < $n;
@@ -1149,8 +1082,7 @@ class SfbConverter {
 	/**
 	* Notice processing
 	*/
-	protected function doNotice()
-	{
+	protected function doNotice() {
 		$this->doNoticeStart();
 		$this->checkForParagraphOnBlockStart();
 
@@ -1164,8 +1096,7 @@ class SfbConverter {
 		$this->doNoticeEnd();
 	}
 
-	protected function inNotice()
-	{
+	protected function inNotice() {
 		switch ($this->lcmd) {
 			case self::PARAGRAPH:       $this->doParagraph();           break;
 			case self::STYLE_S:         $this->doStyle();               break;
@@ -1174,18 +1105,15 @@ class SfbConverter {
 		}
 	}
 
-	protected function doNoticeStart()
-	{
+	protected function doNoticeStart() {
 		$this->saveStartTag($this->noticeElement);
 	}
 
-	protected function doNoticeEnd()
-	{
+	protected function doNoticeEnd() {
 		$this->saveEndTag($this->noticeElement);
 	}
 
-	protected function doNoticeOl()
-	{
+	protected function doNoticeOl() {
 		$this->doNoticeStart();
 		$this->doParagraph();
 		$this->doNoticeEnd();
@@ -1198,8 +1126,7 @@ class SfbConverter {
 	/**
 	* Annotation processing
 	*/
-	protected function doAnnotation()
-	{
+	protected function doAnnotation() {
 		$this->_inAnnotation = true;
 		$this->flushEmptyLineBuffer();
 
@@ -1223,8 +1150,7 @@ class SfbConverter {
 	* annotation (p | poem | cite | subtitle | table | empty-line)*
 	* 	id ID #IMPLIED
 	*/
-	protected function inAnnotation()
-	{
+	protected function inAnnotation() {
 		switch ($this->lcmd) {
 			case self::PARAGRAPH:       $this->doParagraph();           break;
 			case self::POEM_S:          $this->doPoem();                break;
@@ -1242,23 +1168,19 @@ class SfbConverter {
 		}
 	}
 
-	protected function doAnnotationStart()
-	{
+	protected function doAnnotationStart() {
 		$this->saveStartTag($this->annotationElement);
 	}
 
-	protected function doAnnotationEnd()
-	{
+	protected function doAnnotationEnd() {
 		$this->saveEndTag($this->annotationElement);
 	}
 
-	protected function isInAnnotation()
-	{
+	protected function isInAnnotation() {
 		return $this->_inAnnotation;
 	}
 
-	protected function isAtAnnotationEnd()
-	{
+	protected function isAtAnnotationEnd() {
 		return $this->lcmd == self::ANNO_E;
 	}
 
@@ -1269,8 +1191,7 @@ class SfbConverter {
 	/**
 	* Infoblock processing
 	*/
-	protected function doInfoblock()
-	{
+	protected function doInfoblock() {
 		$this->_inInfoblock = true;
 		$this->flushEmptyLineBuffer();
 
@@ -1288,8 +1209,7 @@ class SfbConverter {
 		$this->_inInfoblock = false;
 	}
 
-	protected function inInfoblock()
-	{
+	protected function inInfoblock() {
 		switch ($this->lcmd) {
 			case self::PARAGRAPH:       $this->doParagraph();           break;
 			case self::TITLE_1:
@@ -1312,23 +1232,19 @@ class SfbConverter {
 		}
 	}
 
-	protected function doInfoblockStart()
-	{
+	protected function doInfoblockStart() {
 		$this->saveStartTag($this->infoblockElement);
 	}
 
-	protected function doInfoblockEnd()
-	{
+	protected function doInfoblockEnd() {
 		$this->saveEndTag($this->infoblockElement);
 	}
 
-	protected function isInInfoblock()
-	{
+	protected function isInInfoblock() {
 		return $this->_inInfoblock;
 	}
 
-	protected function isAtInfoblockEnd()
-	{
+	protected function isAtInfoblockEnd() {
 		return $this->lcmd == self::INFO_E;
 	}
 
@@ -1339,8 +1255,7 @@ class SfbConverter {
 	/**
 	* Poem processing
 	*/
-	protected function doPoem()
-	{
+	protected function doPoem() {
 		$this->_inPoem = $this->linecnt;
 		$this->_poemsEntered++;
 		$this->saveEmptyLineBuffer();
@@ -1370,8 +1285,7 @@ class SfbConverter {
 	*
 	* TODO handle poem in a foot note within a poem
 	*/
-	protected function inPoem()
-	{
+	protected function inPoem() {
 		switch ($this->lcmd) {
 			case self::DEDICATION_S:    $this->doDedication();      break;
 			case self::EPIGRAPH_S:      $this->doEpigraph();        break;
@@ -1396,28 +1310,23 @@ class SfbConverter {
 		}
 	}
 
-	protected function doPoemStart()
-	{
+	protected function doPoemStart() {
 		$this->saveStartTag($this->poemElement);
 	}
 
-	protected function doPoemEnd()
-	{
+	protected function doPoemEnd() {
 		$this->saveEndTag($this->poemElement);
 	}
 
-	protected function isInPoem()
-	{
+	protected function isInPoem() {
 		return $this->_inPoem;
 	}
 
-	protected function isAtPoemEnd()
-	{
+	protected function isAtPoemEnd() {
 		return $this->lcmd == self::POEM_E;
 	}
 
-	protected function isInMainPoemBody()
-	{
+	protected function isInMainPoemBody() {
 		return $this->isInPoem()
 			&& ! $this->isInPoemEpigraph()
 			&& ! $this->isInPoemDedication()
@@ -1427,8 +1336,7 @@ class SfbConverter {
 	/**
 	* Are we in a poem within an epigraph
 	*/
-	protected function isInEpigraphPoem()
-	{
+	protected function isInEpigraphPoem() {
 		$e = $this->isInEpigraph();
 		$p = $this->isInPoem();
 		return  $e && $p && $e < $p;
@@ -1437,8 +1345,7 @@ class SfbConverter {
 	/**
 	* Are we in an epigraph within a poem
 	*/
-	protected function isInPoemEpigraph()
-	{
+	protected function isInPoemEpigraph() {
 		$e = $this->isInEpigraph();
 		$p = $this->isInPoem();
 		return  $e && $p && $e > $p;
@@ -1448,8 +1355,7 @@ class SfbConverter {
 	/**
 	* Are we in a poem within a dedication
 	*/
-	protected function isInDedicationPoem()
-	{
+	protected function isInDedicationPoem() {
 		$d = $this->isInDedication();
 		$p = $this->isInPoem();
 		return  $d && $p && $d < $p;
@@ -1458,8 +1364,7 @@ class SfbConverter {
 	/**
 	* Are we in a dedication within a poem
 	*/
-	protected function isInPoemDedication()
-	{
+	protected function isInPoemDedication() {
 		$d = $this->isInDedication();
 		$p = $this->isInPoem();
 		return  $d && $p && $d > $p;
@@ -1469,34 +1374,29 @@ class SfbConverter {
 	/**
 	* Are we in a foot note within a poem
 	*/
-	protected function isInPoemNote()
-	{
+	protected function isInPoemNote() {
 		$p = $this->isInPoem();
 		$n = $this->isInNote();
 		return  $p && $n && $p < $n;
 	}
 
 
-	protected function isAtVerseNumber()
-	{
+	protected function isAtVerseNumber() {
 		return ! empty($this->lcmd) && preg_match('/^\d/', $this->lcmd);
 	}
 
 
-	protected function doVerseNumber()
-	{
+	protected function doVerseNumber() {
 		$this->prepareVerseNumber();
 		$this->doParagraph();
 		$this->clearVerseNumber();
 	}
 
-	protected function prepareVerseNumber()
-	{
+	protected function prepareVerseNumber() {
 		$this->paragraphSuffix = " [$this->lcmd]";
 	}
 
-	protected function clearVerseNumber()
-	{
+	protected function clearVerseNumber() {
 		$this->paragraphSuffix = '';
 	}
 
@@ -1507,8 +1407,7 @@ class SfbConverter {
 	/**
 	* Processing of text with styles
 	*/
-	protected function doStyle()
-	{
+	protected function doStyle() {
 		$this->doStyleStart();
 
 		do {
@@ -1524,8 +1423,7 @@ class SfbConverter {
 	}
 
 
-	protected function inStyle()
-	{
+	protected function inStyle() {
 		switch ($this->lcmd) {
 			case self::PARAGRAPH:       $this->doParagraph();        break;
 			case self::TITLE_1:
@@ -1552,13 +1450,11 @@ class SfbConverter {
 		}
 	}
 
-	protected function doStyleStart()
-	{
+	protected function doStyleStart() {
 		$this->saveStartTag($this->blockStyleElement, array($this->blockStyleAttribute => $this->ltext));
 	}
 
-	protected function doStyleEnd()
-	{
+	protected function doStyleEnd() {
 		$this->saveEndTag($this->blockStyleElement);
 	}
 
@@ -1569,8 +1465,7 @@ class SfbConverter {
 	/**
 	* Cite processing
 	*/
-	protected function doCite()
-	{
+	protected function doCite() {
 		$this->_inCite = $this->linecnt;
 		$this->saveEmptyLineBuffer();
 		$this->enableEmptyLines();
@@ -1592,8 +1487,7 @@ class SfbConverter {
 	/**
 	* cite ((p | poem | empty-line | subtitle | table)*, text-author*)
 	*/
-	protected function inCite()
-	{
+	protected function inCite() {
 		switch ($this->lcmd) {
 			case self::PARAGRAPH:        $this->doParagraph();       break;
 			case self::POEM_S:           $this->doPoem();            break;
@@ -1611,23 +1505,19 @@ class SfbConverter {
 		}
 	}
 
-	protected function doCiteStart()
-	{
+	protected function doCiteStart() {
 		$this->saveStartTag($this->citeElement);
 	}
 
-	protected function doCiteEnd()
-	{
+	protected function doCiteEnd() {
 		$this->saveEndTag($this->citeElement);
 	}
 
-	protected function isInCite()
-	{
+	protected function isInCite() {
 		return $this->_inCite;
 	}
 
-	protected function isAtCiteEnd()
-	{
+	protected function isAtCiteEnd() {
 		return $this->lcmd == self::CITE_E;
 	}
 
@@ -1638,8 +1528,7 @@ class SfbConverter {
 	/**
 	* Preformatted processing
 	*/
-	protected function doPreformatted()
-	{
+	protected function doPreformatted() {
 		$this->saveEmptyLineBuffer();
 		$this->doPreformattedStart();
 
@@ -1651,35 +1540,30 @@ class SfbConverter {
 		$this->doPreformattedEnd();
 	}
 
-	protected function inPreformatted()
-	{
+	protected function inPreformatted() {
 		switch ($this->lcmd) {
 			case self::PREFORMATTED_E: break;
 			default:                   $this->savePreformatted($this->ltext);
 		}
 	}
 
-	protected function doPreformattedStart()
-	{
+	protected function doPreformattedStart() {
 		$this->saveStartTag($this->preformattedElement);
 	}
 
-	protected function doPreformattedEnd()
-	{
+	protected function doPreformattedEnd() {
 		$this->saveEndTag($this->preformattedElement);
 	}
 
 
-	protected function doPreformattedOl()
-	{
+	protected function doPreformattedOl() {
 		$this->doPreformattedStart();
 		$this->savePreformatted($this->ltext);
 		$this->doPreformattedEnd();
 	}
 
 
-	protected function savePreformatted($content)
-	{
+	protected function savePreformatted($content) {
 		$this->save($this->doInlineElements($content));
 		//$this->save( htmlspecialchars($content) );
 	}
@@ -1694,8 +1578,7 @@ class SfbConverter {
 	* p (#PCDATA | strong | emphasis | style | a | strikethrough | sub | sup | code | image)*
 	* 	id ID #IMPLIED
 	*/
-	protected function doParagraph()
-	{
+	protected function doParagraph() {
 		if ( $this->isEmptyLine() ) {
 			if ($this->acceptsEmptyLines()) {
 				$this->doEmptyLine();
@@ -1719,8 +1602,7 @@ class SfbConverter {
 	}
 
 
-	protected function doParagraphReally()
-	{
+	protected function doParagraphReally() {
 		$this->saveEmptyLineBuffer();
 		$this->enableEmptyLines();
 		$this->doParagraphStart();
@@ -1729,23 +1611,20 @@ class SfbConverter {
 	}
 
 
-	protected function inParagraph()
-	{
+	protected function inParagraph() {
 		$this->save($this->paragraphPrefix);
 		$this->saveContent($this->ltext);
 		$this->save($this->paragraphSuffix);
 	}
 
 
-	protected function doParagraphStart()
-	{
+	protected function doParagraphStart() {
 		$this->saveStartTag($this->paragraphElement, array(
 			'id' => 'p-'.$this->linecnt,
 		));
 	}
 
-	protected function doParagraphEnd()
-	{
+	protected function doParagraphEnd() {
 		$this->saveEndTag($this->paragraphElement);
 	}
 
@@ -1756,8 +1635,7 @@ class SfbConverter {
 	/**
 	* Author processing
 	*/
-	protected function doAuthor()
-	{
+	protected function doAuthor() {
 		$this->saveEmptyLineBuffer();
 		$this->doAuthorStart();
 		$this->inAuthor( $this->getLinesForMultiLineMarker(self::AUTHOR_OL) );
@@ -1766,8 +1644,7 @@ class SfbConverter {
 	}
 
 
-	protected function inAuthor($lines)
-	{
+	protected function inAuthor($lines) {
 		foreach ($lines as $line) {
 			$this->doAuthorLineStart();
 			$this->saveContent($line);
@@ -1775,21 +1652,17 @@ class SfbConverter {
 		}
 	}
 
-	protected function doAuthorStart()
-	{
+	protected function doAuthorStart() {
 	}
 
-	protected function doAuthorEnd()
-	{
+	protected function doAuthorEnd() {
 	}
 
-	protected function doAuthorLineStart()
-	{
+	protected function doAuthorLineStart() {
 		$this->saveStartTag($this->authorElement);
 	}
 
-	protected function doAuthorLineEnd()
-	{
+	protected function doAuthorLineEnd() {
 		$this->saveEndTag($this->authorElement);
 	}
 
@@ -1800,8 +1673,7 @@ class SfbConverter {
 	/**
 	* Date/year processing
 	*/
-	protected function doDate()
-	{
+	protected function doDate() {
 		$this->saveEmptyLineBuffer();
 		$this->doDateStart();
 		$this->inDate( $this->getLinesForMultiLineMarker(self::DATE_OL) );
@@ -1809,8 +1681,7 @@ class SfbConverter {
 		$this->enableEmptyLines();
 	}
 
-	protected function inDate($lines)
-	{
+	protected function inDate($lines) {
 		foreach ($lines as $line) {
 			$this->doDateLineStart();
 			$this->saveContent($line);
@@ -1818,26 +1689,21 @@ class SfbConverter {
 		}
 	}
 
-	protected function doDateStart()
-	{
+	protected function doDateStart() {
 	}
 
-	protected function doDateEnd()
-	{
+	protected function doDateEnd() {
 	}
 
-	protected function doDateLineStart()
-	{
+	protected function doDateLineStart() {
 		$this->saveStartTag($this->dateElement);
 	}
 
-	protected function doDateLineEnd()
-	{
+	protected function doDateLineEnd() {
 		$this->saveEndTag($this->dateElement);
 	}
 
-	protected function isAtDate()
-	{
+	protected function isAtDate() {
 		return $this->lcmd == self::DATE_OL;
 	}
 
@@ -1847,8 +1713,7 @@ class SfbConverter {
 	/**
 	* Subheader processing
 	*/
-	protected function doSubheader()
-	{
+	protected function doSubheader() {
 		$this->flushEmptyLineBuffer();
 		$lines = $this->getLinesForMultiLineMarker(self::SUBHEADER);
 		$isMulti = count($lines) > 1;
@@ -1858,8 +1723,7 @@ class SfbConverter {
 		$this->disableEmptyLines();
 	}
 
-	protected function inSubheader($lines, $isMulti)
-	{
+	protected function inSubheader($lines, $isMulti) {
 		foreach ($lines as $line) {
 			$this->doSubheaderLineStart($isMulti, $line);
 			$this->saveContent($line);
@@ -1867,21 +1731,17 @@ class SfbConverter {
 		}
 	}
 
-	protected function doSubheaderStart($isMulti)
-	{
+	protected function doSubheaderStart($isMulti) {
 	}
 
-	protected function doSubheaderEnd($isMulti)
-	{
+	protected function doSubheaderEnd($isMulti) {
 	}
 
-	protected function doSubheaderLineStart($isMulti, $line)
-	{
+	protected function doSubheaderLineStart($isMulti, $line) {
 		$this->saveStartTag($this->subheaderElement);
 	}
 
-	protected function doSubheaderLineEnd($isMulti)
-	{
+	protected function doSubheaderLineEnd($isMulti) {
 		$this->saveEndTag($this->subheaderElement);
 	}
 
@@ -1892,8 +1752,7 @@ class SfbConverter {
 	/**
 	* Poem header processing
 	*/
-	protected function doPoemHeader()
-	{
+	protected function doPoemHeader() {
 		$this->doPoemHeaderStart();
 		$this->inPoemHeader( $this->getLinesForMultiLineMarker(self::POEM_HEADER) );
 		$this->doPoemHeaderEnd();
@@ -1901,8 +1760,7 @@ class SfbConverter {
 	}
 
 
-	protected function inPoemHeader($lines)
-	{
+	protected function inPoemHeader($lines) {
 		foreach ($lines as $line) {
 			$this->doPoemHeaderLineStart();
 			$this->saveContent($line);
@@ -1910,21 +1768,17 @@ class SfbConverter {
 		}
 	}
 
-	protected function doPoemHeaderStart()
-	{
+	protected function doPoemHeaderStart() {
 	}
 
-	protected function doPoemHeaderEnd()
-	{
+	protected function doPoemHeaderEnd() {
 	}
 
-	protected function doPoemHeaderLineStart()
-	{
+	protected function doPoemHeaderLineStart() {
 		$this->saveStartTag($this->poemHeaderElement);
 	}
 
-	protected function doPoemHeaderLineEnd()
-	{
+	protected function doPoemHeaderLineEnd() {
 		$this->saveEndTag($this->poemHeaderElement);
 	}
 
@@ -1935,18 +1789,15 @@ class SfbConverter {
 	/**
 	* empty-line ANY
 	*/
-	protected function doEmptyLine()
-	{
+	protected function doEmptyLine() {
 		$this->saveEmptyLine( $this->out->getEmptyTag($this->emptyLineElement) );
 	}
 
-	protected function saveEmptyLine($content)
-	{
+	protected function saveEmptyLine($content) {
 		$this->_emptyLineBuffer .= $content . $this->saveSuffix;
 	}
 
-	protected function saveEmptyLineBuffer()
-	{
+	protected function saveEmptyLineBuffer() {
 		$buffer = $this->flushEmptyLineBuffer();
 		if ( ! empty($buffer) ) {
 			$this->save($buffer);
@@ -1956,26 +1807,22 @@ class SfbConverter {
 	/**
 	* Clear the empty line buffer and return its previous content
 	*/
-	protected function flushEmptyLineBuffer()
-	{
+	protected function flushEmptyLineBuffer() {
 		$buffer = $this->_emptyLineBuffer;
 		$this->_emptyLineBuffer = '';
 		return $buffer;
 	}
 
 
-	protected function acceptsEmptyLines()
-	{
+	protected function acceptsEmptyLines() {
 		return $this->_acceptEmptyLine;
 	}
 
-	protected function enableEmptyLines()
-	{
+	protected function enableEmptyLines() {
 		$this->_acceptEmptyLine = true;
 	}
 
-	protected function disableEmptyLines()
-	{
+	protected function disableEmptyLines() {
 		$this->_acceptEmptyLine = false;
 	}
 
@@ -1983,16 +1830,14 @@ class SfbConverter {
 	/*************************************************************************/
 
 
-	protected function doSeparator()
-	{
+	protected function doSeparator() {
 		$this->flushEmptyLineBuffer();
 		$this->inSeparator();
 		$this->disableEmptyLines();
 	}
 
 
-	protected function inSeparator()
-	{
+	protected function inSeparator() {
 		$this->saveStartTag($this->separatorElement);
 		$this->save($this->ltext);
 		$this->saveEndTag($this->separatorElement);
@@ -2005,8 +1850,7 @@ class SfbConverter {
 	/**
 	* Raw processing
 	*/
-	protected function doRaw()
-	{
+	protected function doRaw() {
 		$this->doRawStart();
 
 		do {
@@ -2017,24 +1861,20 @@ class SfbConverter {
 		$this->doRawEnd();
 	}
 
-	protected function inRaw()
-	{
+	protected function inRaw() {
 		switch ($this->lcmd) {
 			case self::RAW_E:     break;
 			default:              $this->saveRaw($this->line);
 		}
 	}
 
-	protected function doRawStart()
-	{
+	protected function doRawStart() {
 	}
 
-	protected function doRawEnd()
-	{
+	protected function doRawEnd() {
 	}
 
-	protected function saveRaw($line)
-	{
+	protected function saveRaw($line) {
 		$this->save($line, true);
 	}
 
@@ -2045,8 +1885,7 @@ class SfbConverter {
 	/**
 	* Foot note processing
 	*/
-	protected function doNote()
-	{
+	protected function doNote() {
 		$this->_inNote = $this->linecnt;
 		$this->preNoteStart();
 		$this->doNoteStart();
@@ -2067,8 +1906,7 @@ class SfbConverter {
 	}
 
 
-	protected function inEndingNote()
-	{
+	protected function inEndingNote() {
 		$this->preNoteEnd();
 		$this->removeNoteEndMarkerFromLine();
 		if ($this->ltext || $this->paragraphSuffix) {
@@ -2080,79 +1918,66 @@ class SfbConverter {
 	}
 
 
-	protected function doNoteStart()
-	{
+	protected function doNoteStart() {
 		$this->overwriteParagraphElement('p');
 		$this->saveStartTag($this->footnoteElement, array(
 			'id' => $this->getCurrentNoteId()
 		));
 	}
 
-	protected function doNoteEnd()
-	{
+	protected function doNoteEnd() {
 		$this->saveEndTag($this->footnoteElement);
 		$this->revertParagraphElement();
 	}
 
-	protected function preNoteStart()
-	{
+	protected function preNoteStart() {
 		$this->fnEntered++;
 		$this->saveEmptyLineBuffer();
 		$this->updateCurFn();
 		$this->enterContentBlock('footnotes', $this->_curNoteIndex);
 	}
 
-	protected function postNoteStart()
-	{
+	protected function postNoteStart() {
 	}
 
-	protected function preNoteEnd()
-	{
+	protected function preNoteEnd() {
 	}
 
-	protected function postNoteEnd()
-	{
+	protected function postNoteEnd() {
 		$this->fnEntered--;
 		if ( ! $this->fnEntered ) {
 			$this->leaveContentBlock('footnotes');
 		}
 	}
 
-	protected function isInNote()
-	{
+	protected function isInNote() {
 		return $this->_inNote;
 	}
 
-	protected function noteStarts()
-	{
+	protected function noteStarts() {
 		return substr($this->ltext, 0, strlen(self::NOTE_START)) == self::NOTE_START;
 	}
 
-	protected function noteEnds()
-	{
+	protected function noteEnds() {
 		return substr($this->ltext, -strlen(self::NOTE_END) ) == self::NOTE_END;
 	}
 
-	protected function removeNoteStartMarkerFromLine()
-	{
+	protected function removeNoteStartMarkerFromLine() {
 		$this->ltext = ltrim(preg_replace('/^' . self::NOTE_START_REGEXP . '/', '', $this->ltext));
 	}
 
-	protected function removeNoteEndMarkerFromLine()
-	{
+	protected function removeNoteEndMarkerFromLine() {
 		$this->ltext = substr($this->ltext, 0, -strlen(self::NOTE_END) );
 	}
 
-	protected function removeNoteMarkersFromLine()
-	{
+	protected function removeNoteMarkersFromLine() {
 		$this->removeNoteStartMarkerFromLine();
 		$this->removeNoteEndMarkerFromLine();
 	}
 
 
 	/* TODO remove $this->curFn */
-	protected function updateCurFn()
-	{
+	protected function updateCurFn() {
 		preg_match('/'. self::NOTE_START_REGEXP .'/', $this->ltext, $m);
 		$noteMarker = $m[1] . $m[2];
 		$noteNumber = $m[2];
@@ -2181,8 +2006,7 @@ class SfbConverter {
 	* Return a note link.
 	* Called as a callback of a preg_replace.
 	*/
-	public function getRef($stars, $num)
-	{
+	public function getRef($stars, $num) {
 		$this->updateCurRef($num);
 		$this->_refsWaiting[$this->curRef] = $stars . $num;
 
@@ -2190,8 +2014,7 @@ class SfbConverter {
 	}
 
 
-	protected function updateCurRef($num)
-	{
+	protected function updateCurRef($num) {
 		if ( $num === '' || $this->curRef >= $num ) {
 			$this->curRef++;
 		} else {
@@ -2200,8 +2023,7 @@ class SfbConverter {
 	}
 
 
-	public function getNoteLink($curReference)
-	{
+	public function getNoteLink($curReference) {
 		return "[$curReference]";
 	}
 
@@ -2209,38 +2031,33 @@ class SfbConverter {
 	/**
 	* Return an element ID for the current foot note
 	*/
-	protected function getCurrentNoteId()
-	{
+	protected function getCurrentNoteId() {
 		return self::getNoteId($this->_curNoteIndex/*$this->curFn*/);
 	}
 
 	/**
 	* Return an element ID for a foot note
 	*/
-	protected static function getNoteId($nr)
-	{
+	protected static function getNoteId($nr) {
 		return 'note_' . self::getNoteNr($nr);
 	}
 
 	/**
 	* Return the current normalized note number
 	*/
-	protected function getCurrentNoteNr()
-	{
+	protected function getCurrentNoteNr() {
 		return self::getNoteNr($this->_curNoteIndex/*$this->curFn*/);
 	}
 
 	/**
 	* Return a normalized note number
 	*/
-	protected static function getNoteNr($nr)
-	{
+	protected static function getNoteNr($nr) {
 		return self::getUniqueObjectNr($nr);
 	}
 
 
-	public static function removeNoteLinks($text)
-	{
+	public static function removeNoteLinks($text) {
 		return preg_replace('|<a.[^>]+>[^<]+</a>|', '', $text);
 	}
 
@@ -2251,8 +2068,7 @@ class SfbConverter {
 	/**
 	* Table processing
 	*/
-	protected function doTable()
-	{
+	protected function doTable() {
 		$this->saveEmptyLineBuffer();
 		$this->doTableStart();
 
@@ -2276,8 +2092,7 @@ class SfbConverter {
 	*
 	* td|th (#PCDATA | strong | emphasis | style | a | strikethrough | sub | sup | code | image)*
 	*/
-	protected function inTable()
-	{
+	protected function inTable() {
 		$this->inHeaderRow = false;
 		switch ($this->lcmd) {
 			case self::TABLE_HEADER:
@@ -2295,8 +2110,7 @@ class SfbConverter {
 	}
 
 
-	protected function doTableStart()
-	{
+	protected function doTableStart() {
 		$this->tableData = array();
 		$this->tableCaption = '';
 		$this->curTableRow = -1;
@@ -2305,21 +2119,18 @@ class SfbConverter {
 	}
 
 
-	protected function addTableCaption($text)
-	{
+	protected function addTableCaption($text) {
 		$this->tableCaption .= $text;
 	}
 
 
-	protected function doTableEnd()
-	{
+	protected function doTableEnd() {
 		$table = $this->out->simpleTable($this->tableCaption, $this->tableData);
 		$this->save( $table );
 	}
 
 
-	protected function inTableRow()
-	{
+	protected function inTableRow() {
 		// add missing leading marker
 		if ( $this->ltext[0] != self::TABLE_CELL ) {
 			$this->ltext = self::TABLE_CELL . $this->ltext;
@@ -2417,8 +2228,7 @@ class SfbConverter {
 	}
 
 
-	protected function getEmptyTableCell()
-	{
+	protected function getEmptyTableCell() {
 		$attributes = array();
 		if ( $this->inHeaderRow ) {
 			$attributes['type'] = 'header';
@@ -2445,8 +2255,7 @@ class SfbConverter {
 	* 	content-type CDATA #REQUIRED
 	* 	id           ID    #REQUIRED
 	*/
-	protected function doBlockImage()
-	{
+	protected function doBlockImage() {
 		$this->_inBlockImage = $this->linecnt;
 		$this->doBlockImageStart();
 		$this->doParagraphReally();
@@ -2454,16 +2263,13 @@ class SfbConverter {
 		$this->_inBlockImage = false;
 	}
 
-	protected function doBlockImageStart()
-	{
+	protected function doBlockImageStart() {
 	}
 
-	protected function doBlockImageEnd()
-	{
+	protected function doBlockImageEnd() {
 	}
 
-	protected function isInBlockImage()
-	{
+	protected function isInBlockImage() {
 		return $this->_inBlockImage;
 	}
 
@@ -2471,8 +2277,7 @@ class SfbConverter {
 	 *
 	 * Called as a callback of a preg_replace.
 	 */
-	protected function doImage($name, $modifs)
-	{
+	protected function doImage($name, $modifs) {
 		$alt = $name;
 		$title = $align = $size = '';
 		$id = $this->getCurrentImageId();
@@ -2506,8 +2311,7 @@ class SfbConverter {
 	}
 
 
-	protected function getImage($src, $id, $alt, $title, $url, $size, $align)
-	{
+	protected function getImage($src, $id, $alt, $title, $url, $size, $align) {
 		return $this->out->xmlElement($this->imageElement, array(
 			'id'    => $id,
 			'src'   => $src,
@@ -2516,13 +2320,11 @@ class SfbConverter {
 		));
 	}
 
-	protected function getCurrentImageId()
-	{
+	protected function getCurrentImageId() {
 		return 'img_' . self::getUniqueObjectNr( ++$this->curImgNr );
 	}
 
-	protected function isStandardImageId($id)
-	{
+	protected function isStandardImageId($id) {
 		return strpos($id, 'img_') === 0;
 	}
 
@@ -2530,8 +2332,7 @@ class SfbConverter {
 
 	/*************************************************************************/
 
-	protected function doUnknownContent()
-	{
+	protected function doUnknownContent() {
 		if ($this->hasJumpId()) {
 			if ($this->ltext != '') {
 				$this->doParagraph();
@@ -2541,14 +2342,12 @@ class SfbConverter {
 		$this->saveUnknownContent();
 	}
 
-	protected function saveUnknownContent()
-	{
+	protected function saveUnknownContent() {
 		echo "Unknown content at line $this->linecnt: $this->line\n";
 		$this->saveContent($this->line);
 	}
 
-	protected function hasJumpId()
-	{
+	protected function hasJumpId() {
 		if ($this->lcmd[0] == self::JUMP_ID) {
 			$this->_curJumpId = substr($this->lcmd, 1);
 			return true;
@@ -2559,8 +2358,7 @@ class SfbConverter {
 	/*************************************************************************/
 
 
-	protected function saveStartTag($elm, $attrs = array())
-	{
+	protected function saveStartTag($elm, $attrs = array()) {
 		if ( ! empty($elm) ) {
 			if ($this->_curJumpId !== null) {
 				if ( !isset($attrs['id'])) {
@@ -2572,36 +2370,31 @@ class SfbConverter {
 		}
 	}
 
-	protected function saveEndTag($elm)
-	{
+	protected function saveEndTag($elm) {
 		if ( ! empty($elm) ) {
 			$this->save( $this->out->getEndTag($elm) );
 		}
 	}
 
-	protected function saveEmptyTag($elm, $attrs = array())
-	{
+	protected function saveEmptyTag($elm, $attrs = array()) {
 		if ( ! empty($elm) ) {
 			$this->save( $this->out->getEmptyTag($elm, $attrs) );
 		}
 	}
 
-	protected function saveElement($elm, $content, $attrs = array())
-	{
+	protected function saveElement($elm, $content, $attrs = array()) {
 		if ( ! empty($elm) ) {
 			$this->save( $this->out->xmlElement($elm, $content, $attrs) );
 		}
 	}
 
 
-	protected function saveContent($cont)
-	{
+	protected function saveContent($cont) {
 		$this->save($this->doInlineElements($cont) . $this->saveSuffix);
 	}
 
 
-	protected function save($text, $forceEmpty = false)
-	{
+	protected function save($text, $forceEmpty = false) {
 		if ( ! empty($text) || $forceEmpty ) {
 			$this->_text[$this->_curBlock][$this->_curSubBlock] .= $text . $this->_newLineOutput;
 		}
@@ -2611,8 +2404,7 @@ class SfbConverter {
 	/**
 	* Replace inline elements thru string and regular expression replacements
 	*/
-	protected function doInlineElements($s)
-	{
+	protected function doInlineElements($s) {
 		$s = $this->doInlineElementsEscape($s);
 		$s = preg_replace($this->kpatterns, $this->vpatterns, $s);
 		$s = strtr($s, $this->replPairs);
@@ -2621,8 +2413,7 @@ class SfbConverter {
 	}
 
 	/** Escape some characters */
-	protected function doInlineElementsEscape($s)
-	{
+	protected function doInlineElementsEscape($s) {
 		return htmlspecialchars($s, ENT_COMPAT, 'UTF-8');
 	}
 
@@ -2633,8 +2424,7 @@ class SfbConverter {
 	* Called as a callback of a preg_replace.
 	* Escaping is already done by SfbConverter::doInlineElementsEscape()
 	*/
-	protected function doExternLink($href)
-	{
+	protected function doExternLink($href) {
 		return $this->out->xmlElement('a', $href, array(
 			'href'  => $href,
 			'title' => $href,
@@ -2649,8 +2439,7 @@ class SfbConverter {
 	 * @param string	$text	Link text
 	 * @return string	An XML anchor element
 	 */
-	protected function doInternalLink($target, $text = null)
-	{
+	protected function doInternalLink($target, $text = null) {
 		if ($text === null) {
 			$target = rtrim($target, '/');
 			if (strpos($target, '|') !== false) {
@@ -2663,16 +2452,14 @@ class SfbConverter {
 		return $this->doInternalLinkElement($target, $text);
 	}
 
-	protected function doInternalLinkElement($target, $text)
-	{
+	protected function doInternalLinkElement($target, $text) {
 		return $this->out->xmlElement('a', $text, array(
 			'href'  => $this->internalLinkTarget . "#$target",
 		), false);
 	}
 
 
-	public function setInternalLinkTarget($target)
-	{
+	public function setInternalLinkTarget($target) {
 		$this->internalLinkTarget = $target;
 	}
 
@@ -2680,8 +2467,7 @@ class SfbConverter {
 	* Sometimes a paragraph can be on the same line as the starting block marker.
 	* If that is the case, ensure we process the paragraph.
 	*/
-	protected function checkForParagraphOnBlockStart()
-	{
+	protected function checkForParagraphOnBlockStart() {
 		if ( ! empty($this->ltext) ) {
 			$this->doParagraph();
 		}
@@ -2697,60 +2483,51 @@ class SfbConverter {
 	*
 	* @param $endMarker  A block end marker
 	*/
-	protected function fixHasNextLine($endMarker)
-	{
+	protected function fixHasNextLine($endMarker) {
 		if ( $this->lcmd == $endMarker ) {
 			$this->hasNextLine = false;
 		}
 	}
 
 
-	protected function isEmptyLine()
-	{
+	protected function isEmptyLine() {
 		return empty($this->line);
 	}
 
 
-	protected function isEmptyTextLine()
-	{
+	protected function isEmptyTextLine() {
 		return empty($this->ltext);
 	}
 
 
-	protected function isInBlock($blockEndMarker)
-	{
+	protected function isInBlock($blockEndMarker) {
 		return $this->lcmd != $blockEndMarker && ! is_null($this->lcmd);
 	}
 
 
-	protected function paragraphContainsBlockImage()
-	{
+	protected function paragraphContainsBlockImage() {
 		return preg_match('/^\{img:[^}]+\}$/', $this->ltext);
 	}
 
-	protected function overwriteParagraphElement($newParagraphElement = '')
-	{
+	protected function overwriteParagraphElement($newParagraphElement = '') {
 		$this->_oldParagraphElements[] = $this->paragraphElement;
 		$this->paragraphElement = $newParagraphElement;
 	}
 
-	protected function revertParagraphElement()
-	{
+	protected function revertParagraphElement() {
 		$this->paragraphElement = array_pop($this->_oldParagraphElements);
 	}
 
 
 
-	protected function saveTemp($key, $value)
-	{
+	protected function saveTemp($key, $value) {
 		if ( ! isset($this->_oldElements[$key]) ) {
 			$this->_oldElements[$key] = array();
 		}
 		$this->_oldElements[$key][] = $value;
 	}
 
-	protected function getTemp($key)
-	{
+	protected function getTemp($key) {
 		return array_pop($this->_oldElements[$key]);
 	}
 
@@ -2758,8 +2535,7 @@ class SfbConverter {
 	/*************************************************************************/
 
 
-	protected function getContentBlock($block, $subBlock = 0)
-	{
+	protected function getContentBlock($block, $subBlock = 0) {
 		if ($subBlock === 0) {
 			return $this->_text[$block][0];
 		}
@@ -2767,8 +2543,7 @@ class SfbConverter {
 		return $this->_text[$block];
 	}
 
-	protected function addContentBlock($block, $subBlock = 0)
-	{
+	protected function addContentBlock($block, $subBlock = 0) {
 		$this->_text[$block][$subBlock] = '';
 	}
 
@@ -2777,8 +2552,7 @@ class SfbConverter {
 	* @param $newBlock  The new content block
 	* @param $subBlock  ...
 	*/
-	protected function enterContentBlock($newBlock, $subBlock = 0)
-	{
+	protected function enterContentBlock($newBlock, $subBlock = 0) {
 		$this->_prevBlocks[$newBlock] = $this->_curBlock;
 		$this->_curBlock = $newBlock;
 		$this->_curSubBlock = $subBlock;
@@ -2788,8 +2562,7 @@ class SfbConverter {
 	* Leave the current content block and activate the previous one.
 	* @param $key       This key should have been used by enterContentBlock()
 	*/
-	protected function leaveContentBlock($key = '')
-	{
+	protected function leaveContentBlock($key = '') {
 		$this->_curBlock = $this->_prevBlocks[$key];
 		$this->_curSubBlock = 0;
 	}
@@ -2808,8 +2581,7 @@ class FileLineReader implements LineReader {
 
 	protected $_handle = null;
 
-	public function __construct($file)
-	{
+	public function __construct($file) {
 		if ( is_readable($file) ) {
 			$this->_handle = fopen($file, 'r');
 		} else {
@@ -2817,15 +2589,13 @@ class FileLineReader implements LineReader {
 		}
 	}
 
-	public function __destruct()
-	{
+	public function __destruct() {
 		if ( $this->_handle ) {
 			fclose( $this->_handle );
 		}
 	}
 
-	public function getNextLine()
-	{
+	public function getNextLine() {
 		if ( feof($this->_handle) ) {
 			return false;
 		}
@@ -2833,8 +2603,7 @@ class FileLineReader implements LineReader {
 		return fgets($this->_handle);
 	}
 
-	public function getFirstLine()
-	{
+	public function getFirstLine() {
 		$oldPos = ftell( $this->_handle );
 		fseek( $this->_handle, 0 );
 		$line = fgets($this->_handle);
@@ -2842,8 +2611,7 @@ class FileLineReader implements LineReader {
 		return $line;
 	}
 
-	public function setStartPosition($pos)
-	{
+	public function setStartPosition($pos) {
 		fseek($this->_handle, $pos);
 	}
 }
@@ -2854,25 +2622,21 @@ class StringLineReader implements LineReader {
 		$_delim = "\n",
 		$_lines;
 
-	public function __construct($string)
-	{
+	public function __construct($string) {
 		$this->_lines = explode($this->_delim, $string);
 	}
 
-	public function getNextLine()
-	{
+	public function getNextLine() {
 		$c = current($this->_lines);
 		next($this->_lines);
 		return $c;
 	}
 
-	public function getFirstLine()
-	{
+	public function getFirstLine() {
 		return $this->_lines[0];
 	}
 
-	public function setStartPosition($pos)
-	{
+	public function setStartPosition($pos) {
 		$dl = strlen($this->_delim);
 		while ($pos > 0) {
 			$pos -= strlen( $this->getNextLine() ) + $dl;

@@ -8,14 +8,12 @@ class XmlElement {
 	 */
 	private $_anchorNames = array();
 
-	public function xmlElement($name, $content = '', $attrs = array(), $doEscape = true)
-	{
+	public function xmlElement($name, $content = '', $attrs = array(), $doEscape = true) {
 		$end = is_null($content) ? ' />' : ">$content</$name>";
 		return '<'.$name . $this->makeAttribs($attrs, $doEscape) . $end;
 	}
 
-	public function xmlElementOrNone($name, $content, $attrs = array(), $doEscape = true)
-	{
+	public function xmlElementOrNone($name, $content, $attrs = array(), $doEscape = true) {
 		if ( empty($content) ) {
 			return '';
 		}
@@ -92,18 +90,15 @@ class XmlElement {
 	}
 
 
-	public function getStartTag($elm, $attrs = array())
-	{
+	public function getStartTag($elm, $attrs = array()) {
 		return '<'. $elm . $this->makeAttribs($attrs) . '>';
 	}
 
-	public function getEndTag($elm)
-	{
+	public function getEndTag($elm) {
 		return '</'. $elm . '>';
 	}
 
-	public function getEmptyTag($elm, $attrs = array(), $xml = true)
-	{
+	public function getEmptyTag($elm, $attrs = array(), $xml = true) {
 		$end = $xml ? '/>' : ' />';
 		return '<'. $elm . $this->makeAttribs($attrs) . $end;
 	}
@@ -115,8 +110,7 @@ class XmlElement {
 	* @param bool    $unique  Always generate a unique name
 	*                         (consider all previously generated names)
 	*/
-	public function getAnchorName($text, $unique = true)
-	{
+	public function getAnchorName($text, $unique = true) {
 		$text = Char::cyr2lat($text);
 		$text = strtolower($text);
 		$text = strtr($text, array(
