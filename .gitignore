@@ -1,2 +1,3 @@
-test/converter/output
+/test/converter/output
+/vendor/*
 *~
