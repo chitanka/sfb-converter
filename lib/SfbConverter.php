@@ -326,6 +326,8 @@ class SfbConverter {
 	 */
 	protected $spanRows;
 
+	private $paragraphIdsEnabled = true;
+
 	public function __construct($file, $imgDir = 'img') {
 		self::$objCount++;
 
@@ -511,6 +513,13 @@ class SfbConverter {
 	 */
 	public function setMaxLineCount($maxLineCount) {
 		$this->maxlinecnt = $maxLineCount;
+	}
+
+	public function enableParagraphIds() {
+		$this->paragraphIdsEnabled = true;
+	}
+	public function disableParagraphIds() {
+		$this->paragraphIdsEnabled = false;
 	}
 
 	public function convert() {
@@ -1627,9 +1636,11 @@ class SfbConverter {
 
 
 	protected function doParagraphStart() {
-		$this->saveStartTag($this->paragraphElement, array(
-			'id' => 'p-'.$this->linecnt,
-		));
+		$attributes = [];
+		if ($this->paragraphIdsEnabled) {
+			$attributes['id'] = 'p-'.$this->linecnt;
+		}
+		$this->saveStartTag($this->paragraphElement, $attributes);
 	}
 
 	protected function doParagraphEnd() {
@@ -2110,7 +2121,7 @@ class SfbConverter {
 				break;
 			case self::TABLE_HCELL:
 				$this->inHeaderRow = true;
-				// go to default
+				// break; // go to default
 			default:
 				$this->curTableRow++;
 				$this->inTableRow();
