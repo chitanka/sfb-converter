@@ -147,7 +147,7 @@ class SfbToHtmlConverter extends SfbConverter {
 
 
 	protected function prepareVerseNumber() {
-		$this->paragraphPrefix = $this->getVerseAnchor() . ' ';
+		$this->paragraphPrefix = $this->getVerseAnchor();
 	}
 
 	protected function clearVerseNumber() {
