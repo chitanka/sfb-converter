@@ -114,6 +114,7 @@ class MainTest extends TestCase {
 			"<p>\n" => '<p>',
 			"\n</p>" => '</p>',
 		]);
+		$testOutput = rtrim($testOutput, "\n");
 
 		// save output if wanted
 		$outDir = dirname($outFile) . '/output';
@@ -121,7 +122,8 @@ class MainTest extends TestCase {
 			file_put_contents($outDir .'/'. basename($outFile), $testOutput);
 		}
 
-		$this->assertEquals(file_get_contents($outFile), $testOutput, get_class($conv).": $inFile");
+		$expected = rtrim(file_get_contents($outFile), "\n");
+		$this->assertEquals($expected, $testOutput, get_class($conv).": $inFile");
 	}
 
 
