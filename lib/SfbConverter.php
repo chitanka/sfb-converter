@@ -1,8 +1,8 @@
 <?php namespace Sfblib;
 
 /**
-* Generic SFB to XML-ish language converter
-*/
+ * Generic SFB to XML-ish language converter
+ */
 class SfbConverter {
 
 	const
@@ -410,8 +410,8 @@ class SfbConverter {
 	}
 
 	/**
-	* Return a unique number across all converter objects
-	*/
+	 * Return a unique number across all converter objects
+	 */
 	public static function getUniqueObjectNr($nr) {
 		return self::createNoteIdSuffix(self::$objCount, $nr);
 	}
@@ -531,8 +531,8 @@ class SfbConverter {
 
 
 	/**
-	* TODO remove
-	*/
+	 * TODO remove
+	 */
 	public function content($withNotes = true, $plainNotes = true) {
 		return $this->getText() . ($withNotes ? $this->getNotes($plainNotes ? 0 : 1) : '');
 	}
@@ -588,9 +588,9 @@ class SfbConverter {
 
 
 	/**
-	* Tells whether there is a foot note without corresponding reference.
-	* Such a foot note should refer to the text title.
-	*/
+	 * Tells whether there is a foot note without corresponding reference.
+	 * Such a foot note should refer to the text title.
+	 */
 	public function hasTitleNote() {
 		if ( ! $this->_reader ) {
 			return null;
@@ -634,11 +634,11 @@ class SfbConverter {
 
 
 	/**
-	* TODO catch infinite loops
-	* @param $canMarkEnd   Sometimes we read several lines in a buffer.
-	*                      If false, we may be at the end, but our buffer
-	*                      still holds lines to be processed.
-	*/
+	 * TODO catch infinite loops
+	 * @param bool $canMarkEnd   Sometimes we read several lines in a buffer.
+	 *                      If false, we may be at the end, but our buffer
+	 *                      still holds lines to be processed.
+	 */
 	protected function nextLine($canMarkEnd = true) {
 		if ($this->hasNextLine) {
 			$this->hasNextLine = false;
@@ -693,14 +693,14 @@ class SfbConverter {
 
 
 	/**
-	* body (image?, title?, epigraph*, section+)
-	*
-	* section (title?, epigraph*, image?, annotation?,
-	*		( (section+) |
-	*	 	((p | poem | subtitle | cite | empty-line | table),
-	*			(p | image | poem | subtitle | cite | empty-line | table)*)))
-	*		id ID #IMPLIED
-	*/
+	 * body (image?, title?, epigraph*, section+)
+	 *
+	 * section (title?, epigraph*, image?, annotation?,
+	 *		( (section+) |
+	 *	 	((p | poem | subtitle | cite | empty-line | table),
+	 *			(p | image | poem | subtitle | cite | empty-line | table)*)))
+	 *		id ID #IMPLIED
+	 */
 	protected function doText() {
 		$this->preDoText();
 		switch ($this->lcmd) {
@@ -763,12 +763,12 @@ class SfbConverter {
 
 
 	/**
-	* Close some of the opened sections according to a given title level.
-	*
-	* By level X close all except X-1 sections.
-	*
-	* @param $marker  A title marker (self::TITLE_X)
-	*/
+	 * Close some of the opened sections according to a given title level.
+	 *
+	 * By level X close all except X-1 sections.
+	 *
+	 * @param string $marker  A title marker (self::TITLE_X)
+	 */
 	protected function closeSectionsForTitle($marker) {
 		while ( $this->areSectionsToCloseForTitle($marker) ) {
 			$this->closeSection();
@@ -795,10 +795,10 @@ class SfbConverter {
 
 
 	/**
-	* Check if there are sections to be closed on a title start.
-	*
-	* @param $marker  A title marker (self::TITLE_X)
-	*/
+	 * Check if there are sections to be closed on a title start.
+	 *
+	 * @param string $marker  A title marker (self::TITLE_X)
+	 */
 	protected function areSectionsToCloseForTitle($marker) {
 		return self::$remainingSectionsByTitle[$marker] < $this->sectionsEntered;
 	}
@@ -828,8 +828,8 @@ class SfbConverter {
 	}
 
 	/**
-	* @param $headerLines  Header lines
-	*/
+	 * @param array $headerLines  Header lines
+	 */
 	protected function inHeader($headerLines) {
 		$text = $this->getHeaderText($headerLines);
 		if ( ! empty($text) ) {
@@ -858,11 +858,11 @@ class SfbConverter {
 
 
 	/**
-	* Title processing
-	*
-	* title (p | empty-line)*
-	*
-	*/
+	 * Title processing
+	 *
+	 * title (p | empty-line)*
+	 *
+	 */
 	protected function doTitle($marker) {
 		$this->flushEmptyLineBuffer();
 
@@ -913,8 +913,8 @@ class SfbConverter {
 
 
 	/**
-	* Epigraph processing
-	*/
+	 * Epigraph processing
+	 */
 	protected function doEpigraph() {
 		$this->_inEpigraph = $this->linecnt;
 		$this->flushEmptyLineBuffer();
@@ -936,8 +936,8 @@ class SfbConverter {
 	}
 
 	/**
-	* epigraph ((p | poem | cite | empty-line)*, text-author*)
-	*/
+	 * epigraph ((p | poem | cite | empty-line)*, text-author*)
+	 */
 	protected function inEpigraph() {
 		switch ($this->lcmd) {
 			case self::PARAGRAPH:       $this->doParagraph();           break;
@@ -997,8 +997,8 @@ class SfbConverter {
 
 
 	/**
-	* Dedication processing
-	*/
+	 * Dedication processing
+	 */
 	protected function doDedication() {
 		$this->_inDedication = $this->linecnt;
 		$this->flushEmptyLineBuffer();
@@ -1020,8 +1020,8 @@ class SfbConverter {
 	}
 
 	/**
-	* As epigraph
-	*/
+	 * As epigraph
+	 */
 	protected function inDedication() {
 		switch ($this->lcmd) {
 			case self::PARAGRAPH:       $this->doParagraph();           break;
@@ -1080,8 +1080,8 @@ class SfbConverter {
 
 
 	/**
-	* Notice processing
-	*/
+	 * Notice processing
+	 */
 	protected function doNotice() {
 		$this->doNoticeStart();
 		$this->checkForParagraphOnBlockStart();
@@ -1124,8 +1124,8 @@ class SfbConverter {
 
 
 	/**
-	* Annotation processing
-	*/
+	 * Annotation processing
+	 */
 	protected function doAnnotation() {
 		$this->_inAnnotation = true;
 		$this->flushEmptyLineBuffer();
@@ -1147,9 +1147,9 @@ class SfbConverter {
 	}
 
 	/**
-	* annotation (p | poem | cite | subtitle | table | empty-line)*
-	* 	id ID #IMPLIED
-	*/
+	 * annotation (p | poem | cite | subtitle | table | empty-line)*
+	 * 	id ID #IMPLIED
+	 */
 	protected function inAnnotation() {
 		switch ($this->lcmd) {
 			case self::PARAGRAPH:       $this->doParagraph();           break;
@@ -1189,8 +1189,8 @@ class SfbConverter {
 
 
 	/**
-	* Infoblock processing
-	*/
+	 * Infoblock processing
+	 */
 	protected function doInfoblock() {
 		$this->_inInfoblock = true;
 		$this->flushEmptyLineBuffer();
@@ -1253,8 +1253,8 @@ class SfbConverter {
 
 
 	/**
-	* Poem processing
-	*/
+	 * Poem processing
+	 */
 	protected function doPoem() {
 		$this->_inPoem = $this->linecnt;
 		$this->_poemsEntered++;
@@ -1279,12 +1279,12 @@ class SfbConverter {
 	}
 
 	/**
-	* poem (title?, epigraph*, stanza+, text-author*, date?)
-	* stanza (title?, subtitle?, v+)
-	* v (#PCDATA | strong | emphasis | style | a | strikethrough | sub | sup | code | image)*
-	*
-	* TODO handle poem in a foot note within a poem
-	*/
+	 * poem (title?, epigraph*, stanza+, text-author*, date?)
+	 * stanza (title?, subtitle?, v+)
+	 * v (#PCDATA | strong | emphasis | style | a | strikethrough | sub | sup | code | image)*
+	 *
+	 * TODO handle poem in a foot note within a poem
+	 */
 	protected function inPoem() {
 		switch ($this->lcmd) {
 			case self::DEDICATION_S:    $this->doDedication();      break;
@@ -1334,8 +1334,8 @@ class SfbConverter {
 	}
 
 	/**
-	* Are we in a poem within an epigraph
-	*/
+	 * Are we in a poem within an epigraph
+	 */
 	protected function isInEpigraphPoem() {
 		$e = $this->isInEpigraph();
 		$p = $this->isInPoem();
@@ -1343,8 +1343,8 @@ class SfbConverter {
 	}
 
 	/**
-	* Are we in an epigraph within a poem
-	*/
+	 * Are we in an epigraph within a poem
+	 */
 	protected function isInPoemEpigraph() {
 		$e = $this->isInEpigraph();
 		$p = $this->isInPoem();
@@ -1353,8 +1353,8 @@ class SfbConverter {
 
 
 	/**
-	* Are we in a poem within a dedication
-	*/
+	 * Are we in a poem within a dedication
+	 */
 	protected function isInDedicationPoem() {
 		$d = $this->isInDedication();
 		$p = $this->isInPoem();
@@ -1362,8 +1362,8 @@ class SfbConverter {
 	}
 
 	/**
-	* Are we in a dedication within a poem
-	*/
+	 * Are we in a dedication within a poem
+	 */
 	protected function isInPoemDedication() {
 		$d = $this->isInDedication();
 		$p = $this->isInPoem();
@@ -1372,8 +1372,8 @@ class SfbConverter {
 
 
 	/**
-	* Are we in a foot note within a poem
-	*/
+	 * Are we in a foot note within a poem
+	 */
 	protected function isInPoemNote() {
 		$p = $this->isInPoem();
 		$n = $this->isInNote();
@@ -1405,8 +1405,8 @@ class SfbConverter {
 
 
 	/**
-	* Processing of text with styles
-	*/
+	 * Processing of text with styles
+	 */
 	protected function doStyle() {
 		$this->doStyleStart();
 
@@ -1463,8 +1463,8 @@ class SfbConverter {
 
 
 	/**
-	* Cite processing
-	*/
+	 * Cite processing
+	 */
 	protected function doCite() {
 		$this->_inCite = $this->linecnt;
 		$this->saveEmptyLineBuffer();
@@ -1485,8 +1485,8 @@ class SfbConverter {
 	}
 
 	/**
-	* cite ((p | poem | empty-line | subtitle | table)*, text-author*)
-	*/
+	 * cite ((p | poem | empty-line | subtitle | table)*, text-author*)
+	 */
 	protected function inCite() {
 		switch ($this->lcmd) {
 			case self::PARAGRAPH:        $this->doParagraph();       break;
@@ -1526,8 +1526,8 @@ class SfbConverter {
 
 
 	/**
-	* Preformatted processing
-	*/
+	 * Preformatted processing
+	 */
 	protected function doPreformatted() {
 		$this->saveEmptyLineBuffer();
 		$this->doPreformattedStart();
@@ -1573,11 +1573,11 @@ class SfbConverter {
 
 
 	/**
-	* Paragraph processing
-	*
-	* p (#PCDATA | strong | emphasis | style | a | strikethrough | sub | sup | code | image)*
-	* 	id ID #IMPLIED
-	*/
+	 * Paragraph processing
+	 *
+	 * p (#PCDATA | strong | emphasis | style | a | strikethrough | sub | sup | code | image)*
+	 * 	id ID #IMPLIED
+	 */
 	protected function doParagraph() {
 		if ( $this->isEmptyLine() ) {
 			if ($this->acceptsEmptyLines()) {
@@ -1633,8 +1633,8 @@ class SfbConverter {
 
 
 	/**
-	* Author processing
-	*/
+	 * Author processing
+	 */
 	protected function doAuthor() {
 		$this->saveEmptyLineBuffer();
 		$this->doAuthorStart();
@@ -1671,8 +1671,8 @@ class SfbConverter {
 
 
 	/**
-	* Date/year processing
-	*/
+	 * Date/year processing
+	 */
 	protected function doDate() {
 		$this->saveEmptyLineBuffer();
 		$this->doDateStart();
@@ -1711,8 +1711,8 @@ class SfbConverter {
 
 
 	/**
-	* Subheader processing
-	*/
+	 * Subheader processing
+	 */
 	protected function doSubheader() {
 		$this->flushEmptyLineBuffer();
 		$lines = $this->getLinesForMultiLineMarker(self::SUBHEADER);
@@ -1750,8 +1750,8 @@ class SfbConverter {
 
 
 	/**
-	* Poem header processing
-	*/
+	 * Poem header processing
+	 */
 	protected function doPoemHeader() {
 		$this->doPoemHeaderStart();
 		$this->inPoemHeader( $this->getLinesForMultiLineMarker(self::POEM_HEADER) );
@@ -1787,8 +1787,8 @@ class SfbConverter {
 
 
 	/**
-	* empty-line ANY
-	*/
+	 * empty-line ANY
+	 */
 	protected function doEmptyLine() {
 		$this->saveEmptyLine( $this->out->getEmptyTag($this->emptyLineElement) );
 	}
@@ -1805,8 +1805,8 @@ class SfbConverter {
 	}
 
 	/**
-	* Clear the empty line buffer and return its previous content
-	*/
+	 * Clear the empty line buffer and return its previous content
+	 */
 	protected function flushEmptyLineBuffer() {
 		$buffer = $this->_emptyLineBuffer;
 		$this->_emptyLineBuffer = '';
@@ -1848,8 +1848,8 @@ class SfbConverter {
 
 
 	/**
-	* Raw processing
-	*/
+	 * Raw processing
+	 */
 	protected function doRaw() {
 		$this->doRawStart();
 
@@ -1883,8 +1883,8 @@ class SfbConverter {
 
 
 	/**
-	* Foot note processing
-	*/
+	 * Foot note processing
+	 */
 	protected function doNote() {
 		$this->_inNote = $this->linecnt;
 		$this->preNoteStart();
@@ -2003,9 +2003,9 @@ class SfbConverter {
 
 
 	/**
-	* Return a note link.
-	* Called as a callback of a preg_replace.
-	*/
+	 * Return a note link.
+	 * Called as a callback of a preg_replace.
+	 */
 	public function getRef($stars, $num) {
 		$this->updateCurRef($num);
 		$this->_refsWaiting[$this->curRef] = $stars . $num;
@@ -2029,29 +2029,29 @@ class SfbConverter {
 
 
 	/**
-	* Return an element ID for the current foot note
-	*/
+	 * Return an element ID for the current foot note
+	 */
 	protected function getCurrentNoteId() {
 		return self::getNoteId($this->_curNoteIndex/*$this->curFn*/);
 	}
 
 	/**
-	* Return an element ID for a foot note
-	*/
+	 * Return an element ID for a foot note
+	 */
 	protected static function getNoteId($nr) {
 		return 'note_' . self::getNoteNr($nr);
 	}
 
 	/**
-	* Return the current normalized note number
-	*/
+	 * Return the current normalized note number
+	 */
 	protected function getCurrentNoteNr() {
 		return self::getNoteNr($this->_curNoteIndex/*$this->curFn*/);
 	}
 
 	/**
-	* Return a normalized note number
-	*/
+	 * Return a normalized note number
+	 */
 	protected static function getNoteNr($nr) {
 		return self::getUniqueObjectNr($nr);
 	}
@@ -2066,8 +2066,8 @@ class SfbConverter {
 
 
 	/**
-	* Table processing
-	*/
+	 * Table processing
+	 */
 	protected function doTable() {
 		$this->saveEmptyLineBuffer();
 		$this->doTableStart();
@@ -2083,15 +2083,15 @@ class SfbConverter {
 
 
 	/**
-	* table (tr)+
-	* 	style   xs:string   optional
-	* 	id   xs:ID   optional
-	*
-	* tr (th | td)+
-	* 	align   alignType   optional   left
-	*
-	* td|th (#PCDATA | strong | emphasis | style | a | strikethrough | sub | sup | code | image)*
-	*/
+	 * table (tr)+
+	 * 	style   xs:string   optional
+	 * 	id   xs:ID   optional
+	 *
+	 * tr (th | td)+
+	 * 	align   alignType   optional   left
+	 *
+	 * td|th (#PCDATA | strong | emphasis | style | a | strikethrough | sub | sup | code | image)*
+	 */
 	protected function inTable() {
 		$this->inHeaderRow = false;
 		switch ($this->lcmd) {
@@ -2241,20 +2241,20 @@ class SfbConverter {
 
 
 	/**
-	* Image processing
-	*
-	* image (EMPTY)
-	* 	xmlns:xlink CDATA       #FIXED "http://www.w3.org/1999/xlink"
-	* 	xlink:type  CDATA       #FIXED "simple"
-	* 	xlink:href  CDATA       #IMPLIED
-	* 	alt         xs:string   optional
-	* 	title       xs:string   optional
-	* 	id          xs:ID       optional
-	*
-	* binary (#PCDATA)
-	* 	content-type CDATA #REQUIRED
-	* 	id           ID    #REQUIRED
-	*/
+	 * Image processing
+	 *
+	 * image (EMPTY)
+	 * 	xmlns:xlink CDATA       #FIXED "http://www.w3.org/1999/xlink"
+	 * 	xlink:type  CDATA       #FIXED "simple"
+	 * 	xlink:href  CDATA       #IMPLIED
+	 * 	alt         xs:string   optional
+	 * 	title       xs:string   optional
+	 * 	id          xs:ID       optional
+	 *
+	 * binary (#PCDATA)
+	 * 	content-type CDATA #REQUIRED
+	 * 	id           ID    #REQUIRED
+	 */
 	protected function doBlockImage() {
 		$this->_inBlockImage = $this->linecnt;
 		$this->doBlockImageStart();
@@ -2402,8 +2402,10 @@ class SfbConverter {
 
 
 	/**
-	* Replace inline elements thru string and regular expression replacements
-	*/
+	 * Replace inline elements thru string and regular expression replacements
+	 * @param string $s
+	 * @return string
+	 */
 	protected function doInlineElements($s) {
 		$s = $this->doInlineElementsEscape($s);
 		$s = preg_replace($this->kpatterns, $this->vpatterns, $s);
@@ -2420,10 +2422,10 @@ class SfbConverter {
 
 
 	/**
-	* Generate an extern link.
-	* Called as a callback of a preg_replace.
-	* Escaping is already done by SfbConverter::doInlineElementsEscape()
-	*/
+	 * Generate an extern link.
+	 * Called as a callback of a preg_replace.
+	 * Escaping is already done by SfbConverter::doInlineElementsEscape()
+	 */
 	protected function doExternLink($href) {
 		return $this->out->xmlElement('a', $href, array(
 			'href'  => $href,
@@ -2464,9 +2466,9 @@ class SfbConverter {
 	}
 
 	/**
-	* Sometimes a paragraph can be on the same line as the starting block marker.
-	* If that is the case, ensure we process the paragraph.
-	*/
+	 * Sometimes a paragraph can be on the same line as the starting block marker.
+	 * If that is the case, ensure we process the paragraph.
+	 */
 	protected function checkForParagraphOnBlockStart() {
 		if ( ! empty($this->ltext) ) {
 			$this->doParagraph();
@@ -2475,14 +2477,14 @@ class SfbConverter {
 
 
 	/**
-	* The current processing of multiline markers as "author" and "date"
-	* sets $hasNextLine to true after the surrounding block has been read.
-	* At this point though the buffer contains the block end marker, so
-	* $hasNextLine should be really false, as we still do not have the next line.
-	* So, revert $hasNextLine to false if $lcmd is equal to the given $endMarker.
-	*
-	* @param $endMarker  A block end marker
-	*/
+	 * The current processing of multiline markers as "author" and "date"
+	 * sets $hasNextLine to true after the surrounding block has been read.
+	 * At this point though the buffer contains the block end marker, so
+	 * $hasNextLine should be really false, as we still do not have the next line.
+	 * So, revert $hasNextLine to false if $lcmd is equal to the given $endMarker.
+	 *
+	 * @param string $endMarker  A block end marker
+	 */
 	protected function fixHasNextLine($endMarker) {
 		if ( $this->lcmd == $endMarker ) {
 			$this->hasNextLine = false;
@@ -2548,10 +2550,10 @@ class SfbConverter {
 	}
 
 	/**
-	* Activate a new content block.
-	* @param $newBlock  The new content block
-	* @param $subBlock  ...
-	*/
+	 * Activate a new content block.
+	 * @param string $newBlock  The new content block
+	 * @param string $subBlock  ...
+	 */
 	protected function enterContentBlock($newBlock, $subBlock = 0) {
 		$this->_prevBlocks[$newBlock] = $this->_curBlock;
 		$this->_curBlock = $newBlock;
@@ -2559,9 +2561,9 @@ class SfbConverter {
 	}
 
 	/**
-	* Leave the current content block and activate the previous one.
-	* @param $key       This key should have been used by enterContentBlock()
-	*/
+	 * Leave the current content block and activate the previous one.
+	 * @param string $key       This key should have been used by enterContentBlock()
+	 */
 	protected function leaveContentBlock($key = '') {
 		$this->_curBlock = $this->_prevBlocks[$key];
 		$this->_curSubBlock = 0;
