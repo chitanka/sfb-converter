@@ -207,6 +207,9 @@ class SfbConverter {
 	 */
 	protected $ltext;
 
+	/** how many poems do we have entered */
+	protected $_poemsEntered = 0;
+
 	private
 		/** save here the empty lines */
 		$_emptyLineBuffer = '',
@@ -228,8 +231,6 @@ class SfbConverter {
 		$_inDedication       = false,
 		/** are we in a poem */
 		$_inPoem             = false,
-		/** how many poems do we have entered */
-		$_poemsEntered       = 0,
 		/** are we in a cite */
 		$_inCite             = false,
 		/** are we in a foot note */
@@ -1299,8 +1300,6 @@ class SfbConverter {
 	 * poem (title?, epigraph*, stanza+, text-author*, date?)
 	 * stanza (title?, subtitle?, v+)
 	 * v (#PCDATA | strong | emphasis | style | a | strikethrough | sub | sup | code | image)*
-	 *
-	 * TODO handle poem in a foot note within a poem
 	 */
 	protected function inPoem() {
 		switch ($this->lcmd) {
@@ -1315,8 +1314,7 @@ class SfbConverter {
 			case self::PREFORMATTED_OL: $this->doPreformattedOl();  break;
 			case self::STYLE_S:         $this->doStyle();           break;
 			case self::POEM_E:                                      break;
-			// TODO handle poem in a foot note
-			//case self::POEM_S:          $this->doPoem();            break;
+			case self::POEM_S:          $this->doPoem();            break;
 
 			default:
 				if ( $this->isAtVerseNumber() ) {

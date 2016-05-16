@@ -81,7 +81,7 @@ class SfbToFb2Converter extends SfbConverter {
 		/** save all binary data here */
 		$binaryTextFileName,
 
-		$_inStanza             = false,
+		$_inStanza = [false, false, false, false, false, false], // support up to five levels of nested poems
 
 		// process subheaders as they were titles
 		$_subheaderAsTitle     = false,
@@ -872,30 +872,30 @@ class SfbToFb2Converter extends SfbConverter {
 
 
 	protected function openStanzaIfNone() {
-		if ( ! $this->_inStanza ) {
+		if ($this->_inStanza[$this->_poemsEntered] === false) {
 			$this->openStanza();
 		}
 	}
 
 	protected function closeStanzaIfAny() {
-		if ( $this->_inStanza ) {
+		if ($this->_inStanza[$this->_poemsEntered]) {
 			$this->closeStanza();
 		}
 	}
 
 	protected function openStanza() {
 		$this->closeStanzaIfAny();
-		$this->_inStanza = true;
+		$this->_inStanza[$this->_poemsEntered] = true;
 		$this->saveStartTag($this->stanzaElement);
 	}
 
 	protected function closeStanza() {
-		$this->_inStanza = false;
+		$this->_inStanza[$this->_poemsEntered] = false;
 		$this->saveEndTag($this->stanzaElement);
 	}
 
 	protected function isInStanza() {
-		return $this->_inStanza;
+		return $this->_inStanza[$this->_poemsEntered];
 	}
 
 
