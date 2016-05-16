@@ -705,9 +705,7 @@ class SfbToFb2Converter extends SfbConverter {
 			$this->openStanza();
 		}
 
-		$this->saveTemp('paragraphPrefix', $this->paragraphPrefix);
-		$this->saveTemp('paragraphSuffix', $this->paragraphSuffix);
-
+		$this->storeParagraphAffixes();
 		$this->paragraphPrefix = $this->out->getStartTag($this->blockStyleElement, array($this->blockStyleAttribute => $this->ltext)) . $this->paragraphPrefix;
 		$this->paragraphSuffix .= $this->out->getEndTag($this->blockStyleElement);
 	}
@@ -716,9 +714,7 @@ class SfbToFb2Converter extends SfbConverter {
 		if ( $this->isInPoem() ) {
 			$this->closeStanzaIfAny();
 		}
-
-		$this->paragraphPrefix = $this->getTemp('paragraphPrefix');
-		$this->paragraphSuffix = $this->getTemp('paragraphSuffix');
+		$this->restoreParagraphAffixes();
 	}
 
 

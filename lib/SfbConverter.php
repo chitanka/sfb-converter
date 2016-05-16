@@ -1938,6 +1938,9 @@ class SfbConverter {
 
 
 	protected function doNoteStart() {
+		$this->storeParagraphAffixes('note');
+		$this->paragraphPrefix = '';
+		$this->paragraphSuffix = '';
 		$this->overwriteParagraphElement('p');
 		$this->saveStartTag($this->footnoteElement, array(
 			'id' => $this->getCurrentNoteId()
@@ -1947,6 +1950,7 @@ class SfbConverter {
 	protected function doNoteEnd() {
 		$this->saveEndTag($this->footnoteElement);
 		$this->revertParagraphElement();
+		$this->restoreParagraphAffixes('note');
 	}
 
 	protected function preNoteStart() {
@@ -2590,6 +2594,15 @@ class SfbConverter {
 		$this->_curSubBlock = 0;
 	}
 
+	protected function storeParagraphAffixes($key = null) {
+		$this->saveTemp('paragraphPrefix'.$key, $this->paragraphPrefix);
+		$this->saveTemp('paragraphSuffix'.$key, $this->paragraphSuffix);
+	}
+
+	protected function restoreParagraphAffixes($key = null) {
+		$this->paragraphPrefix = $this->getTemp('paragraphPrefix'.$key);
+		$this->paragraphSuffix = $this->getTemp('paragraphSuffix'.$key);
+	}
 }
 
 
