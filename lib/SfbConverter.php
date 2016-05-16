@@ -339,26 +339,34 @@ class SfbConverter {
 		$e = $this->emphasisElement;
 		$s = $this->strongElement;
 
-		$this->patterns = array(
-		"/({$reStart}___|^___)(.+)___{$reEnd}/U" => "<$s><$e>$2</$e></$s>",
-		"/({$reStart}__|^__)(.+)__{$reEnd}/U"    => "<$s>$2</$s>",
-		"/({$reStart}_|^_)(.+)_{$reEnd}/U"       => "<$e>$2</$e>",
+		$this->patterns = [
+			"/({$reStart}___|^___)(.+)___{$reEnd}/U" => "<$s><$e>$2</$e></$s>",
+			"/({$reStart}__|^__)(.+)__{$reEnd}/U"    => "<$s>$2</$s>",
+			"/({$reStart}_|^_)(.+)_{$reEnd}/U"       => "<$e>$2</$e>",
 
-		'/{m ([^}]+)}/'  => "<$this->inlineStyleElement $this->inlineStyleAttribute=\"$1\">",
+			'/{m ([^}]+)}/'  => "<$this->inlineStyleElement $this->inlineStyleAttribute=\"$1\">",
 
-		'/\[\[(.+)\|(.+)\]\]/U' => '<a href="$1" title="$1 — $2">$2</a>',
-		'!(?<=[\s>])(https?://[^])\s<*]+[^])\s<*,.])!e' => "\$this->doExternLink('$1')",
-
-		'/{img:([^'.self::IMG_SEP.'}]+)([^}]*)}/e' => "\$this->doImage('$1', '$2')",
-
-		// foot notes
-		'/(?<=[^\s\\\\(])(\*+)(\d*)/e' => "\$this->getRef('$1', '$2')",
-		#'/&([^;]) /' => '&amp;$1 ',
-
-		// internal links
-		'%{#([^}]+)}([^{]+){/#}%e' => "\$this->doInternalLink('$1', '$2')",
-		'%{#([^}]+)}%e' => "\$this->doInternalLink('$1')",
-		);
+			'/\[\[(.+)\|(.+)\]\]/U' => '<a href="$1" title="$1 — $2">$2</a>',
+		];
+		$this->patternsCallbacks = [
+			'!(?<=[\s>])(https?://[^])\s<*]+[^])\s<*,.])!' => function($matches) {
+				return $this->doExternLink($matches[1]);
+			},
+			'/{img:([^'.self::IMG_SEP.'}]+)([^}]*)}/' => function($matches) {
+				return $this->doImage($matches[1], $matches[2]);
+			},
+			// foot notes
+			'/(?<=[^\s\\\\(])(\*+)(\d*)/' => function($matches) {
+				return $this->getRef($matches[1], $matches[2]);
+			},
+			// internal links
+			'%{#([^}]+)}([^{]+){/#}%' => function($matches) {
+				return $this->doInternalLink($matches[1], $matches[2]);
+			},
+			'%{#([^}]+)}%' => function($matches) {
+				return $this->doInternalLink($matches[1]);
+			},
+		];
 
 		$this->replPairs = array(
 			"\t"     => '        ', // eight nbspaces
@@ -2409,8 +2417,10 @@ class SfbConverter {
 	protected function doInlineElements($s) {
 		$s = $this->doInlineElementsEscape($s);
 		$s = preg_replace($this->kpatterns, $this->vpatterns, $s);
+		foreach ($this->patternsCallbacks as $pattern => $callback) {
+			$s = preg_replace_callback($pattern, $callback, $s);
+		}
 		$s = strtr($s, $this->replPairs);
-
 		return $s;
 	}
 
