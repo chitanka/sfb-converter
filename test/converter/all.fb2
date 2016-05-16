@@ -55,10 +55,10 @@
 <title><p>Заглавие 2</p></title>
 <p>Свободен текст след заглавието. Още текст след заглавието. И още малко текст. Една интересна<a l:href="#note_1-1" type="note">1</a> бележка.</p>
 <empty-line/>
-<subtitle>
+<subtitle id="l-zaglavie_na_tablitsata">
 Заглавие на таблицата
 </subtitle>
-<subtitle>
+<subtitle id="l-vtori_red_ot_zaglavieto">
 Втори ред от заглавието
 </subtitle>
 <table><tr><th>Заглавие 1</th><th>Заглавие 2</th></tr><tr><td>Клетка 1.1</td><td>Клетка 1.2</td></tr><tr><td>Клетка 2.1</td><td>Клетка 2.2</td></tr></table>
