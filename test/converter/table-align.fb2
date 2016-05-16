@@ -10,13 +10,13 @@
 </document-info>
 </description>
 <body><section>
-<subtitle>
+<subtitle id="l-primer_za_podravnjavane">
 Пример за подравняване
 </subtitle>
 <table><tr><th>Първа колона</th><th>Втора колона</th></tr><tr><td align="left">Ляво</td><td align="center">Центрирано</td></tr><tr><td align="right">Дясно</td><td>По подразбиране</td></tr></table>
 <empty-line/>
 <p>Опростен вариант:</p>
-<subtitle>
+<subtitle id="l-primer_za_podravnjavane.2">
 Пример за подравняване
 </subtitle>
 <table><tr><th>Първа колона</th><th>Втора колона</th></tr><tr><td align="left">Ляво</td><td align="center">Центрирано</td></tr><tr><td align="right">Дясно</td><td>По подразбиране</td></tr></table>
