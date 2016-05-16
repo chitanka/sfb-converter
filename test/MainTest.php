@@ -1,5 +1,6 @@
 <?php
 
+use Sfblib\SfbConverter;
 use Sfblib\SfbToFb2Converter;
 use Sfblib\SfbToHtmlConverter;
 
@@ -62,7 +63,7 @@ class MainTest extends TestCase {
 		'section-empty-with-note',
 		'separator',
 		'sign',
-		'sign-with-note', // currently broken
+		'sign-with-note',
 		'sign-with-subtitle',
 		'strong',
 		'subtitle',
@@ -98,9 +99,10 @@ class MainTest extends TestCase {
 		}, $this->inputFiles);
 	}
 
-	private function doTestConverter($conv, $inFile, $outFile, $callback = null) {
+	private function doTestConverter(SfbConverter $conv, $inFile, $outFile, $callback = null) {
 		$conv->setObjectCount(1);
 		$conv->rmPattern(' —')->rmRegExpPattern('/^— /');
+		$conv->disableParagraphIds();
 		$conv->convert();
 		$testOutput = $conv->getContent();
 		if ( is_callable($callback) ) {
@@ -108,6 +110,10 @@ class MainTest extends TestCase {
 		}
 		// remove double new lines
 		$testOutput = preg_replace('/\n\n+/', "\n", $testOutput);
+		$testOutput = strtr($testOutput, [
+			"<p>\n" => '<p>',
+			"\n</p>" => '</p>',
+		]);
 
 		// save output if wanted
 		$outDir = dirname($outFile) . '/output';
