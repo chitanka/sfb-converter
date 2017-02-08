@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:l="http://www.w3.org/1999/xlink">
+<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:xlink="http://www.w3.org/1999/xlink">
 <description><title-info><genre>prose_classic</genre>
 <author><nickname>(неизвестен автор)</nickname></author>
 <book-title>(няма заглавие)</book-title>
@@ -53,7 +53,7 @@
 </section>
 <section id="l-zaglavie_2">
 <title><p>Заглавие 2</p></title>
-<p>Свободен текст след заглавието. Още текст след заглавието. И още малко текст. Една интересна<a l:href="#note_1-1" type="note">1</a> бележка.</p>
+<p>Свободен текст след заглавието. Още текст след заглавието. И още малко текст. Една интересна<a xlink:href="#note_1-1" type="note">1</a> бележка.</p>
 <empty-line/>
 <subtitle id="l-zaglavie_na_tablitsata">
 Заглавие на таблицата
