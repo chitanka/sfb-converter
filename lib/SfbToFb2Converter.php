@@ -859,6 +859,7 @@ class SfbToFb2Converter extends SfbConverter {
 		}
 		else if ( $this->isInNote() ) {
 			$this->saveStartTag($this->paragraphElement);
+			return;
 		}
 		parent::doParagraphStart();
 	}
