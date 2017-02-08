@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:l="http://www.w3.org/1999/xlink">
+<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:xlink="http://www.w3.org/1999/xlink">
 <description><title-info><genre>prose_classic</genre>
 <author><nickname>(неизвестен автор)</nickname></author>
 <book-title>(няма заглавие)</book-title>
@@ -10,7 +10,7 @@
 </document-info>
 </description>
 <body><section id="l-belezhka1">
-<title><p>Бележка<a l:href="#note_1-1" type="note">1</a></p></title>
+<title><p>Бележка<a xlink:href="#note_1-1" type="note">1</a></p></title>
 <empty-line/>
 </section>
 <section id="l-prodylzhava">

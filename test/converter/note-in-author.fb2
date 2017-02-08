@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:l="http://www.w3.org/1999/xlink">
+<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:xlink="http://www.w3.org/1999/xlink">
 <description><title-info><genre>prose_classic</genre>
 <author><nickname>(неизвестен автор)</nickname></author>
 <book-title>(няма заглавие)</book-title>
@@ -13,7 +13,7 @@
 <p>От времената на дедите</p>
 <p>…</p>
 <text-author>
-Харис<a l:href="#note_1-1" type="note">1</a> (500. 6:2-9)
+Харис<a xlink:href="#note_1-1" type="note">1</a> (500. 6:2-9)
 </text-author>
 </epigraph>
 <section>

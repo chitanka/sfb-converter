@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:l="http://www.w3.org/1999/xlink">
+<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:xlink="http://www.w3.org/1999/xlink">
 <description><title-info><genre>prose_classic</genre>
 <author><nickname>(неизвестен автор)</nickname></author>
 <book-title>(няма заглавие)</book-title>
 <annotation>
 <p>Първи ред.</p>
-<p><image l:href="#img_1-1"/></p>
+<p><image xlink:href="#img_1-1"/></p>
 </annotation>
 <lang>bg</lang>
 </title-info>
