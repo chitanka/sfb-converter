@@ -1,16 +1,10 @@
 <?php
 error_reporting(E_ALL | E_STRICT);
 
-spl_autoload_register(function($class) {
-	if (strpos($class, 'Sfblib') === 0) {
-		$class = strtr($class, array(
-			'Sfblib\\' => '',
-			'\\' => '/',
-		));
-		require_once "$class.php";
-	}
-});
+require __DIR__.'/../vendor/autoload.php';
 
-set_include_path(get_include_path() . PATH_SEPARATOR . realpath(__DIR__ . '/../lib'));
+if (!class_exists('PHPUnit\Framework\TestCase') && class_exists('PHPUnit_Framework_TestCase')) {
+	class_alias('PHPUnit_Framework_TestCase', 'PHPUnit\Framework\TestCase');
+}
 
 require __DIR__ . '/TestCase.php';
