@@ -1,7 +1,6 @@
 {
 	"name": "chitanka/sfb-converter",
 	"description": "SFB converter used by chitanka",
-	"version": "1.0.0",
 	"type": "library",
 	"keywords": ["sfb"],
 	"homepage": "https://github.com/chitanka/sfb-converter",
