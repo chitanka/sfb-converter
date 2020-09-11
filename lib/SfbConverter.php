@@ -2517,10 +2517,11 @@ class SfbConverter {
 
 	protected function doInlineAnchor($text) {
 		$target = "a-$text";
-		return $this->doInternalLinkElement($target, $text, [
+		return $this->out->xmlElement('a', $text, array(
 			'id' => $target,
 			'class' => 'inline-anchor',
-		]);
+			'href'  => "#$target",
+		));
 	}
 
 	public function setInternalLinkTarget($target) {
