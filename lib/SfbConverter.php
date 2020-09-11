@@ -328,6 +328,7 @@ class SfbConverter {
 	protected $spanRows;
 
 	private $paragraphIdsEnabled = true;
+	protected $paragraphIdPrefix = 'p-';
 
 	public function __construct($file, $imgDir = 'img') {
 		self::$objCount++;
@@ -524,6 +525,10 @@ class SfbConverter {
 	}
 	public function disableParagraphIds() {
 		$this->paragraphIdsEnabled = false;
+	}
+
+	public function setParagraphIdPrefix(string $prefix) {
+		$this->paragraphIdPrefix = $prefix.'-';
 	}
 
 	public function convert() {
@@ -1645,7 +1650,7 @@ class SfbConverter {
 	protected function doParagraphStart() {
 		$attributes = [];
 		if ($this->paragraphIdsEnabled) {
-			$attributes['id'] = 'p-'.$this->linecnt;
+			$attributes['id'] = $this->paragraphIdPrefix.$this->linecnt;
 		}
 		$this->saveStartTag($this->paragraphElement, $attributes);
 	}
