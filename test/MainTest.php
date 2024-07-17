@@ -1,107 +1,174 @@
 <?php
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Sfblib\SfbConverter;
 use Sfblib\SfbToFb2Converter;
 use Sfblib\SfbToHtmlConverter;
 
 class MainTest extends TestCase {
 
-	private static $inputFiles = array(
-		'accent',
-		'ampersand',
-		'annotation-author-dedication',
-		'annotation',
-		'annotation-with-image',
-		'author-date-author',
-		'author-not-last',
-		'author',
-		'bug-body-section-swap',
-		'bug-redundant-stanza',
-		'bug-m-with-author',
-		'cite',
-		'date-alone',
-		'date-letter-begin',
-		'date-multi',
-		'dedication',
-		'dedication-with-subtitle',
-		'deleted',
-		'emphasis',
-		//'emphasis-strong-mishmash', // will probably never work
-		'epigraph',
-		'epigraph-with-separator',
-		'epigraph-dedication',
-		'header',
-		'image-complex',
-		'image-in-blocks',
-		'image',
-		'images-start-section',
-		'image-start-subsection',
-		'index',
-		'infoblock',
-		'letter',
-		'm-in-m',
-		'note-in-author',
-		'notes-high-numbers',
-		'notes-mixed',
-		'notes',
-		'notes-with-brackets',
-		'notice',
-		'poem-center',
-		'poem-complex',
-		'poem-epigraph-note-with-poem',
-		'poem-epigraph-poem',
-		'poem-in-epigraph',
-		'poem',
-		'poem-note-poem',
-		'poem-titles',
-		'poem-with-notes',
-		'poem-with-numbers',
-		'poem-with-preformatted',
-		'poem-with-separators',
-		'preformatted',
-		'section-dedication-only',
-		'section-empty',
-		'section-empty-with-note',
-		'separator',
-		'sign',
-		'sign-with-note',
-		'sign-with-subtitle',
-		'strong',
-		'subtitle',
-		'section-with-annotation',
-		'table-align',
-		'table',
-		'table-span',
-		'table-th2',
-		'table-th',
-		'table-with-img',
-		'title-note-multiline',
-		'title-note-notitle',
-		'titles',
-		'title-with-note',
-		//'all', // currently broken
-	);
-
-	/**
-	 * @param string $file
-	 * @dataProvider getInputFiles
-	 */
-	public function testFb2Converter($file) {
-		$this->doTestConverter(new SfbToFb2Converter("$file.sfb", dirname($file)), "$file.sfb", "$file.fb2", array($this, 'clearFb2String'));
+	#[DataProvider('data_fb2')]
+	public function testFb2Converter(string $sfbFile, string $expectedHtmlFile) {
+		$this->doTestConverter(new SfbToFb2Converter($sfbFile, dirname($sfbFile)), $sfbFile, $expectedHtmlFile, array($this, 'clearFb2String'));
+	}
+	public static function data_fb2(): array {
+		return [
+			[__DIR__.'/converter/accent.sfb', __DIR__.'/converter/accent.fb2'],
+			[__DIR__.'/converter/ampersand.sfb', __DIR__.'/converter/ampersand.fb2'],
+			[__DIR__.'/converter/annotation-author-dedication.sfb', __DIR__.'/converter/annotation-author-dedication.fb2'],
+			[__DIR__.'/converter/annotation.sfb', __DIR__.'/converter/annotation.fb2'],
+			[__DIR__.'/converter/annotation-with-image.sfb', __DIR__.'/converter/annotation-with-image.fb2'],
+			[__DIR__.'/converter/author-date-author.sfb', __DIR__.'/converter/author-date-author.fb2'],
+			[__DIR__.'/converter/author-not-last.sfb', __DIR__.'/converter/author-not-last.fb2'],
+			[__DIR__.'/converter/author.sfb', __DIR__.'/converter/author.fb2'],
+			[__DIR__.'/converter/bug-body-section-swap.sfb', __DIR__.'/converter/bug-body-section-swap.fb2'],
+			[__DIR__.'/converter/bug-redundant-stanza.sfb', __DIR__.'/converter/bug-redundant-stanza.fb2'],
+			[__DIR__.'/converter/bug-m-with-author.sfb', __DIR__.'/converter/bug-m-with-author.fb2'],
+			[__DIR__.'/converter/cite.sfb', __DIR__.'/converter/cite.fb2'],
+			[__DIR__.'/converter/date-alone.sfb', __DIR__.'/converter/date-alone.fb2'],
+			[__DIR__.'/converter/date-letter-begin.sfb', __DIR__.'/converter/date-letter-begin.fb2'],
+			[__DIR__.'/converter/date-multi.sfb', __DIR__.'/converter/date-multi.fb2'],
+			[__DIR__.'/converter/dedication.sfb', __DIR__.'/converter/dedication.fb2'],
+			[__DIR__.'/converter/dedication-with-subtitle.sfb', __DIR__.'/converter/dedication-with-subtitle.fb2'],
+			[__DIR__.'/converter/deleted.sfb', __DIR__.'/converter/deleted.fb2'],
+			[__DIR__.'/converter/emphasis.sfb', __DIR__.'/converter/emphasis.fb2'],
+			//[__DIR__.'/converter/emphasis-strong-mishmash.sfb', __DIR__.'/converter/emphasis-strong-mishmash.fb2'], // will probably never work
+			[__DIR__.'/converter/epigraph.sfb', __DIR__.'/converter/epigraph.fb2'],
+			[__DIR__.'/converter/epigraph-with-separator.sfb', __DIR__.'/converter/epigraph-with-separator.fb2'],
+			[__DIR__.'/converter/epigraph-dedication.sfb', __DIR__.'/converter/epigraph-dedication.fb2'],
+			[__DIR__.'/converter/header.sfb', __DIR__.'/converter/header.fb2'],
+			[__DIR__.'/converter/image-complex.sfb', __DIR__.'/converter/image-complex.fb2'],
+			[__DIR__.'/converter/image-in-blocks.sfb', __DIR__.'/converter/image-in-blocks.fb2'],
+			[__DIR__.'/converter/image.sfb', __DIR__.'/converter/image.fb2'],
+			[__DIR__.'/converter/images-start-section.sfb', __DIR__.'/converter/images-start-section.fb2'],
+			[__DIR__.'/converter/image-start-subsection.sfb', __DIR__.'/converter/image-start-subsection.fb2'],
+			[__DIR__.'/converter/index.sfb', __DIR__.'/converter/index.fb2'],
+			[__DIR__.'/converter/infoblock.sfb', __DIR__.'/converter/infoblock.fb2'],
+			[__DIR__.'/converter/letter.sfb', __DIR__.'/converter/letter.fb2'],
+			[__DIR__.'/converter/m-in-m.sfb', __DIR__.'/converter/m-in-m.fb2'],
+			[__DIR__.'/converter/note-in-author.sfb', __DIR__.'/converter/note-in-author.fb2'],
+			[__DIR__.'/converter/notes-high-numbers.sfb', __DIR__.'/converter/notes-high-numbers.fb2'],
+			[__DIR__.'/converter/notes-mixed.sfb', __DIR__.'/converter/notes-mixed.fb2'],
+			[__DIR__.'/converter/notes.sfb', __DIR__.'/converter/notes.fb2'],
+			[__DIR__.'/converter/notes-with-brackets.sfb', __DIR__.'/converter/notes-with-brackets.fb2'],
+			[__DIR__.'/converter/notice.sfb', __DIR__.'/converter/notice.fb2'],
+			[__DIR__.'/converter/poem-center.sfb', __DIR__.'/converter/poem-center.fb2'],
+			[__DIR__.'/converter/poem-complex.sfb', __DIR__.'/converter/poem-complex.fb2'],
+			[__DIR__.'/converter/poem-epigraph-note-with-poem.sfb', __DIR__.'/converter/poem-epigraph-note-with-poem.fb2'],
+			[__DIR__.'/converter/poem-epigraph-poem.sfb', __DIR__.'/converter/poem-epigraph-poem.fb2'],
+			[__DIR__.'/converter/poem-in-epigraph.sfb', __DIR__.'/converter/poem-in-epigraph.fb2'],
+			[__DIR__.'/converter/poem.sfb', __DIR__.'/converter/poem.fb2'],
+			[__DIR__.'/converter/poem-note-poem.sfb', __DIR__.'/converter/poem-note-poem.fb2'],
+			[__DIR__.'/converter/poem-titles.sfb', __DIR__.'/converter/poem-titles.fb2'],
+			[__DIR__.'/converter/poem-with-notes.sfb', __DIR__.'/converter/poem-with-notes.fb2'],
+			[__DIR__.'/converter/poem-with-numbers.sfb', __DIR__.'/converter/poem-with-numbers.fb2'],
+			[__DIR__.'/converter/poem-with-preformatted.sfb', __DIR__.'/converter/poem-with-preformatted.fb2'],
+			[__DIR__.'/converter/poem-with-separators.sfb', __DIR__.'/converter/poem-with-separators.fb2'],
+			[__DIR__.'/converter/preformatted.sfb', __DIR__.'/converter/preformatted.fb2'],
+			[__DIR__.'/converter/section-dedication-only.sfb', __DIR__.'/converter/section-dedication-only.fb2'],
+			[__DIR__.'/converter/section-empty.sfb', __DIR__.'/converter/section-empty.fb2'],
+			[__DIR__.'/converter/section-empty-with-note.sfb', __DIR__.'/converter/section-empty-with-note.fb2'],
+			[__DIR__.'/converter/separator.sfb', __DIR__.'/converter/separator.fb2'],
+			[__DIR__.'/converter/sign.sfb', __DIR__.'/converter/sign.fb2'],
+			[__DIR__.'/converter/sign-with-note.sfb', __DIR__.'/converter/sign-with-note.fb2'],
+			[__DIR__.'/converter/sign-with-subtitle.sfb', __DIR__.'/converter/sign-with-subtitle.fb2'],
+			[__DIR__.'/converter/strong.sfb', __DIR__.'/converter/strong.fb2'],
+			[__DIR__.'/converter/subtitle.sfb', __DIR__.'/converter/subtitle.fb2'],
+			[__DIR__.'/converter/section-with-annotation.sfb', __DIR__.'/converter/section-with-annotation.fb2'],
+			[__DIR__.'/converter/table-align.sfb', __DIR__.'/converter/table-align.fb2'],
+			[__DIR__.'/converter/table.sfb', __DIR__.'/converter/table.fb2'],
+			[__DIR__.'/converter/table-span.sfb', __DIR__.'/converter/table-span.fb2'],
+			[__DIR__.'/converter/table-th2.sfb', __DIR__.'/converter/table-th2.fb2'],
+			[__DIR__.'/converter/table-th.sfb', __DIR__.'/converter/table-th.fb2'],
+			[__DIR__.'/converter/table-with-img.sfb', __DIR__.'/converter/table-with-img.fb2'],
+			[__DIR__.'/converter/title-note-multiline.sfb', __DIR__.'/converter/title-note-multiline.fb2'],
+			[__DIR__.'/converter/title-note-notitle.sfb', __DIR__.'/converter/title-note-notitle.fb2'],
+			[__DIR__.'/converter/titles.sfb', __DIR__.'/converter/titles.fb2'],
+			[__DIR__.'/converter/title-with-note.sfb', __DIR__.'/converter/title-with-note.fb2'],
+			//[__DIR__.'/converter/all.sfb', __DIR__.'/converter/all.fb2'], // currently broken
+		];
 	}
 
-	/**
-	 * @param string $file
-	 * @dataProvider getInputFiles
-	 */
-	public function testHtmlConverter($file) {
-		$this->doTestConverter(new SfbToHtmlConverter("$file.sfb", 'img'), "$file.sfb", "$file.html");
+	#[DataProvider('data_html')]
+	public function testHtmlConverter(string $sfbFile, string $expectedHtmlFile) {
+		$this->doTestConverter(new SfbToHtmlConverter($sfbFile, 'img'), $sfbFile, $expectedHtmlFile);
 	}
-
-	public static function getInputFiles(): array {
-		return array_map(function($file){
-			return [__DIR__.'/converter/'.$file];
-		}, self::$inputFiles);
+	public static function data_html(): array {
+		return [
+			[__DIR__.'/converter/accent.sfb', __DIR__.'/converter/accent.html'],
+			[__DIR__.'/converter/ampersand.sfb', __DIR__.'/converter/ampersand.html'],
+			[__DIR__.'/converter/annotation-author-dedication.sfb', __DIR__.'/converter/annotation-author-dedication.html'],
+			[__DIR__.'/converter/annotation.sfb', __DIR__.'/converter/annotation.html'],
+			[__DIR__.'/converter/annotation-with-image.sfb', __DIR__.'/converter/annotation-with-image.html'],
+			[__DIR__.'/converter/author-date-author.sfb', __DIR__.'/converter/author-date-author.html'],
+			[__DIR__.'/converter/author-not-last.sfb', __DIR__.'/converter/author-not-last.html'],
+			[__DIR__.'/converter/author.sfb', __DIR__.'/converter/author.html'],
+			[__DIR__.'/converter/bug-body-section-swap.sfb', __DIR__.'/converter/bug-body-section-swap.html'],
+			[__DIR__.'/converter/bug-redundant-stanza.sfb', __DIR__.'/converter/bug-redundant-stanza.html'],
+			[__DIR__.'/converter/bug-m-with-author.sfb', __DIR__.'/converter/bug-m-with-author.html'],
+			[__DIR__.'/converter/cite.sfb', __DIR__.'/converter/cite.html'],
+			[__DIR__.'/converter/date-alone.sfb', __DIR__.'/converter/date-alone.html'],
+			[__DIR__.'/converter/date-letter-begin.sfb', __DIR__.'/converter/date-letter-begin.html'],
+			[__DIR__.'/converter/date-multi.sfb', __DIR__.'/converter/date-multi.html'],
+			[__DIR__.'/converter/dedication.sfb', __DIR__.'/converter/dedication.html'],
+			[__DIR__.'/converter/dedication-with-subtitle.sfb', __DIR__.'/converter/dedication-with-subtitle.html'],
+			[__DIR__.'/converter/deleted.sfb', __DIR__.'/converter/deleted.html'],
+			[__DIR__.'/converter/emphasis.sfb', __DIR__.'/converter/emphasis.html'],
+			//[__DIR__.'/converter/emphasis-strong-mishmash.sfb', __DIR__.'/converter/emphasis-strong-mishmash.html'], // will probably never work
+			[__DIR__.'/converter/epigraph.sfb', __DIR__.'/converter/epigraph.html'],
+			[__DIR__.'/converter/epigraph-with-separator.sfb', __DIR__.'/converter/epigraph-with-separator.html'],
+			[__DIR__.'/converter/epigraph-dedication.sfb', __DIR__.'/converter/epigraph-dedication.html'],
+			[__DIR__.'/converter/header.sfb', __DIR__.'/converter/header.html'],
+			[__DIR__.'/converter/image-complex.sfb', __DIR__.'/converter/image-complex.html'],
+			[__DIR__.'/converter/image-in-blocks.sfb', __DIR__.'/converter/image-in-blocks.html'],
+			[__DIR__.'/converter/image.sfb', __DIR__.'/converter/image.html'],
+			[__DIR__.'/converter/images-start-section.sfb', __DIR__.'/converter/images-start-section.html'],
+			[__DIR__.'/converter/image-start-subsection.sfb', __DIR__.'/converter/image-start-subsection.html'],
+			[__DIR__.'/converter/index.sfb', __DIR__.'/converter/index.html'],
+			[__DIR__.'/converter/infoblock.sfb', __DIR__.'/converter/infoblock.html'],
+			[__DIR__.'/converter/letter.sfb', __DIR__.'/converter/letter.html'],
+			[__DIR__.'/converter/m-in-m.sfb', __DIR__.'/converter/m-in-m.html'],
+			[__DIR__.'/converter/note-in-author.sfb', __DIR__.'/converter/note-in-author.html'],
+			[__DIR__.'/converter/notes-high-numbers.sfb', __DIR__.'/converter/notes-high-numbers.html'],
+			[__DIR__.'/converter/notes-mixed.sfb', __DIR__.'/converter/notes-mixed.html'],
+			[__DIR__.'/converter/notes.sfb', __DIR__.'/converter/notes.html'],
+			[__DIR__.'/converter/notes-with-brackets.sfb', __DIR__.'/converter/notes-with-brackets.html'],
+			[__DIR__.'/converter/notice.sfb', __DIR__.'/converter/notice.html'],
+			[__DIR__.'/converter/poem-center.sfb', __DIR__.'/converter/poem-center.html'],
+			[__DIR__.'/converter/poem-complex.sfb', __DIR__.'/converter/poem-complex.html'],
+			[__DIR__.'/converter/poem-epigraph-note-with-poem.sfb', __DIR__.'/converter/poem-epigraph-note-with-poem.html'],
+			[__DIR__.'/converter/poem-epigraph-poem.sfb', __DIR__.'/converter/poem-epigraph-poem.html'],
+			[__DIR__.'/converter/poem-in-epigraph.sfb', __DIR__.'/converter/poem-in-epigraph.html'],
+			[__DIR__.'/converter/poem.sfb', __DIR__.'/converter/poem.html'],
+			[__DIR__.'/converter/poem-note-poem.sfb', __DIR__.'/converter/poem-note-poem.html'],
+			[__DIR__.'/converter/poem-titles.sfb', __DIR__.'/converter/poem-titles.html'],
+			[__DIR__.'/converter/poem-with-notes.sfb', __DIR__.'/converter/poem-with-notes.html'],
+			[__DIR__.'/converter/poem-with-numbers.sfb', __DIR__.'/converter/poem-with-numbers.html'],
+			[__DIR__.'/converter/poem-with-preformatted.sfb', __DIR__.'/converter/poem-with-preformatted.html'],
+			[__DIR__.'/converter/poem-with-separators.sfb', __DIR__.'/converter/poem-with-separators.html'],
+			[__DIR__.'/converter/preformatted.sfb', __DIR__.'/converter/preformatted.html'],
+			[__DIR__.'/converter/section-dedication-only.sfb', __DIR__.'/converter/section-dedication-only.html'],
+			[__DIR__.'/converter/section-empty.sfb', __DIR__.'/converter/section-empty.html'],
+			[__DIR__.'/converter/section-empty-with-note.sfb', __DIR__.'/converter/section-empty-with-note.html'],
+			[__DIR__.'/converter/separator.sfb', __DIR__.'/converter/separator.html'],
+			[__DIR__.'/converter/sign.sfb', __DIR__.'/converter/sign.html'],
+			[__DIR__.'/converter/sign-with-note.sfb', __DIR__.'/converter/sign-with-note.html'],
+			[__DIR__.'/converter/sign-with-subtitle.sfb', __DIR__.'/converter/sign-with-subtitle.html'],
+			[__DIR__.'/converter/strong.sfb', __DIR__.'/converter/strong.html'],
+			[__DIR__.'/converter/subtitle.sfb', __DIR__.'/converter/subtitle.html'],
+			[__DIR__.'/converter/section-with-annotation.sfb', __DIR__.'/converter/section-with-annotation.html'],
+			[__DIR__.'/converter/table-align.sfb', __DIR__.'/converter/table-align.html'],
+			[__DIR__.'/converter/table.sfb', __DIR__.'/converter/table.html'],
+			[__DIR__.'/converter/table-span.sfb', __DIR__.'/converter/table-span.html'],
+			[__DIR__.'/converter/table-th2.sfb', __DIR__.'/converter/table-th2.html'],
+			[__DIR__.'/converter/table-th.sfb', __DIR__.'/converter/table-th.html'],
+			[__DIR__.'/converter/table-with-img.sfb', __DIR__.'/converter/table-with-img.html'],
+			[__DIR__.'/converter/title-note-multiline.sfb', __DIR__.'/converter/title-note-multiline.html'],
+			[__DIR__.'/converter/title-note-notitle.sfb', __DIR__.'/converter/title-note-notitle.html'],
+			[__DIR__.'/converter/titles.sfb', __DIR__.'/converter/titles.html'],
+			[__DIR__.'/converter/title-with-note.sfb', __DIR__.'/converter/title-with-note.html'],
+			//[__DIR__.'/converter/all.sfb', __DIR__.'/converter/all.html'], // currently broken
+		];
 	}
 
 	private function doTestConverter(SfbConverter $conv, $inFile, $outFile, $callback = null) {
