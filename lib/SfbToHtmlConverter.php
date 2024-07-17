@@ -286,9 +286,9 @@ class SfbToHtmlConverter extends SfbConverter {
 		}
 	}
 
-	protected function getParagraphAttributes() {
-		return parent::getParagraphAttributes() + [
-			'data-id' => $this->generateDataId(),
+	protected function getParagraphAttributes(?int $lineNumber = null) {
+		return parent::getParagraphAttributes($lineNumber) + [
+			'data-id' => $this->generateDataId($lineNumber),
 		];
 	}
 
@@ -300,8 +300,8 @@ class SfbToHtmlConverter extends SfbConverter {
 		$this->saveEndTag($this->authorElement);
 	}
 
-	protected function doAuthorLineStart() {
-		$this->saveStartTag($this->paragraphElement);
+	protected function doAuthorLineStart(int $lineNumber) {
+		$this->saveStartTag($this->paragraphElement, $this->getParagraphAttributes($lineNumber));
 	}
 
 	protected function doAuthorLineEnd() {
@@ -317,8 +317,8 @@ class SfbToHtmlConverter extends SfbConverter {
 		$this->saveEndTag($this->dateElement);
 	}
 
-	protected function doDateLineStart() {
-		$this->saveStartTag($this->paragraphElement, ['id' => $this->generateParagraphId()]);
+	protected function doDateLineStart(int $lineNumber) {
+		$this->saveStartTag($this->paragraphElement, $this->getParagraphAttributes($lineNumber));
 	}
 
 	protected function doDateLineEnd() {
@@ -395,8 +395,8 @@ class SfbToHtmlConverter extends SfbConverter {
 		return $this->paragraphIdPrefix.$this->linecnt;
 	}
 
-	protected function generateDataId($linecnt = null) {
-		return $this->nbOfSkippedLines + ($linecnt ?? $this->linecnt);
+	protected function generateDataId(int $lineNumber = null) {
+		return $this->nbOfSkippedLines + ($lineNumber ?? $this->linecnt);
 	}
 
 	protected function saveUnknownContent() {

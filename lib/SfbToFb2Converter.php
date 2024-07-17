@@ -743,9 +743,9 @@ class SfbToFb2Converter extends SfbConverter {
 		}
 	}
 
-	protected function doAuthorLineStart() {
+	protected function doAuthorLineStart(int $lineNumber) {
 		if ( $this->acceptsAuthor() ) {
-			parent::doAuthorLineStart();
+			parent::doAuthorLineStart($lineNumber);
 		} else {
 			$this->saveStartTag($this->paragraphElement);
 			$this->saveStartTag($this->emphasisElement);

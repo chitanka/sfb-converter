@@ -717,11 +717,11 @@ class SfbConverter {
 		$lines = array();
 		do {
 			$lines[] = $this->ltext;
-			$this->nextLine(false);
+			$rawLine = $this->nextLine(false);
 		} while ( $this->lcmd == $marker );
 
 		// we have read the next non-marker line, make sure this is known
-		$this->hasNextLine = true;
+		$this->hasNextLine = $rawLine !== false;
 
 		return $lines;
 	}
@@ -1662,10 +1662,10 @@ class SfbConverter {
 		$this->saveStartTag($this->paragraphElement, $this->getParagraphAttributes());
 	}
 
-	protected function getParagraphAttributes() {
+	protected function getParagraphAttributes(?int $lineNumber = null) {
 		$attributes = [];
 		if ($this->paragraphIdsEnabled) {
-			$attributes['id'] = $this->paragraphIdPrefix.$this->linecnt;
+			$attributes['id'] = $this->paragraphIdPrefix. ($lineNumber ?? $this->linecnt);
 		}
 		return $attributes;
 	}
@@ -1708,9 +1708,11 @@ class SfbConverter {
 	}
 
 
-	protected function inAuthor($lines) {
-		foreach ($lines as $line) {
-			$this->doAuthorLineStart();
+	protected function inAuthor(array $lines) {
+		$nbLines = count($lines);
+		foreach ($lines as $i => $line) {
+			$lineNumber = $this->linecnt - $nbLines + $i + ($this->hasNextLine ? 0 : 1);
+			$this->doAuthorLineStart($lineNumber);
 			$this->saveContent($line);
 			$this->doAuthorLineEnd();
 		}
@@ -1722,7 +1724,7 @@ class SfbConverter {
 	protected function doAuthorEnd() {
 	}
 
-	protected function doAuthorLineStart() {
+	protected function doAuthorLineStart(int $lineNumber) {
 		$this->saveStartTag($this->authorElement);
 	}
 
@@ -1745,9 +1747,11 @@ class SfbConverter {
 		$this->enableEmptyLines();
 	}
 
-	protected function inDate($lines) {
-		foreach ($lines as $line) {
-			$this->doDateLineStart();
+	protected function inDate(array $lines) {
+		$nbLines = count($lines);
+		foreach ($lines as $i => $line) {
+			$lineNumber = $this->linecnt - $nbLines + $i + ($this->hasNextLine ? 0 : 1);
+			$this->doDateLineStart($lineNumber);
 			$this->saveContent($line);
 			$this->doDateLineEnd();
 		}
@@ -1759,7 +1763,7 @@ class SfbConverter {
 	protected function doDateEnd() {
 	}
 
-	protected function doDateLineStart() {
+	protected function doDateLineStart(int $lineNumber) {
 		$this->saveStartTag($this->dateElement);
 	}
 
