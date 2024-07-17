@@ -1,3 +1,4 @@
 /test/converter/output
 /vendor/*
 *~
+composer.lock
