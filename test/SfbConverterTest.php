@@ -11,7 +11,7 @@ class SfbConverterTest extends TestCase {
 		$this->assertEquals($expected, rtrim(SfbConverter::addMissingCommandDelimiters($input)));
 	}
 
-	public function providerForTestAddMissingCommandDelimiters() {
+	public static function providerForTestAddMissingCommandDelimiters(): array {
 		return array(
 			array(
 				'mytest',

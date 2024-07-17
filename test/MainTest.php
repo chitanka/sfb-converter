@@ -6,7 +6,7 @@ use Sfblib\SfbToHtmlConverter;
 
 class MainTest extends TestCase {
 
-	private $inputFiles = array(
+	private static $inputFiles = array(
 		'accent',
 		'ampersand',
 		'annotation-author-dedication',
@@ -98,10 +98,10 @@ class MainTest extends TestCase {
 		$this->doTestConverter(new SfbToHtmlConverter("$file.sfb", 'img'), "$file.sfb", "$file.html");
 	}
 
-	public function getInputFiles() {
+	public static function getInputFiles(): array {
 		return array_map(function($file){
 			return [__DIR__.'/converter/'.$file];
-		}, $this->inputFiles);
+		}, self::$inputFiles);
 	}
 
 	private function doTestConverter(SfbConverter $conv, $inFile, $outFile, $callback = null) {
